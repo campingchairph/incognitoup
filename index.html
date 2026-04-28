@@ -2,1137 +2,637 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>IncogniToup — Private Hair Systems</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>*INCOGNITOUP</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --red: #FF0101;
-  --black: #131313;
-  --graphite: #383838;
-  --offwhite: #F5F5F5;
-  --concrete: #DFE1D9;
-  --white: #ffffff;
-  --font-display: 'Bebas Neue', sans-serif;
-  --font-body: 'DM Sans', sans-serif;
-  --font-mono: 'DM Mono', monospace;
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0e0e0e;
+  --card:#181818;
+  --card2:#1e1e1e;
+  --line:#262626;
+  --line2:#303030;
+  --text:#f0f0f0;
+  --sub:#666;
+  --dim:#3a3a3a;
+  --red:#c42828;
+  --red-s:#1f0808;
+  --ff:'Bebas Neue',sans-serif;
+  --fb:'DM Sans',sans-serif;
+  --fm:'DM Mono',monospace;
 }
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{background:var(--black);color:var(--offwhite);font-family:var(--font-body);min-height:100vh;overflow-x:hidden}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--fb);-webkit-font-smoothing:antialiased}
+#app{height:100dvh;display:flex;flex-direction:column;max-width:430px;margin:0 auto;position:relative;overflow:hidden}
 
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:20px 40px;background:rgba(19,19,19,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06)}
-.nav-logo{font-family:var(--font-display);font-size:22px;letter-spacing:0.08em;color:var(--white);cursor:pointer}
-.nav-logo span{color:var(--red)}
-.nav-links{display:flex;gap:32px;align-items:center}
-.nav-links a{font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,245,245,0.55);cursor:pointer;transition:color .2s}
-.nav-links a:hover{color:var(--white)}
-.nav-cta{background:var(--red);color:var(--white);font-family:var(--font-body);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;padding:10px 24px;border:none;cursor:pointer;transition:opacity .2s}
-.nav-cta:hover{opacity:0.85}
+/* SCREENS */
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg);transform:translateX(100%);transition:transform .34s cubic-bezier(.25,1,.5,1);overflow:hidden;will-change:transform}
+.scr.active{transform:translateX(0)}
+.scr.out{transform:translateX(-30%);transition:transform .34s cubic-bezier(.25,1,.5,1)}
 
-/* HERO */
-.hero{min-height:100vh;background:var(--red);position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:60px 40px 0;overflow:hidden}
-.hero-meta{position:absolute;top:90px;right:40px;text-align:right;font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;color:rgba(19,19,19,0.6);line-height:1.8}
-.hero-content{position:relative;z-index:2;padding-bottom:0}
-.hero-eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(19,19,19,0.65);margin-bottom:24px}
-.hero-title{font-family:var(--font-display);font-size:clamp(52px,10vw,92px);line-height:0.95;color:var(--black);letter-spacing:0.02em;margin-bottom:24px}
-.hero-desc{font-size:13px;letter-spacing:0.08em;line-height:1.7;color:rgba(19,19,19,0.7);max-width:360px;margin-bottom:40px;text-transform:uppercase}
-.hero-actions{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-.btn-primary{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:13px;font-weight:600;letter-spacing:0.08em;padding:16px 40px;border:none;cursor:pointer;transition:opacity .2s}
-.btn-primary:hover{opacity:0.8}
-.btn-ghost{background:transparent;color:var(--black);font-size:13px;font-weight:500;letter-spacing:0.08em;padding:16px 32px;border:2px solid var(--black);cursor:pointer;transition:all .2s}
-.btn-ghost:hover{background:var(--black);color:var(--white)}
-.hero-wordmark{font-family:var(--font-display);font-size:clamp(80px,18vw,200px);line-height:0.85;color:var(--offwhite);letter-spacing:-0.01em;margin-top:32px;margin-left:-4px;opacity:0.18;pointer-events:none;white-space:nowrap}
+/* HOME */
+#s-home{transform:translateX(0)}
+.home-scroll{flex:1;overflow-y:auto}
+.home-scroll::-webkit-scrollbar{display:none}
+.home-nav{padding:54px 24px 0;display:flex;align-items:flex-start;justify-content:space-between}
+.home-mark{font-family:var(--ff);font-size:clamp(42px,12vw,64px);letter-spacing:.04em;color:var(--text);line-height:.88}
+.home-mark .ast{color:var(--red)}
+.home-mark-sub{font-size:11px;font-weight:300;font-style:italic;color:var(--sub);margin-top:10px;letter-spacing:.02em}
+.menu-btn{width:38px;height:38px;border-radius:50%;background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;flex-shrink:0;margin-top:6px}
+.menu-btn span{display:block;width:14px;height:1.5px;background:var(--sub);border-radius:1px}
 
-/* SECTIONS */
-section{padding:100px 40px}
-.section-label{font-family:var(--font-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);margin-bottom:16px}
-.section-title{font-family:var(--font-display);font-size:clamp(36px,6vw,72px);line-height:0.95;color:var(--white);letter-spacing:0.02em;margin-bottom:32px}
-.section-body{font-size:15px;line-height:1.8;color:rgba(245,245,245,0.55);max-width:520px}
+/* STRIP */
+.meta-strip{display:flex;gap:0;margin:28px 24px 0;border:1px solid var(--line);overflow:hidden}
+.meta-item{flex:1;padding:12px 10px;display:flex;flex-direction:column;gap:3px;border-right:1px solid var(--line)}
+.meta-item:last-child{border-right:none}
+.meta-n{font-family:var(--ff);font-size:22px;letter-spacing:.03em;color:var(--text);line-height:1}
+.meta-l{font-family:var(--fm);font-size:8px;letter-spacing:.15em;color:var(--sub);text-transform:uppercase}
 
-/* SERVICES */
-.services{background:var(--offwhite)}
-.services .section-label{color:var(--graphite)}
-.services .section-title{color:var(--black)}
-.services .section-body{color:rgba(19,19,19,0.55)}
-.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:2px;margin-top:60px}
-.service-card{background:var(--white);padding:40px 32px;border:1px solid rgba(19,19,19,0.08);transition:all .25s;cursor:pointer;position:relative;overflow:hidden}
-.service-card::after{content:'';position:absolute;bottom:0;left:0;width:0;height:3px;background:var(--red);transition:width .3s}
-.service-card:hover::after{width:100%}
-.service-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(19,19,19,0.1)}
-.service-num{font-family:var(--font-mono);font-size:10px;color:rgba(19,19,19,0.3);margin-bottom:24px;letter-spacing:0.15em}
-.service-icon{font-size:28px;margin-bottom:20px}
-.service-name{font-family:var(--font-display);font-size:28px;letter-spacing:0.04em;color:var(--black);margin-bottom:12px}
-.service-desc{font-size:13px;line-height:1.7;color:rgba(19,19,19,0.55)}
-.service-price{font-family:var(--font-mono);font-size:12px;color:var(--red);margin-top:20px;letter-spacing:0.1em}
+/* SECTION */
+.sec{padding:28px 24px 14px;display:flex;align-items:center;justify-content:space-between}
+.sec-lbl{font-family:var(--fm);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--sub)}
+.sec-link{font-size:11px;font-weight:600;color:var(--red);cursor:pointer}
 
-/* CATALOG */
-.catalog{background:var(--black)}
-.catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;margin-top:60px;background:rgba(255,255,255,0.05)}
-.hair-card{background:var(--black);padding:0;cursor:pointer;transition:all .3s;border:1px solid rgba(255,255,255,0.04)}
-.hair-card:hover{border-color:var(--red)}
-.hair-img{height:200px;background:var(--graphite);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.hair-img-placeholder{font-family:var(--font-display);font-size:64px;color:rgba(255,255,255,0.06);letter-spacing:0.1em}
-.hair-badge{position:absolute;top:12px;left:12px;background:var(--red);color:var(--white);font-family:var(--font-mono);font-size:9px;letter-spacing:0.12em;padding:4px 10px;text-transform:uppercase}
-.hair-info{padding:24px}
-.hair-name{font-family:var(--font-display);font-size:22px;letter-spacing:0.04em;color:var(--white);margin-bottom:8px}
-.hair-attrs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.hair-attr{font-family:var(--font-mono);font-size:10px;color:rgba(245,245,245,0.35);letter-spacing:0.1em;border:1px solid rgba(255,255,255,0.08);padding:3px 8px}
-.hair-price{font-family:var(--font-display);font-size:24px;color:var(--red)}
-.hair-select{width:100%;margin-top:16px;background:transparent;color:var(--white);font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;padding:12px 16px;border:1px solid rgba(255,255,255,0.15);cursor:pointer;transition:all .2s;text-transform:uppercase}
-.hair-select:hover{background:var(--red);border-color:var(--red)}
+/* SYSTEM CARDS horizontal */
+.hscroll{overflow-x:auto;padding:0 24px 4px;display:flex;gap:10px}
+.hscroll::-webkit-scrollbar{display:none}
+.sys-card{flex-shrink:0;width:140px;background:var(--card);border:1px solid var(--line);cursor:pointer;transition:border-color .15s;overflow:hidden}
+.sys-card:active{border-color:var(--red)}
+.sys-card-img{height:90px;background:var(--card2);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.sys-card-letter{font-family:var(--ff);font-size:52px;color:var(--line2)}
+.sys-badge{position:absolute;top:7px;left:7px;background:var(--red);padding:2px 6px;font-family:var(--fm);font-size:8px;letter-spacing:.1em;color:#fff;text-transform:uppercase}
+.sys-card-body{padding:10px 12px}
+.sys-cname{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sys-cprice{font-family:var(--fm);font-size:10px;color:var(--red)}
 
-/* BOOKING */
-.booking{background:var(--concrete)}
-.booking .section-title{color:var(--black)}
-.booking .section-label{color:var(--graphite)}
-.booking-wrapper{display:grid;grid-template-columns:1fr 380px;gap:40px;margin-top:60px;align-items:start}
-.booking-steps{display:flex;flex-direction:column;gap:4px}
-.step-tab{display:flex;align-items:center;gap:16px;padding:20px 24px;background:rgba(19,19,19,0.05);cursor:pointer;transition:all .2s;border-left:3px solid transparent}
-.step-tab.active{background:var(--white);border-left-color:var(--red)}
-.step-tab.done{border-left-color:var(--graphite)}
-.step-num{font-family:var(--font-mono);font-size:10px;color:rgba(19,19,19,0.35);letter-spacing:0.1em;min-width:24px}
-.step-name{font-size:13px;font-weight:500;color:var(--black);letter-spacing:0.04em}
-.step-check{margin-left:auto;color:var(--graphite);font-size:14px}
+/* BARBER ROWS */
+.b-row{margin:0 24px 8px;background:var(--card);border:1px solid var(--line);padding:14px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color .15s}
+.b-row:active{border-color:var(--red)}
+.b-av{width:44px;height:44px;background:var(--card2);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:16px;color:var(--sub);flex-shrink:0}
+.b-info{flex:1}
+.b-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.b-meta{font-size:11px;color:var(--sub)}
+.b-rat{font-size:11px;font-weight:700;color:var(--text);flex-shrink:0;text-align:right}
+.b-rat .star{color:var(--red);font-size:11px}
 
-.booking-panel{background:var(--white);padding:40px}
-.panel-title{font-family:var(--font-display);font-size:32px;letter-spacing:0.04em;color:var(--black);margin-bottom:8px}
-.panel-sub{font-size:12px;color:rgba(19,19,19,0.45);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:32px}
+.home-bottom{padding:20px 24px 40px}
+.book-btn{width:100%;background:var(--red);border:none;padding:17px 24px;font-family:var(--ff);font-size:22px;letter-spacing:.1em;color:#fff;cursor:pointer;transition:opacity .15s;display:flex;align-items:center;justify-content:space-between}
+.book-btn:active{opacity:.8}
+.book-btn svg{width:18px;height:18px;stroke:#fff}
 
-/* Form elements */
-.form-group{margin-bottom:24px}
-.form-label{font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(19,19,19,0.45);margin-bottom:8px;display:block}
-.form-input{width:100%;padding:14px 16px;border:1px solid rgba(19,19,19,0.15);background:var(--offwhite);font-family:var(--font-body);font-size:14px;color:var(--black);outline:none;transition:border .2s}
-.form-input:focus{border-color:var(--black)}
-.form-select{width:100%;padding:14px 16px;border:1px solid rgba(19,19,19,0.15);background:var(--offwhite);font-family:var(--font-body);font-size:14px;color:var(--black);outline:none;appearance:none;cursor:pointer}
-.option-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.option-btn{padding:14px;border:1px solid rgba(19,19,19,0.12);background:var(--offwhite);font-family:var(--font-body);font-size:13px;color:rgba(19,19,19,0.6);cursor:pointer;transition:all .2s;text-align:left}
-.option-btn.selected,.option-btn:hover{background:var(--black);color:var(--white);border-color:var(--black)}
+/* ===== BOTTOM SHEET ===== */
+.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:50;opacity:0;pointer-events:none;transition:opacity .3s}
+.sheet-overlay.show{opacity:1;pointer-events:all}
+.sheet{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:430px;background:var(--card);z-index:51;transition:transform .38s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column;max-height:92dvh}
+.sheet.open{transform:translateX(-50%) translateY(0)}
+.sheet-handle{width:36px;height:3px;background:var(--dim);border-radius:2px;margin:14px auto 0;flex-shrink:0}
+.sheet-head{padding:16px 22px 14px;flex-shrink:0;border-bottom:1px solid var(--line)}
+.sheet-eyebrow{font-family:var(--fm);font-size:9px;letter-spacing:.2em;color:var(--red);text-transform:uppercase;margin-bottom:6px}
+.sheet-title{font-family:var(--ff);font-size:clamp(28px,8vw,38px);letter-spacing:.03em;color:var(--text);line-height:.92}
+.sheet-body{flex:1;overflow-y:auto;padding:14px 22px 10px}
+.sheet-body::-webkit-scrollbar{display:none}
+.sheet-footer{padding:12px 22px 36px;flex-shrink:0;border-top:1px solid var(--line)}
+.sheet-cta{width:100%;background:var(--red);border:none;padding:16px;font-family:var(--ff);font-size:20px;letter-spacing:.1em;color:#fff;cursor:pointer;transition:opacity .15s;display:flex;align-items:center;justify-content:space-between}
+.sheet-cta:active{opacity:.8}
+.sheet-cta:disabled{background:var(--card2);color:var(--dim);cursor:default}
+.sheet-cta svg{width:14px;height:14px;stroke:#fff;flex-shrink:0}
+.sheet-cta:disabled svg{stroke:var(--dim)}
 
-/* Barber cards */
-.barber-list{display:flex;flex-direction:column;gap:12px}
-.barber-item{display:flex;align-items:center;gap:16px;padding:16px;border:1px solid rgba(19,19,19,0.1);background:var(--offwhite);cursor:pointer;transition:all .2s}
-.barber-item.selected,.barber-item:hover{border-color:var(--black);background:var(--white)}
-.barber-avatar{width:44px;height:44px;background:var(--black);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:16px;color:var(--white);flex-shrink:0}
-.barber-name{font-size:14px;font-weight:600;color:var(--black);margin-bottom:2px}
-.barber-meta{font-size:11px;color:rgba(19,19,19,0.45);letter-spacing:0.05em}
-.barber-rating{margin-left:auto;font-family:var(--font-mono);font-size:12px;color:var(--red)}
+/* STEP PROGRESS inside sheet */
+.sheet-steps{display:flex;gap:3px;margin-bottom:16px}
+.sstep{flex:1;height:2px;background:var(--dim);transition:background .3s}
+.sstep.done{background:var(--sub)}
+.sstep.now{background:var(--red)}
 
-/* Summary */
-.summary-lines{display:flex;flex-direction:column;gap:0}
-.summary-line{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid rgba(19,19,19,0.08);font-size:13px}
-.summary-line:last-child{border-bottom:none}
-.summary-line .label{color:rgba(19,19,19,0.5);letter-spacing:0.04em}
-.summary-line .val{font-weight:500;color:var(--black)}
-.summary-total{display:flex;justify-content:space-between;align-items:center;padding:20px 0 0;margin-top:8px;border-top:2px solid var(--black)}
-.summary-total .label{font-family:var(--font-display);font-size:18px;letter-spacing:0.04em;color:var(--black)}
-.summary-total .val{font-family:var(--font-display);font-size:28px;color:var(--red)}
-.receipt-badge{display:flex;align-items:center;gap:8px;background:rgba(19,19,19,0.04);padding:12px 16px;margin-top:20px;font-family:var(--font-mono);font-size:10px;color:rgba(19,19,19,0.45);letter-spacing:0.1em;text-transform:uppercase}
+/* OPTION PILLS */
+.opt-list{display:flex;flex-direction:column;gap:8px}
+.opt-item{background:var(--card2);border:1px solid var(--line2);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:border-color .15s,background .15s}
+.opt-item:active{background:var(--line)}
+.opt-item.sel{border-color:var(--red);background:rgba(196,40,40,.06)}
+.oi-left{flex:1}
+.oi-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px}
+.oi-sub{font-size:11px;color:var(--sub)}
+.oi-right{display:flex;align-items:center;gap:10px;flex-shrink:0;margin-left:12px}
+.oi-price{font-family:var(--fm);font-size:11px;color:var(--sub)}
+.opt-item.sel .oi-price{color:var(--red)}
+.chk{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--dim);display:flex;align-items:center;justify-content:center;transition:all .15s}
+.chk svg{width:10px;height:10px;stroke:#fff;opacity:0;transition:opacity .15s}
+.opt-item.sel .chk{background:var(--red);border-color:var(--red)}
+.opt-item.sel .chk svg{opacity:1}
 
-/* Pending state */
-.pending-screen{text-align:center;padding:40px 20px}
-.pending-icon{width:72px;height:72px;background:var(--black);margin:0 auto 24px;display:flex;align-items:center;justify-content:center;font-size:28px}
-.pending-title{font-family:var(--font-display);font-size:36px;letter-spacing:0.04em;color:var(--black);margin-bottom:12px}
-.pending-sub{font-size:13px;color:rgba(19,19,19,0.5);line-height:1.7;max-width:280px;margin:0 auto 28px}
-.booking-id{font-family:var(--font-mono);font-size:11px;letter-spacing:0.15em;color:var(--red);background:rgba(255,1,1,0.06);padding:10px 20px;display:inline-block}
+/* LIBRARY GRID */
+.lib-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lib-card{background:var(--card2);border:1px solid var(--line2);cursor:pointer;transition:border-color .15s;overflow:hidden}
+.lib-card:active{opacity:.8}
+.lib-card.sel{border-color:var(--red)}
+.lib-img{height:100px;background:var(--bg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.lib-letter{font-family:var(--ff);font-size:56px;color:var(--line2)}
+.lib-sel-mark{position:absolute;top:8px;right:8px;width:20px;height:20px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
+.lib-sel-mark svg{width:10px;height:10px;stroke:#fff}
+.lib-card.sel .lib-sel-mark{opacity:1}
+.lib-cbadge{position:absolute;top:8px;left:8px;background:var(--red);padding:2px 6px;font-family:var(--fm);font-size:7px;letter-spacing:.1em;color:#fff;text-transform:uppercase}
+.lib-info{padding:10px 12px}
+.lib-cname{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px}
+.lib-cattrs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}
+.lib-attr{font-family:var(--fm);font-size:8px;letter-spacing:.08em;color:var(--sub);border:1px solid var(--dim);padding:2px 6px}
+.lib-cprice{font-family:var(--fm);font-size:10px;color:var(--red)}
 
-/* Sidebar nav during booking */
-.booking-sidebar{background:var(--white);padding:32px;border:1px solid rgba(19,19,19,0.08)}
-.sidebar-title{font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(19,19,19,0.35);margin-bottom:20px}
-.sidebar-item{padding:14px 0;border-bottom:1px solid rgba(19,19,19,0.06);font-size:13px}
-.sidebar-item:last-child{border-bottom:none}
-.sidebar-item-label{color:rgba(19,19,19,0.4);font-size:11px;letter-spacing:0.06em;margin-bottom:4px}
-.sidebar-item-val{font-weight:500;color:var(--black)}
+/* BARBER OPTION */
+.barber-opt{background:var(--card2);border:1px solid var(--line2);padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .15s;margin-bottom:8px}
+.barber-opt.sel{border-color:var(--red);background:rgba(196,40,40,.06)}
+.barber-opt:active{opacity:.8}
+.bo-av{width:42px;height:42px;background:var(--bg);border:1px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:15px;color:var(--sub)}
+.barber-opt.sel .bo-av{border-color:var(--red);color:var(--red)}
+.bo-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.bo-sub{font-size:10px;color:var(--sub)}
+.bo-rat{margin-left:auto;text-align:right;flex-shrink:0}
+.bo-stars{font-family:var(--fm);font-size:12px;color:var(--red);font-weight:700}
+.bo-sess{font-size:10px;color:var(--sub)}
 
-/* BARBER REG */
-.barber-reg{background:var(--graphite)}
-.barber-reg .section-title{color:var(--white)}
-.reg-form{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:48px;max-width:800px}
-.reg-form .form-input{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12);color:var(--white)}
-.reg-form .form-label{color:rgba(255,255,255,0.4)}
-.reg-form .form-input::placeholder{color:rgba(255,255,255,0.2)}
-.reg-form .form-input:focus{border-color:var(--red)}
-.full-span{grid-column:1/-1}
-.upload-zone{border:1px dashed rgba(255,255,255,0.2);padding:32px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(255,255,255,0.02)}
-.upload-zone:hover{border-color:var(--red);background:rgba(255,1,1,0.04)}
-.upload-zone-text{font-family:var(--font-mono);font-size:11px;letter-spacing:0.12em;color:rgba(255,255,255,0.3);text-transform:uppercase}
+/* DATE FIELDS */
+.dt-row{background:var(--card2);border:1px solid var(--line2);padding:13px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.dt-lbl{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--sub)}
+input[type=date],input[type=text],select{background:transparent;border:none;outline:none;font-family:var(--fb);font-size:14px;font-weight:600;color:var(--text);text-align:right;-webkit-appearance:none;color-scheme:dark;max-width:60%}
+input[type=text]::placeholder{color:var(--dim)}
+select option{background:#1a1a1a;color:var(--text)}
+
+/* RECEIPT */
+.receipt{background:var(--card2);border:1px solid var(--line2)}
+.receipt-hd{padding:14px 16px;border-bottom:1px solid var(--line);text-align:center}
+.receipt-hd-txt{font-size:15px;font-weight:700;color:var(--text)}
+.r-row{display:flex;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--line)}
+.r-row:last-child{border-bottom:none}
+.r-lbl{font-size:12px;color:var(--sub)}
+.r-val{font-size:12px;font-weight:600;color:var(--text)}
+.r-row.total-row{background:var(--card);padding:14px 16px}
+.r-row.total-row .r-lbl{font-size:13px;font-weight:700;color:var(--text)}
+.r-row.total-row .r-val{font-size:14px;font-weight:700;color:var(--red)}
+.r-row.down-row{border-left:3px solid var(--red)}
+
+/* CONFIRM */
+.conf-id-box{background:var(--red-s);border:1px solid var(--red);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.conf-id-txt{font-family:var(--fm);font-size:10px;letter-spacing:.16em;color:var(--red);text-transform:uppercase}
+.st-row{background:var(--card2);border:1px solid var(--line);padding:12px 16px;display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.st-row.active-st{border-left:3px solid var(--red)}
+.st-dot{width:6px;height:6px;border-radius:50%;background:var(--dim);flex-shrink:0}
+.st-row.active-st .st-dot{background:var(--red)}
+.st-txt{font-size:12px;color:var(--sub)}
+.st-row.active-st .st-txt{color:var(--text);font-weight:500}
+
+/* INLINE TOPBAR for non-home screens */
+.topbar{display:flex;align-items:center;padding:54px 22px 16px;flex-shrink:0}
+.tb-back{width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-right:14px}
+.tb-back:active{background:var(--line)}
+.tb-back svg{width:14px;height:14px;stroke:var(--sub)}
+.tb-title{font-size:16px;font-weight:700;color:var(--text)}
 
 /* ADMIN */
-.admin{background:var(--offwhite);min-height:100vh}
-.admin-header{background:var(--black);padding:20px 40px;display:flex;align-items:center;justify-content:space-between}
-.admin-logo{font-family:var(--font-display);font-size:18px;letter-spacing:0.08em;color:var(--white)}
-.admin-logo span{color:var(--red)}
-.admin-nav{display:flex;gap:32px}
-.admin-nav a{font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);cursor:pointer;transition:color .2s}
-.admin-nav a.active,.admin-nav a:hover{color:var(--white)}
-.admin-body{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 62px)}
-.admin-sidebar{background:var(--white);padding:32px 0;border-right:1px solid rgba(19,19,19,0.08)}
-.admin-menu-item{padding:14px 32px;font-size:13px;letter-spacing:0.04em;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px;color:rgba(19,19,19,0.5)}
-.admin-menu-item.active{background:rgba(255,1,1,0.04);color:var(--black);border-left:3px solid var(--red)}
-.admin-menu-item:hover:not(.active){background:rgba(19,19,19,0.03);color:var(--black)}
-.admin-content{padding:40px}
-.admin-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:40px}
-.stat-card{background:var(--white);padding:24px;border:1px solid rgba(19,19,19,0.06)}
-.stat-label{font-family:var(--font-mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(19,19,19,0.35);margin-bottom:8px}
-.stat-val{font-family:var(--font-display);font-size:40px;color:var(--black);line-height:1}
-.stat-val.red{color:var(--red)}
-.stat-sub{font-size:11px;color:rgba(19,19,19,0.35);margin-top:4px}
+.adm-scroll{flex:1;overflow-y:auto;padding:0 22px 20px}
+.adm-scroll::-webkit-scrollbar{display:none}
+.stat-row{display:flex;gap:6px;margin-bottom:6px}
+.st-box{flex:1;background:var(--card);border:1px solid var(--line);padding:14px}
+.st-n{font-family:var(--ff);font-size:28px;letter-spacing:.02em;line-height:1}
+.st-n.red{color:var(--red)}
+.st-l{font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--sub);margin-top:5px}
+.adm-sec{font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--red);padding:14px 0 8px}
+.adm-card{background:var(--card);border:1px solid var(--line);padding:14px;margin-bottom:6px}
+.adm-id{font-family:var(--fm);font-size:9px;letter-spacing:.12em;color:var(--sub);margin-bottom:4px;text-transform:uppercase}
+.adm-name{font-size:14px;font-weight:700;color:var(--text)}
+.adm-meta{font-size:11px;color:var(--sub);margin-top:2px}
+.pill{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px}
+.pill-p{background:rgba(180,120,0,.15);color:#c8900a}
+.pill-c{background:rgba(30,120,60,.15);color:#3aaa6a}
+.pill-a{background:var(--red-s);color:var(--red)}
+.pill-r{background:rgba(50,50,50,.4);color:var(--sub)}
+.adm-btns{display:flex;gap:6px;margin-top:10px}
+.adm-ok{flex:1;padding:9px;border:none;background:var(--red);color:#fff;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+.adm-no{flex:1;padding:9px;border:1px solid var(--line2);background:var(--card2);color:var(--sub);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
 
-/* Table */
-.data-table{width:100%;border-collapse:collapse;background:var(--white)}
-.data-table th{font-family:var(--font-mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(19,19,19,0.35);padding:14px 20px;text-align:left;border-bottom:1px solid rgba(19,19,19,0.08)}
-.data-table td{padding:16px 20px;border-bottom:1px solid rgba(19,19,19,0.04);font-size:13px;color:var(--black)}
-.data-table tr:hover td{background:rgba(19,19,19,0.015)}
-.status-pill{font-family:var(--font-mono);font-size:10px;letter-spacing:0.08em;padding:4px 10px;display:inline-block}
-.status-pending{background:rgba(186,117,23,0.1);color:#BA7517}
-.status-confirmed{background:rgba(15,110,86,0.1);color:#0F6E56}
-.status-awaiting{background:rgba(255,1,1,0.08);color:var(--red)}
-.status-rejected{background:rgba(19,19,19,0.08);color:var(--graphite)}
-.action-btn{font-family:var(--font-mono);font-size:10px;letter-spacing:0.08em;padding:6px 14px;cursor:pointer;border:none;transition:all .2s;margin-right:4px}
-.btn-approve{background:var(--black);color:var(--white)}
-.btn-approve:hover{background:var(--graphite)}
-.btn-reject{background:transparent;color:rgba(19,19,19,0.35);border:1px solid rgba(19,19,19,0.15)}
-.btn-reject:hover{background:var(--red);color:var(--white);border-color:var(--red)}
-
-/* BARBER DASHBOARD */
-.barber-dash{background:var(--offwhite);min-height:100vh}
-.barber-earnings{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px}
-.job-card{background:var(--white);padding:24px;border:1px solid rgba(19,19,19,0.06);margin-bottom:12px}
-.job-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
-.job-title{font-size:14px;font-weight:600;color:var(--black)}
-.job-meta{font-size:12px;color:rgba(19,19,19,0.4);margin-top:4px}
-.job-actions{display:flex;gap:8px;margin-top:16px}
-
-/* ABOUT / PRIVACY */
-.about{background:var(--black)}
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
-.privacy-points{display:flex;flex-direction:column;gap:24px;margin-top:40px}
-.privacy-point{display:flex;gap:20px;align-items:flex-start}
-.privacy-dot{width:6px;height:6px;background:var(--red);margin-top:8px;flex-shrink:0}
-.privacy-text{font-size:14px;line-height:1.8;color:rgba(245,245,245,0.55)}
-.privacy-title{font-weight:600;color:var(--white);margin-bottom:4px;font-size:14px}
-
-/* PAGE SYSTEM */
-.page{display:none}
-.page.active{display:block}
-
-/* FOOTER */
-footer{background:var(--black);border-top:1px solid rgba(255,255,255,0.06);padding:60px 40px 40px}
-.footer-top{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:40px;margin-bottom:60px}
-.footer-brand{font-family:var(--font-display);font-size:28px;letter-spacing:0.06em;color:var(--white);margin-bottom:16px}
-.footer-brand span{color:var(--red)}
-.footer-tagline{font-size:13px;line-height:1.7;color:rgba(245,245,245,0.35);max-width:220px}
-.footer-col-title{font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(245,245,245,0.25);margin-bottom:20px}
-.footer-link{display:block;font-size:13px;color:rgba(245,245,245,0.45);margin-bottom:12px;cursor:pointer;transition:color .2s}
-.footer-link:hover{color:var(--white)}
-.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:40px;border-top:1px solid rgba(255,255,255,0.06);font-family:var(--font-mono);font-size:10px;letter-spacing:0.1em;color:rgba(245,245,245,0.2)}
-
-/* MOBILE */
-@media(max-width:768px){
-  nav{padding:16px 20px}
-  .nav-links{display:none}
-  section{padding:60px 20px}
-  .hero{padding:40px 20px 0}
-  .booking-wrapper{grid-template-columns:1fr}
-  .about-grid{grid-template-columns:1fr}
-  .reg-form{grid-template-columns:1fr}
-  .admin-stats{grid-template-columns:1fr 1fr}
-  .admin-body{grid-template-columns:1fr}
-  .admin-sidebar{display:none}
-  .footer-top{grid-template-columns:1fr 1fr}
-  .barber-earnings{grid-template-columns:1fr}
-}
-
-/* ANIMATIONS */
-@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-.hero-content>*{animation:fadeUp .6s ease forwards}
-.hero-eyebrow{animation-delay:.1s;opacity:0}
-.hero-title{animation-delay:.2s;opacity:0}
-.hero-desc{animation-delay:.3s;opacity:0}
-.hero-actions{animation-delay:.4s;opacity:0}
+/* REG */
+.reg-scroll{flex:1;overflow-y:auto;padding:0 22px 20px;display:flex;flex-direction:column;gap:6px}
+.reg-scroll::-webkit-scrollbar{display:none}
+.rf{background:var(--card);border:1px solid var(--line);padding:11px 14px;display:flex;flex-direction:column;gap:4px}
+.rl{font-family:var(--fm);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--red)}
+.ri{background:transparent;border:none;outline:none;font-family:var(--fb);font-size:15px;font-weight:500;color:var(--text);color-scheme:dark}
+.ri::placeholder{color:var(--dim)}
+.rs{background:transparent;border:none;outline:none;font-family:var(--fb);font-size:15px;font-weight:500;color:var(--text);-webkit-appearance:none;color-scheme:dark}
+.rs option{background:#181818}
 </style>
 </head>
 <body>
+<div id="app">
 
-<nav>
-  <div class="nav-logo" onclick="showPage('home')">INCOGNI<span>TOUP</span></div>
-  <div class="nav-links">
-    <a onclick="showPage('home')">Home</a>
-    <a onclick="showPage('catalog')">Hair Systems</a>
-    <a onclick="showPage('services')">Services</a>
-    <a onclick="showPage('barber-reg')">Join as Barber</a>
-    <a onclick="showPage('about')">Privacy</a>
-    <a onclick="showPage('admin')">Admin</a>
-  </div>
-  <button class="nav-cta" onclick="startBooking()">Book Now</button>
-</nav>
-
-<!-- HOME PAGE -->
-<div class="page active" id="page-home">
-  <section class="hero">
-    <div class="hero-meta">
-      PRIVATE SERVICE<br>PROTOCOL 01<br><br>DISCREET<br>DELIVERY<br><br>VERIFIED<br>PROFESSIONALS
-    </div>
-    <div class="hero-content">
-      <div class="hero-eyebrow">Private Hair Systems — On Demand</div>
-      <h1 class="hero-title">CONFIDENCE,<br>DELIVERED<br>PRIVATELY.</h1>
-      <p class="hero-desc">IncogniToup governs professional hair system installation across private environments. Discreet scheduling, verified barbers, and complete confidentiality at every step.</p>
-      <div class="hero-actions">
-        <button class="btn-primary" onclick="startBooking()">Book a Session</button>
-        <button class="btn-ghost" onclick="showPage('catalog')">View Hair Systems</button>
-      </div>
-    </div>
-    <div class="hero-wordmark">INCOGNITOUP</div>
-  </section>
-
-  <!-- Trust bar -->
-  <div style="background:var(--black);border-bottom:1px solid rgba(255,255,255,0.06);padding:20px 40px;display:flex;gap:60px;align-items:center;flex-wrap:wrap">
-    <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;color:rgba(245,245,245,0.3);text-transform:uppercase">Trusted by 2,400+ clients</div>
-    <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;color:rgba(245,245,245,0.3);text-transform:uppercase">100% Confidential</div>
-    <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;color:rgba(245,245,245,0.3);text-transform:uppercase">Verified Professionals</div>
-    <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;color:rgba(245,245,245,0.3);text-transform:uppercase">Home / Hotel / Event</div>
-    <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;color:rgba(245,245,245,0.3);text-transform:uppercase">Secure Payments</div>
-  </div>
-
-  <!-- Services preview -->
-  <section class="services">
-    <div class="section-label">What We Offer</div>
-    <h2 class="section-title">PROFESSIONAL<br>HAIR SYSTEMS</h2>
-    <p class="section-body">Every service is performed by a verified professional at a location of your choosing. No salons. No waiting rooms. Just results.</p>
-    <div class="services-grid">
-      <div class="service-card">
-        <div class="service-num">01</div>
-        <div class="service-icon">💎</div>
-        <div class="service-name">INSTALLATION</div>
-        <p class="service-desc">Full hair system fitting and bonding service. Includes scalp prep, custom trimming, and secure adhesion for lasting hold.</p>
-        <div class="service-price">FROM ₱2,500</div>
-      </div>
-      <div class="service-card">
-        <div class="service-num">02</div>
-        <div class="service-icon">✂️</div>
-        <div class="service-name">STYLING</div>
-        <p class="service-desc">Professional cut and style to blend your hair system seamlessly with your natural hair growth pattern.</p>
-        <div class="service-price">FROM ₱1,200</div>
-      </div>
-      <div class="service-card">
-        <div class="service-num">03</div>
-        <div class="service-icon">🔄</div>
-        <div class="service-name">MAINTENANCE</div>
-        <p class="service-desc">Monthly touch-up including cleaning, reattachment, and light styling. Keep your system looking fresh.</p>
-        <div class="service-price">FROM ₱1,800</div>
-      </div>
-      <div class="service-card">
-        <div class="service-num">04</div>
-        <div class="service-icon">⭐</div>
-        <div class="service-name">FULL PACKAGE</div>
-        <p class="service-desc">Complete solution: hair system selection, professional installation, cut, and style. All in one private session.</p>
-        <div class="service-price">FROM ₱4,500</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- About snippet -->
-  <section class="about">
-    <div class="about-grid">
+<!-- ════ HOME ════ -->
+<div class="scr active" id="s-home">
+  <div class="home-scroll">
+    <div class="home-nav">
       <div>
-        <div class="section-label">Why IncogniToup</div>
-        <h2 class="section-title">YOUR PRIVACY<br>IS THE<br>PRODUCT.</h2>
-        <p class="section-body">We built this platform for clients who value discretion above all else. No public salons. No awkward encounters. Professionals come to you.</p>
-        <div class="privacy-points">
-          <div class="privacy-point">
-            <div class="privacy-dot"></div>
-            <div>
-              <div class="privacy-title">Confidential Bookings</div>
-              <div class="privacy-text">Your booking details are never shared beyond what's needed to deliver your service.</div>
-            </div>
-          </div>
-          <div class="privacy-point">
-            <div class="privacy-dot"></div>
-            <div>
-              <div class="privacy-title">Verified Professionals Only</div>
-              <div class="privacy-text">Every barber undergoes identity and background verification before joining the platform.</div>
-            </div>
-          </div>
-          <div class="privacy-point">
-            <div class="privacy-dot"></div>
-            <div>
-              <div class="privacy-title">Discreet Arrival</div>
-              <div class="privacy-text">Barbers arrive in unmarked vehicles. No branding. No uniforms. Pure professionalism.</div>
-            </div>
-          </div>
-        </div>
-        <button class="btn-primary" style="margin-top:40px;background:var(--red);border:none" onclick="showPage('about')">Our Privacy Commitment</button>
+        <div class="home-mark"><span class="ast">*</span>INCOGNITOUP</div>
+        <div class="home-mark-sub">Private hair systems, delivered to you.</div>
       </div>
-      <div style="background:var(--graphite);height:500px;display:flex;align-items:center;justify-content:center">
-        <div style="font-family:var(--font-display);font-size:120px;color:rgba(255,255,255,0.04);writing-mode:vertical-rl;letter-spacing:0.05em">PRIVATE</div>
-      </div>
+      <div class="menu-btn" id="menu-btn"><span></span><span></span><span></span></div>
     </div>
-  </section>
 
-  <footer>
-    <div class="footer-top">
-      <div>
-        <div class="footer-brand">INCOGNI<span>TOUP</span></div>
-        <div class="footer-tagline">Private hair systems delivered with discretion and professionalism.</div>
-      </div>
-      <div>
-        <div class="footer-col-title">Services</div>
-        <a class="footer-link" onclick="showPage('services')">Hair Installation</a>
-        <a class="footer-link">Styling & Cut</a>
-        <a class="footer-link">Maintenance Plan</a>
-        <a class="footer-link" onclick="startBooking()">Book a Session</a>
-      </div>
-      <div>
-        <div class="footer-col-title">Platform</div>
-        <a class="footer-link" onclick="showPage('barber-reg')">Join as Barber</a>
-        <a class="footer-link" onclick="showPage('admin')">Admin Portal</a>
-        <a class="footer-link" onclick="showPage('barber-dash')">Barber Dashboard</a>
-      </div>
-      <div>
-        <div class="footer-col-title">Company</div>
-        <a class="footer-link" onclick="showPage('about')">About & Privacy</a>
-        <a class="footer-link">Contact</a>
-        <a class="footer-link">Terms of Service</a>
-      </div>
+    <div class="meta-strip">
+      <div class="meta-item"><div class="meta-n">140+</div><div class="meta-l">Barbers</div></div>
+      <div class="meta-item"><div class="meta-n">2.4k</div><div class="meta-l">Sessions</div></div>
+      <div class="meta-item"><div class="meta-n">100%</div><div class="meta-l">Private</div></div>
     </div>
-    <div class="footer-bottom">
-      <div>© 2025 IncogniToup. All rights reserved.</div>
-      <div>PRIVATE · PROFESSIONAL · VERIFIED</div>
-    </div>
-  </footer>
-</div>
 
-<!-- CATALOG PAGE -->
-<div class="page" id="page-catalog" style="padding-top:62px">
-  <section class="catalog" style="padding-top:80px">
-    <div class="section-label">Hair Systems Collection</div>
-    <h2 class="section-title">CHOOSE YOUR<br>SYSTEM</h2>
-    <p class="section-body" style="color:rgba(245,245,245,0.4)">Premium human hair and synthetic systems curated for natural appearance, comfort, and longevity.</p>
-    <div class="catalog-grid" id="catalogGrid"></div>
-  </section>
-</div>
+    <div class="sec"><span class="sec-lbl">Hair Systems</span><span class="sec-link" onclick="openSheet('system')">Browse all</span></div>
+    <div class="hscroll" id="sys-hscroll"></div>
 
-<!-- SERVICES PAGE -->
-<div class="page" id="page-services" style="padding-top:62px">
-  <section style="background:var(--black);padding-top:80px">
-    <div class="section-label">Service Menu</div>
-    <h2 class="section-title">WHAT WE<br>PROVIDE</h2>
-  </section>
-  <section class="services" style="padding-top:40px">
-    <div class="services-grid">
-      <div class="service-card">
-        <div class="service-num">01</div>
-        <div class="service-icon">💎</div>
-        <div class="service-name">INSTALLATION</div>
-        <p class="service-desc">Full fitting, scalp preparation, bonding, and initial styling. Duration: 2–3 hours.</p>
-        <div class="service-price">₱2,500 – ₱4,000</div>
-      </div>
-      <div class="service-card">
-        <div class="service-num">02</div>
-        <div class="service-icon">✂️</div>
-        <div class="service-name">HAIRCUT & STYLE</div>
-        <p class="service-desc">Professional trim and blend. Styled to match your natural hairline and desired look.</p>
-        <div class="service-price">₱1,200 – ₱2,000</div>
-      </div>
-      <div class="service-card">
-        <div class="service-num">03</div>
-        <div class="service-icon">🔄</div>
-        <div class="service-name">MAINTENANCE</div>
-        <p class="service-desc">Monthly service: cleanse, reattach, light trim. Extends system life by 3–4x.</p>
-        <div class="service-price">₱1,800 – ₱2,500</div>
-      </div>
-      <div class="service-card">
-        <div class="service-num">04</div>
-        <div class="service-icon">🎯</div>
-        <div class="service-name">SYSTEM REMOVAL</div>
-        <p class="service-desc">Safe, professional removal with scalp treatment. No damage. Clean transition.</p>
-        <div class="service-price">₱800 – ₱1,200</div>
-      </div>
-      <div class="service-card">
-        <div class="service-num">05</div>
-        <div class="service-icon">⭐</div>
-        <div class="service-name">FULL PACKAGE</div>
-        <p class="service-desc">System + installation + cut + styling. The complete first-time experience.</p>
-        <div class="service-price">₱4,500 – ₱7,000</div>
-      </div>
-      <div class="service-card">
-        <div class="service-num">06</div>
-        <div class="service-icon">🏨</div>
-        <div class="service-name">EVENT / HOTEL</div>
-        <p class="service-desc">Premium service for special occasions. Priority barber dispatch, 2hr availability.</p>
-        <div class="service-price">+₱500 PREMIUM</div>
-      </div>
-    </div>
-    <div style="margin-top:60px;text-align:center">
-      <button class="btn-primary" onclick="startBooking()" style="background:var(--black)">Book Any Service</button>
-    </div>
-  </section>
-</div>
+    <div class="sec" style="margin-top:8px"><span class="sec-lbl">Top Barbers</span></div>
+    <div id="barber-list-home"></div>
 
-<!-- BOOKING PAGE -->
-<div class="page" id="page-booking" style="padding-top:62px">
-  <section class="booking" style="padding-top:80px;min-height:100vh">
-    <div class="section-label">Booking Flow</div>
-    <h2 class="section-title" style="color:var(--black)">PRIVATE<br>BOOKING</h2>
-
-    <div class="booking-wrapper">
-      <!-- Steps nav -->
-      <div>
-        <div class="booking-steps" id="bookingSteps"></div>
-        <div id="bookingPanel" style="margin-top:4px"></div>
-        <div style="display:flex;justify-content:space-between;margin-top:24px">
-          <button class="btn-ghost" id="btnBack" onclick="prevStep()" style="color:var(--black);border-color:var(--black)" hidden>← Back</button>
-          <button class="btn-primary" id="btnNext" onclick="nextStep()" style="background:var(--black);margin-left:auto">Continue →</button>
-        </div>
-      </div>
-
-      <!-- Sidebar summary -->
-      <div>
-        <div class="booking-sidebar">
-          <div class="sidebar-title">Booking Summary</div>
-          <div id="bookingSidebar"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-</div>
-
-<!-- BARBER REGISTRATION -->
-<div class="page" id="page-barber-reg" style="padding-top:62px">
-  <section class="barber-reg" style="padding-top:80px;min-height:100vh">
-    <div class="section-label">Join the Network</div>
-    <h2 class="section-title">BECOME A<br>VERIFIED<br>BARBER</h2>
-    <p class="section-body" style="color:rgba(245,245,245,0.4)">Apply to join IncogniToup's professional network. All submissions are reviewed by our team within 48 hours.</p>
-
-    <form class="reg-form" onsubmit="submitBarberReg(event)">
-      <div class="form-group">
-        <label class="form-label">Full Name</label>
-        <input class="form-input" placeholder="Juan dela Cruz" required/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Mobile Number</label>
-        <input class="form-input" placeholder="+63 9XX XXX XXXX" required/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Email Address</label>
-        <input class="form-input" type="email" placeholder="you@email.com" required/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Years of Experience</label>
-        <select class="form-input form-select">
-          <option>1–2 years</option>
-          <option>3–5 years</option>
-          <option>5–10 years</option>
-          <option>10+ years</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Primary Specialty</label>
-        <select class="form-input form-select">
-          <option>Hair System Installation</option>
-          <option>Haircut & Styling</option>
-          <option>Both</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Transportation</label>
-        <select class="form-input form-select">
-          <option>Motorcycle</option>
-          <option>Private Car</option>
-          <option>Public Transport</option>
-          <option>Grab / Ride-hailing</option>
-        </select>
-      </div>
-      <div class="form-group full-span">
-        <label class="form-label">Service Areas (Cities / Barangays)</label>
-        <input class="form-input" placeholder="e.g. Makati, BGC, Pasig, Mandaluyong"/>
-      </div>
-      <div class="form-group full-span">
-        <label class="form-label">Upload Valid ID</label>
-        <div class="upload-zone">
-          <div class="upload-zone-text">Click to upload or drag file here<br>PNG, JPG, PDF — Max 5MB</div>
-        </div>
-      </div>
-      <div class="form-group full-span">
-        <label class="form-label">Upload Certifications / Portfolio (Optional)</label>
-        <div class="upload-zone">
-          <div class="upload-zone-text">Click to upload or drag file here<br>PNG, JPG, PDF — Max 10MB</div>
-        </div>
-      </div>
-      <div class="form-group full-span">
-        <label class="form-label">Brief Introduction</label>
-        <textarea class="form-input" rows="4" placeholder="Tell us about your experience with hair systems..." style="resize:vertical"></textarea>
-      </div>
-      <div class="full-span">
-        <button type="submit" class="btn-primary" style="background:var(--red);border:none;padding:18px 48px;font-size:14px;letter-spacing:0.1em">Submit Application →</button>
-        <p style="font-family:var(--font-mono);font-size:10px;color:rgba(255,255,255,0.2);margin-top:16px;letter-spacing:0.08em">YOUR DATA IS ENCRYPTED AND HANDLED CONFIDENTIALLY. REVIEWED WITHIN 48 HOURS.</p>
-      </div>
-    </form>
-  </section>
-</div>
-
-<!-- BARBER DASHBOARD -->
-<div class="page" id="page-barber-dash" style="padding-top:62px">
-  <div class="barber-dash">
-    <div class="admin-header">
-      <div class="admin-logo">INCOGNI<span>TOUP</span> — BARBER</div>
-      <div style="display:flex;align-items:center;gap:20px">
-        <div style="font-family:var(--font-mono);font-size:11px;color:rgba(255,255,255,0.4);letter-spacing:0.1em">MARCO REYES · VERIFIED ✓</div>
-        <button class="nav-cta" style="font-size:11px;padding:8px 20px">My Profile</button>
-      </div>
-    </div>
-    <div style="padding:40px">
-      <div class="barber-earnings" id="barberStats"></div>
-      <div style="display:grid;grid-template-columns:1fr 340px;gap:32px;align-items:start">
-        <div>
-          <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(19,19,19,0.35);margin-bottom:20px">Incoming Job Requests</div>
-          <div id="barberJobs"></div>
-        </div>
-        <div>
-          <div class="booking-sidebar" style="margin-bottom:16px">
-            <div class="sidebar-title">This Week Schedule</div>
-            <div id="barberSchedule"></div>
-          </div>
-          <div class="booking-sidebar">
-            <div class="sidebar-title">Earnings Tracker</div>
-            <div id="earningsTracker"></div>
-          </div>
-        </div>
-      </div>
+    <div class="home-bottom">
+      <button class="book-btn" onclick="openSheet('system')">
+        <span>BOOK A SESSION</span>
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
     </div>
   </div>
 </div>
 
-<!-- ADMIN DASHBOARD -->
-<div class="page" id="page-admin" style="padding-top:62px">
-  <div class="admin">
-    <div class="admin-header">
-      <div class="admin-logo">INCOGNI<span>TOUP</span> — ADMIN</div>
-      <div class="admin-nav">
-        <a class="active" onclick="adminTab('bookings',this)">Bookings</a>
-        <a onclick="adminTab('barbers',this)">Barbers</a>
-        <a onclick="adminTab('clients',this)">Clients</a>
-      </div>
-    </div>
-    <div class="admin-body">
-      <div class="admin-sidebar">
-        <div style="padding:0 32px 16px;font-family:var(--font-mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(19,19,19,0.3)">Dashboard</div>
-        <div class="admin-menu-item active" onclick="adminTab('bookings',null)">📋 All Bookings</div>
-        <div class="admin-menu-item" onclick="adminTab('barbers',null)">💈 Barber Applications</div>
-        <div class="admin-menu-item" onclick="adminTab('clients',null)">👤 Client Accounts</div>
-        <div class="admin-menu-item" onclick="adminTab('payments',null)">💳 Payments</div>
-        <div style="height:1px;background:rgba(19,19,19,0.06);margin:16px 0"></div>
-        <div class="admin-menu-item">⚙️ Settings</div>
-      </div>
-      <div class="admin-content">
-        <div class="admin-stats" id="adminStats"></div>
-        <div id="adminTable"></div>
-      </div>
-    </div>
+<!-- ════ ADMIN ════ -->
+<div class="scr" id="s-admin">
+  <div class="topbar">
+    <div class="tb-back" onclick="goHome()"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path d="M15 18l-6-6 6-6"/></svg></div>
+    <div class="tb-title">Admin</div>
+  </div>
+  <div class="adm-scroll" id="adm-body"></div>
+</div>
+
+<!-- ════ BARBER REG ════ -->
+<div class="scr" id="s-reg">
+  <div class="topbar">
+    <div class="tb-back" onclick="goHome()"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path d="M15 18l-6-6 6-6"/></svg></div>
+    <div class="tb-title">Join the Network</div>
+  </div>
+  <div style="padding:0 22px 10px;flex-shrink:0">
+    <div style="font-family:var(--ff);font-size:36px;letter-spacing:.03em;color:var(--text);line-height:.9">JOIN THE<br>NETWORK.</div>
+  </div>
+  <div class="reg-scroll">
+    <div class="rf"><div class="rl">Full Name</div><input class="ri" placeholder="Your name"/></div>
+    <div class="rf"><div class="rl">Mobile</div><input class="ri" placeholder="+63 9XX XXX XXXX"/></div>
+    <div class="rf"><div class="rl">Email</div><input class="ri" type="email" placeholder="you@email.com"/></div>
+    <div class="rf"><div class="rl">Experience</div>
+      <select class="rs"><option value="">—</option><option>1–2 yrs</option><option>3–5 yrs</option><option>5–10 yrs</option><option>10+ yrs</option></select></div>
+    <div class="rf"><div class="rl">Specialty</div>
+      <select class="rs"><option value="">—</option><option>Installation</option><option>Cut & Style</option><option>Both</option></select></div>
+    <div class="rf"><div class="rl">Transport</div>
+      <select class="rs"><option value="">—</option><option>Motorcycle</option><option>Car</option><option>Grab / Rideshare</option></select></div>
+    <div class="rf"><div class="rl">Coverage Area</div><input class="ri" placeholder="Makati, BGC, Pasig…"/></div>
+  </div>
+  <div style="padding:12px 22px 36px;flex-shrink:0">
+    <button style="width:100%;background:var(--red);border:none;padding:16px;font-family:var(--ff);font-size:20px;letter-spacing:.1em;color:#fff;cursor:pointer" onclick="alert('Application submitted. We\'ll contact you within 48 hours.');goHome()">SUBMIT APPLICATION</button>
   </div>
 </div>
 
-<!-- ABOUT / PRIVACY PAGE -->
-<div class="page" id="page-about" style="padding-top:62px">
-  <section class="about" style="padding-top:80px;min-height:100vh">
-    <div class="about-grid">
-      <div>
-        <div class="section-label">About IncogniToup</div>
-        <h2 class="section-title">PRIVACY IS<br>NOT A<br>FEATURE.<br>IT'S THE<br>FOUNDATION.</h2>
-        <p class="section-body">IncogniToup was built on a single insight: millions of men use hair systems but have no private, professional, and dignified way to get them installed. We changed that.</p>
-        <div class="privacy-points">
-          <div class="privacy-point">
-            <div class="privacy-dot"></div>
-            <div>
-              <div class="privacy-title">No Public Records</div>
-              <div class="privacy-text">Bookings are visible only to you, your assigned barber, and our admin team. We never disclose client data to third parties.</div>
-            </div>
-          </div>
-          <div class="privacy-point">
-            <div class="privacy-dot"></div>
-            <div>
-              <div class="privacy-title">Encrypted Transactions</div>
-              <div class="privacy-text">All payments are processed via encrypted channels. We do not store payment details on our servers.</div>
-            </div>
-          </div>
-          <div class="privacy-point">
-            <div class="privacy-dot"></div>
-            <div>
-              <div class="privacy-title">Verified & Briefed Professionals</div>
-              <div class="privacy-text">Every barber signs a confidentiality agreement and undergoes background verification before activation.</div>
-            </div>
-          </div>
-          <div class="privacy-point">
-            <div class="privacy-dot"></div>
-            <div>
-              <div class="privacy-title">Discreet Arrival Protocol</div>
-              <div class="privacy-text">Barbers carry no branded materials. Packaging and tools are neutral. Sessions are conducted privately at your location.</div>
-            </div>
-          </div>
-          <div class="privacy-point">
-            <div class="privacy-dot"></div>
-            <div>
-              <div class="privacy-title">Right to Be Forgotten</div>
-              <div class="privacy-text">You may request full deletion of your account and booking history at any time. We comply within 7 business days.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:2px">
-        <div style="background:var(--red);padding:60px 40px;flex:1">
-          <div style="font-family:var(--font-display);font-size:48px;color:var(--black);margin-bottom:16px">2,400+</div>
-          <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.12em;color:rgba(19,19,19,0.6);text-transform:uppercase">Private Sessions Completed</div>
-        </div>
-        <div style="background:var(--graphite);padding:60px 40px;flex:1">
-          <div style="font-family:var(--font-display);font-size:48px;color:var(--white);margin-bottom:16px">98%</div>
-          <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.12em;color:rgba(245,245,245,0.4);text-transform:uppercase">Client Satisfaction Rate</div>
-        </div>
-        <div style="background:var(--offwhite);padding:60px 40px;flex:1">
-          <div style="font-family:var(--font-display);font-size:48px;color:var(--black);margin-bottom:16px">140+</div>
-          <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.12em;color:rgba(19,19,19,0.4);text-transform:uppercase">Verified Barbers Active</div>
-        </div>
-      </div>
-    </div>
-  </section>
+<!-- ════ SHEET OVERLAY ════ -->
+<div class="sheet-overlay" id="overlay" onclick="closeSheet()"></div>
+
+<!-- ════ BOTTOM SHEET ════ -->
+<div class="sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-head">
+    <div class="sheet-eyebrow" id="sh-eyebrow">Hair System</div>
+    <div class="sheet-title" id="sh-title">WHAT DO<br>YOU NEED.</div>
+    <!-- step dots -->
+    <div style="display:flex;gap:4px;margin-top:12px" id="sh-dots"></div>
+  </div>
+  <div class="sheet-body" id="sh-body"></div>
+  <div class="sheet-footer">
+    <button class="sheet-cta" id="sh-cta" onclick="sheetNext()" disabled>
+      <span id="sh-cta-txt">NEXT</span>
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
 </div>
 
+</div>
 <script>
-// ============ DATA ============
-const hairSystems = [
-  {id:1,name:'THE EXECUTIVE',style:'Classic Slick',size:'Medium',color:'Jet Black',price:8500,badge:'BESTSELLER',desc:'Full lace, natural hairline. Undetectable even up close.'},
-  {id:2,name:'THE SOVEREIGN',style:'Natural Wave',size:'Large',color:'Dark Brown',price:12000,badge:'PREMIUM',desc:'100% Remy human hair. Maximum realism and longevity.'},
-  {id:3,name:'THE PROXY',style:'Textured Fade',size:'Small',color:'Salt & Pepper',price:6800,badge:'POPULAR',desc:'Lightweight poly base. Ideal for first-time users.'},
-  {id:4,name:'THE CIPHER',style:'Straight',size:'Medium',color:'Medium Brown',price:9200,badge:'NEW',desc:'French lace base with PU perimeter. Best of both worlds.'},
-  {id:5,name:'THE ATLAS',style:'Curly / Coily',size:'Large',color:'Natural Black',price:11500,badge:'EXCLUSIVE',desc:'Custom texture match for afro-textured patterns.'},
-  {id:6,name:'THE STEALTH',style:'Thin Skin',size:'Medium',color:'Custom',price:7400,badge:'',desc:'Ultra-thin 0.03mm base. Completely undetectable wear.'},
+// ══ DATA ══
+const SYSTEMS=[
+  {id:1,name:'The Executive',style:'Classic Slick',color:'Jet Black',base:'Full Lace',size:'Medium',price:8500,badge:'BESTSELLER',letter:'E'},
+  {id:2,name:'The Sovereign',style:'Natural Wave',color:'Dark Brown',base:'Swiss Lace',size:'Large',price:12000,badge:'PREMIUM',letter:'S'},
+  {id:3,name:'The Proxy',style:'Textured Fade',color:'Salt & Pepper',base:'Poly Skin',size:'Small',price:6800,badge:'',letter:'P'},
+  {id:4,name:'The Cipher',style:'Straight',color:'Medium Brown',base:'French Lace',size:'Medium',price:9200,badge:'NEW',letter:'C'},
+  {id:5,name:'The Atlas',style:'Curly / Coily',color:'Natural Black',base:'Full Lace',size:'Large',price:11500,badge:'',letter:'A'},
+  {id:6,name:'The Stealth',style:'Thin Skin',color:'Custom',base:'0.03mm Poly',size:'Medium',price:7400,badge:'',letter:'T'},
+  {id:7,name:'The Signal',style:'Side Part',color:'Light Brown',base:'Mono Crown',size:'Medium',price:8900,badge:'',letter:'SI'},
+  {id:8,name:'The Ghost',style:'Buzz Cut Look',color:'Dark Blonde',base:'Skin Base',size:'Small',price:6200,badge:'',letter:'G'},
+];
+const SERVICES=[
+  {id:'install',name:'Installation',sub:'Fitting, bonding, initial style',price:2500,dur:'2–3 hrs'},
+  {id:'cut',name:'Cut & Style',sub:'Trim, blend, finish',price:1200,dur:'1 hr'},
+  {id:'maint',name:'Maintenance',sub:'Clean, reattach, touch-up',price:1800,dur:'1.5 hrs'},
+  {id:'full',name:'Full Package',sub:'System + install + cut + style',price:4500,dur:'3–4 hrs'},
+  {id:'removal',name:'Removal',sub:'Safe removal with scalp care',price:900,dur:'45 min'},
+];
+const BARBERS=[
+  {id:1,name:'Marco Reyes',sub:'8 yrs · Installation · Moto',rating:'4.9',sess:'72',init:'MR'},
+  {id:2,name:'Dean Villanueva',sub:'6 yrs · Cut & Blend · Car',rating:'4.8',sess:'58',init:'DV'},
+  {id:3,name:'Carlos Ignacio',sub:'12 yrs · Full System · Car',rating:'5.0',sess:'89',init:'CI'},
+  {id:4,name:'Rafael Santos',sub:'4 yrs · Maintenance · Moto',rating:'4.7',sess:'41',init:'RS'},
+];
+const BOOKINGS=[
+  {id:'ITP-14892',name:'A. DELA CRUZ',svc:'Full Package',date:'May 3',status:'pending',total:13500},
+  {id:'ITP-14891',name:'R. BONDOC',svc:'Installation',date:'May 2',status:'confirmed',total:14500},
+  {id:'ITP-14890',name:'J. LIM',svc:'Maintenance',date:'May 1',status:'awaiting',total:8600},
+  {id:'ITP-14889',name:'M. CRUZ',svc:'Cut & Style',date:'Apr 30',status:'confirmed',total:10400},
+  {id:'ITP-14888',name:'P. SANTOS',svc:'Full Package',date:'Apr 28',status:'rejected',total:16000},
 ];
 
-const serviceOptions = [
-  {id:'install',name:'Installation Only',price:2500},
-  {id:'cut',name:'Cut & Style',price:1200},
-  {id:'maintenance',name:'Maintenance',price:1800},
-  {id:'full',name:'Full Package',price:4500},
-];
+// ══ STATE ══
+const B={system:null,service:null,date:'',time:'',loc:'',addr:'',barber:null};
+let sheetStep=0; // 0=system-library 1=service 2=datetime 3=barber 4=summary 5=confirm
+const STEPS=5;
 
-const barbers = [
-  {id:1,name:'Marco Reyes',rating:'4.9',exp:'8 yrs',specialty:'Installation Specialist',transport:'Motorcycle',init:'MR'},
-  {id:2,name:'Dean Villanueva',rating:'4.8',exp:'6 yrs',specialty:'Cut & Blend Expert',transport:'Car',init:'DV'},
-  {id:3,name:'Carlos Ignacio',rating:'5.0',exp:'12 yrs',specialty:'Full System Master',transport:'Car',init:'CI'},
-  {id:4,name:'Rafael Santos',rating:'4.7',exp:'4 yrs',specialty:'Maintenance Pro',transport:'Motorcycle',init:'RS'},
-];
-
-const bookingData = {
-  step: 1,
-  hairSystem: null,
-  service: null,
-  date: '',
-  time: '',
-  location: '',
-  locationType: 'Home',
-  barber: null,
-};
-
-// ============ PAGE ROUTING ============
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  window.scrollTo(0,0);
-  if(id==='catalog') renderCatalog();
-  if(id==='admin') renderAdmin();
-  if(id==='barber-dash') renderBarberDash();
+// ══ SCREEN NAV ══
+let curScr='s-home';
+function showScr(id){
+  const from=document.getElementById(curScr);
+  const to=document.getElementById(id);
+  from.classList.add('out');
+  from.classList.remove('active');
+  to.classList.add('active');
+  curScr=id;
+  setTimeout(()=>from.classList.remove('out'),360);
+}
+function goHome(){
+  document.querySelectorAll('.scr').forEach(s=>{s.classList.remove('active','out');s.style.transform='';});
+  document.getElementById('s-home').classList.add('active');
+  curScr='s-home';
+  closeSheet();
 }
 
-function startBooking() {
-  bookingData.step=1;
-  showPage('booking');
-  renderBooking();
+// ══ SHEET ══
+function openSheet(startStep){
+  sheetStep= startStep==='system'?0:0;
+  renderSheet();
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('sheet').classList.add('open');
+}
+function closeSheet(){
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('sheet').classList.remove('open');
 }
 
-// ============ CATALOG ============
-function renderCatalog() {
-  const g = document.getElementById('catalogGrid');
-  g.innerHTML = hairSystems.map(h=>`
-    <div class="hair-card">
-      <div class="hair-img">
-        <div class="hair-img-placeholder">${h.name.charAt(4)||'H'}</div>
-        ${h.badge?`<div class="hair-badge">${h.badge}</div>`:''}
+function setSheetCta(enabled,txt){
+  const btn=document.getElementById('sh-cta');
+  btn.disabled=!enabled;
+  document.getElementById('sh-cta-txt').textContent=txt||'NEXT';
+}
+
+function renderDots(){
+  const c=document.getElementById('sh-dots');
+  c.innerHTML='';
+  for(let i=0;i<STEPS;i++){
+    const d=document.createElement('div');
+    d.style.cssText=`height:2px;flex:1;border-radius:1px;background:${i<sheetStep?'var(--sub)':i===sheetStep?'var(--red)':'var(--dim)'};transition:background .3s`;
+    c.appendChild(d);
+  }
+}
+
+function renderSheet(){
+  const ey=document.getElementById('sh-eyebrow');
+  const tt=document.getElementById('sh-title');
+  const bd=document.getElementById('sh-body');
+  renderDots();
+
+  if(sheetStep===0){
+    ey.textContent='Step 1 of 5 — Hair System';
+    tt.innerHTML='PICK YOUR<br>SYSTEM.';
+    bd.innerHTML='<div class="lib-grid" id="lib-grid"></div>';
+    const g=document.getElementById('lib-grid');
+    SYSTEMS.forEach(s=>{
+      const c=document.createElement('div');
+      c.className='lib-card'+(B.system?.id===s.id?' sel':'');
+      c.innerHTML=`<div class="lib-img">
+        <div class="lib-letter">${s.letter}</div>
+        ${s.badge?`<div class="lib-cbadge">${s.badge}</div>`:''}
+        <div class="lib-sel-mark"><svg fill="none" viewBox="0 0 24 24" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
       </div>
-      <div class="hair-info">
-        <div class="hair-name">${h.name}</div>
-        <div class="hair-attrs">
-          <span class="hair-attr">${h.style}</span>
-          <span class="hair-attr">${h.size}</span>
-          <span class="hair-attr">${h.color}</span>
-        </div>
-        <div style="font-size:12px;color:rgba(245,245,245,0.35);margin-bottom:12px;line-height:1.6">${h.desc}</div>
-        <div class="hair-price">₱${h.price.toLocaleString()}</div>
-        <button class="hair-select" onclick="selectHairFromCatalog(${h.id})">Select This System →</button>
-      </div>
-    </div>
-  `).join('');
-}
+      <div class="lib-info">
+        <div class="lib-cname">${s.name}</div>
+        <div class="lib-cattrs"><span class="lib-attr">${s.style}</span><span class="lib-attr">${s.color}</span><span class="lib-attr">${s.base}</span></div>
+        <div class="lib-cprice">₱${s.price.toLocaleString()}</div>
+      </div>`;
+      c.onclick=()=>{
+        B.system=s;
+        document.querySelectorAll('.lib-card').forEach(x=>x.classList.remove('sel'));
+        c.classList.add('sel');
+        setSheetCta(true,'NEXT');
+      };
+      g.appendChild(c);
+    });
+    setSheetCta(!!B.system,'NEXT');
 
-function selectHairFromCatalog(id) {
-  bookingData.hairSystem = hairSystems.find(h=>h.id===id);
-  bookingData.step=2;
-  showPage('booking');
-  renderBooking();
-}
+  } else if(sheetStep===1){
+    ey.textContent='Step 2 of 5 — Service';
+    tt.innerHTML='YOUR<br>SERVICE.';
+    bd.innerHTML='<div class="opt-list" id="opt-svc"></div>';
+    const c=document.getElementById('opt-svc');
+    SERVICES.forEach(sv=>{
+      const d=document.createElement('div');
+      d.className='opt-item'+(B.service?.id===sv.id?' sel':'');
+      d.innerHTML=`<div class="oi-left"><div class="oi-name">${sv.name}</div><div class="oi-sub">${sv.sub} · ${sv.dur}</div></div>
+      <div class="oi-right"><span class="oi-price">₱${sv.price.toLocaleString()}</span>
+      <div class="chk"><svg fill="none" viewBox="0 0 24 24" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div></div>`;
+      d.onclick=()=>{
+        B.service=sv;
+        c.querySelectorAll('.opt-item').forEach(x=>x.classList.remove('sel'));
+        d.classList.add('sel');
+        setSheetCta(true,'NEXT');
+      };
+      c.appendChild(d);
+    });
+    setSheetCta(!!B.service,'NEXT');
 
-// ============ BOOKING FLOW ============
-const steps = [
-  {num:'01',name:'Hair System'},
-  {num:'02',name:'Service Type'},
-  {num:'03',name:'Date & Location'},
-  {num:'04',name:'Choose Barber'},
-  {num:'05',name:'Review & Pay'},
-  {num:'06',name:'Confirmation'},
-];
-
-function renderBooking() {
-  renderStepsTabs();
-  renderBookingPanel();
-  renderBookingSidebar();
-  document.getElementById('btnBack').hidden = bookingData.step <= 1;
-  document.getElementById('btnNext').hidden = bookingData.step >= 6;
-}
-
-function renderStepsTabs() {
-  document.getElementById('bookingSteps').innerHTML = steps.map((s,i)=>{
-    const n=i+1;
-    const state = n===bookingData.step?'active':n<bookingData.step?'done':'';
-    return `<div class="step-tab ${state}">
-      <span class="step-num">${s.num}</span>
-      <span class="step-name">${s.name}</span>
-      ${n<bookingData.step?'<span class="step-check">✓</span>':''}
-    </div>`;
-  }).join('');
-}
-
-function renderBookingPanel() {
-  const p = document.getElementById('bookingPanel');
-  const s = bookingData.step;
-
-  if(s===1) {
-    p.innerHTML=`<div class="booking-panel">
-      <div class="panel-title">HAIR SYSTEM</div>
-      <div class="panel-sub">Choose your preferred system</div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        ${hairSystems.map(h=>`
-          <div class="option-btn ${bookingData.hairSystem?.id===h.id?'selected':''}"
-            onclick='selectHair(${h.id})'
-            style="display:flex;justify-content:space-between;align-items:center">
-            <div>
-              <div style="font-weight:600;margin-bottom:2px">${h.name}</div>
-              <div style="font-size:11px;color:rgba(19,19,19,0.45)">${h.style} · ${h.color}</div>
-            </div>
-            <div style="font-family:var(--font-mono);font-size:13px;color:var(--red)">₱${h.price.toLocaleString()}</div>
-          </div>`).join('')}
-      </div>
-    </div>`;
-  } else if(s===2) {
-    p.innerHTML=`<div class="booking-panel">
-      <div class="panel-title">SERVICE</div>
-      <div class="panel-sub">Select what you need</div>
-      <div class="option-grid">
-        ${serviceOptions.map(sv=>`
-          <div class="option-btn ${bookingData.service?.id===sv.id?'selected':''}"
-            onclick='selectService("${sv.id}")'>
-            <div style="font-weight:600;margin-bottom:4px">${sv.name}</div>
-            <div style="font-size:12px;opacity:0.6">₱${sv.price.toLocaleString()}</div>
-          </div>`).join('')}
-      </div>
-    </div>`;
-  } else if(s===3) {
-    p.innerHTML=`<div class="booking-panel">
-      <div class="panel-title">DATE & LOCATION</div>
-      <div class="panel-sub">When and where</div>
-      <div class="form-group">
-        <label class="form-label">Preferred Date</label>
-        <input class="form-input" type="date" id="inputDate" value="${bookingData.date}" onchange="bookingData.date=this.value;renderBookingSidebar()"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Preferred Time</label>
-        <select class="form-input form-select" id="inputTime" onchange="bookingData.time=this.value;renderBookingSidebar()">
-          <option value="">Select time slot</option>
-          ${['9:00 AM','10:00 AM','11:00 AM','1:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM'].map(t=>`<option ${bookingData.time===t?'selected':''} value="${t}">${t}</option>`).join('')}
+  } else if(sheetStep===2){
+    ey.textContent='Step 3 of 5 — Schedule';
+    tt.innerHTML='WHEN &<br>WHERE.';
+    bd.innerHTML=`
+      <div class="dt-row"><span class="dt-lbl">Date</span><input type="date" id="i-date" value="${B.date}" oninput="B.date=this.value;chkDT()"/></div>
+      <div class="dt-row"><span class="dt-lbl">Time</span>
+        <select id="i-time" onchange="B.time=this.value;chkDT()">
+          <option value="">Select time</option>
+          <option ${B.time=='9:00 AM'?'selected':''}>9:00 AM</option>
+          <option ${B.time=='10:00 AM'?'selected':''}>10:00 AM</option>
+          <option ${B.time=='11:00 AM'?'selected':''}>11:00 AM</option>
+          <option ${B.time=='1:00 PM'?'selected':''}>1:00 PM</option>
+          <option ${B.time=='2:00 PM'?'selected':''}>2:00 PM</option>
+          <option ${B.time=='3:00 PM'?'selected':''}>3:00 PM</option>
+          <option ${B.time=='4:00 PM'?'selected':''}>4:00 PM</option>
+          <option ${B.time=='5:00 PM'?'selected':''}>5:00 PM</option>
         </select>
       </div>
-      <div class="form-group">
-        <label class="form-label">Location Type</label>
-        <div class="option-grid">
-          ${['Home','Hotel','Office','Event Venue'].map(lt=>`
-            <div class="option-btn ${bookingData.locationType===lt?'selected':''}"
-              onclick='bookingData.locationType="${lt}";renderBookingPanel()'>
-              ${lt}
-            </div>`).join('')}
-        </div>
+      <div class="dt-row"><span class="dt-lbl">Location</span>
+        <select id="i-loc" onchange="B.loc=this.value;chkDT()">
+          <option value="">Select</option>
+          <option ${B.loc=='Home'?'selected':''}>Home</option>
+          <option ${B.loc=='Hotel'?'selected':''}>Hotel</option>
+          <option ${B.loc=='Office'?'selected':''}>Office</option>
+          <option ${B.loc=='Event'?'selected':''}>Event</option>
+        </select>
       </div>
-      <div class="form-group">
-        <label class="form-label">Full Address</label>
-        <input class="form-input" placeholder="Unit, Building, Street, City" value="${bookingData.location}" oninput="bookingData.location=this.value;renderBookingSidebar()"/>
-      </div>
+      <div class="dt-row"><span class="dt-lbl">Address</span>
+        <input type="text" id="i-addr" placeholder="Enter address" value="${B.addr}" oninput="B.addr=this.value;chkDT()"/>
+      </div>`;
+    setSheetCta(!!(B.date&&B.time&&B.loc&&B.addr),'NEXT');
+
+  } else if(sheetStep===3){
+    ey.textContent='Step 4 of 5 — Barber';
+    tt.innerHTML='YOUR<br>BARBER.';
+    bd.innerHTML='<div id="barber-opts"></div>';
+    const c=document.getElementById('barber-opts');
+    BARBERS.forEach(br=>{
+      const d=document.createElement('div');
+      d.className='barber-opt'+(B.barber?.id===br.id?' sel':'');
+      d.innerHTML=`<div class="bo-av">${br.init}</div>
+      <div><div class="bo-name">${br.name}</div><div class="bo-sub">${br.sub}</div></div>
+      <div class="bo-rat"><div class="bo-stars">★ ${br.rating}</div><div class="bo-sess">${br.sess} sessions</div></div>`;
+      d.onclick=()=>{
+        B.barber=br;
+        c.querySelectorAll('.barber-opt').forEach(x=>x.classList.remove('sel'));
+        d.classList.add('sel');
+        setSheetCta(true,'REVIEW');
+      };
+      c.appendChild(d);
+    });
+    setSheetCta(!!B.barber,'REVIEW');
+
+  } else if(sheetStep===4){
+    ey.textContent='Step 5 of 5 — Review';
+    tt.innerHTML='YOUR<br>BOOKING.';
+    const sys=B.system?.price||0;
+    const svc=B.service?.price||0;
+    const bar=500;
+    const total=sys+svc+bar;
+    const down=Math.round(total*.5);
+    bd.innerHTML=`<div class="receipt">
+      <div class="receipt-hd"><div class="receipt-hd-txt">Receipt</div></div>
+      <div class="r-row"><span class="r-lbl">Hair System</span><span class="r-val">${B.system?.name||'—'}</span></div>
+      <div class="r-row"><span class="r-lbl">System Price</span><span class="r-val">₱${sys.toLocaleString()}</span></div>
+      <div class="r-row"><span class="r-lbl">Service</span><span class="r-val">${B.service?.name||'—'}</span></div>
+      <div class="r-row"><span class="r-lbl">Service Fee</span><span class="r-val">₱${svc.toLocaleString()}</span></div>
+      <div class="r-row"><span class="r-lbl">Barber</span><span class="r-val">${B.barber?.name||'—'}</span></div>
+      <div class="r-row"><span class="r-lbl">Barber Fee</span><span class="r-val">₱500</span></div>
+      <div class="r-row"><span class="r-lbl">Date & Time</span><span class="r-val">${B.date} ${B.time}</span></div>
+      <div class="r-row"><span class="r-lbl">Location</span><span class="r-val">${B.loc}</span></div>
+      <div class="r-row total-row"><span class="r-lbl">Total Cost</span><span class="r-val">₱${total.toLocaleString()}</span></div>
+      <div class="r-row down-row"><span class="r-lbl">50% Downpayment</span><span class="r-val" style="color:var(--red)">₱${down.toLocaleString()}</span></div>
     </div>`;
-  } else if(s===4) {
-    p.innerHTML=`<div class="booking-panel">
-      <div class="panel-title">CHOOSE BARBER</div>
-      <div class="panel-sub">Available professionals</div>
-      <div class="barber-list">
-        ${barbers.map(b=>`
-          <div class="barber-item ${bookingData.barber?.id===b.id?'selected':''}" onclick='selectBarber(${b.id})'>
-            <div class="barber-avatar">${b.init}</div>
-            <div>
-              <div class="barber-name">${b.name}</div>
-              <div class="barber-meta">${b.exp} · ${b.specialty} · ${b.transport}</div>
-            </div>
-            <div class="barber-rating">★ ${b.rating}</div>
-          </div>`).join('')}
-      </div>
-    </div>`;
-  } else if(s===5) {
-    const hs = bookingData.hairSystem;
-    const sv = bookingData.service;
-    const barberFee = 500;
-    const total = (hs?.price||0)+(sv?.price||0)+barberFee;
-    const downpay = Math.round(total*0.5);
-    p.innerHTML=`<div class="booking-panel">
-      <div class="panel-title">BOOKING REVIEW</div>
-      <div class="panel-sub">Confirm your details</div>
-      <div class="summary-lines">
-        <div class="summary-line"><span class="label">Hair System</span><span class="val">${hs?.name||'—'}</span></div>
-        <div class="summary-line"><span class="label">System Price</span><span class="val">₱${(hs?.price||0).toLocaleString()}</span></div>
-        <div class="summary-line"><span class="label">Service</span><span class="val">${sv?.name||'—'}</span></div>
-        <div class="summary-line"><span class="label">Service Fee</span><span class="val">₱${(sv?.price||0).toLocaleString()}</span></div>
-        <div class="summary-line"><span class="label">Barber Fee</span><span class="val">₱${barberFee.toLocaleString()}</span></div>
-        <div class="summary-line"><span class="label">Date & Time</span><span class="val">${bookingData.date||'—'} ${bookingData.time||''}</span></div>
-        <div class="summary-line"><span class="label">Location</span><span class="val">${bookingData.locationType}</span></div>
-        <div class="summary-line"><span class="label">Barber</span><span class="val">${bookingData.barber?.name||'—'}</span></div>
-      </div>
-      <div class="summary-total">
-        <span class="label">TOTAL ESTIMATE</span>
-        <span class="val">₱${total.toLocaleString()}</span>
-      </div>
-      <div class="receipt-badge">🔒 50% downpayment required: ₱${downpay.toLocaleString()}</div>
-      <button class="btn-primary" style="width:100%;margin-top:24px;background:var(--red);border:none;padding:18px;font-size:14px;letter-spacing:0.08em" onclick="submitBooking()">Submit Booking →</button>
-    </div>`;
-  } else if(s===6) {
-    const bookingId = 'ITP-'+Math.floor(Math.random()*90000+10000);
-    p.innerHTML=`<div class="booking-panel">
-      <div class="pending-screen">
-        <div class="pending-icon">📋</div>
-        <div class="pending-title">BOOKING SUBMITTED</div>
-        <p class="pending-sub">Your booking is now pending admin approval. You will receive a confirmation once a barber is assigned.</p>
-        <div class="booking-id">${bookingId}</div>
-        <div style="margin-top:32px;display:flex;flex-direction:column;gap:16px">
-          <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.12em;color:rgba(19,19,19,0.4);text-transform:uppercase;text-align:left;padding:16px;background:rgba(19,19,19,0.03)">
-            STATUS FLOW:<br><br>
-            ● PENDING ADMIN APPROVAL<br>
-            ○ BARBER ASSIGNED<br>
-            ○ AWAITING PAYMENT<br>
-            ○ CONFIRMED
-          </div>
-          <button class="btn-primary" onclick="showPage('home')" style="background:var(--black)">Return Home</button>
-        </div>
-      </div>
-    </div>`;
-    document.getElementById('btnNext').hidden=true;
-    document.getElementById('btnBack').hidden=true;
+    setSheetCta(true,'CONFIRM BOOKING');
   }
 }
 
-function renderBookingSidebar() {
-  const hs = bookingData.hairSystem;
-  const sv = bookingData.service;
-  const br = bookingData.barber;
-  const t = (hs?.price||0)+(sv?.price||0)+(br?500:0);
-  document.getElementById('bookingSidebar').innerHTML=`
-    ${hs?`<div class="sidebar-item"><div class="sidebar-item-label">Hair System</div><div class="sidebar-item-val">${hs.name} — ₱${hs.price.toLocaleString()}</div></div>`:''}
-    ${sv?`<div class="sidebar-item"><div class="sidebar-item-label">Service</div><div class="sidebar-item-val">${sv.name} — ₱${sv.price.toLocaleString()}</div></div>`:''}
-    ${bookingData.date?`<div class="sidebar-item"><div class="sidebar-item-label">Date & Time</div><div class="sidebar-item-val">${bookingData.date} ${bookingData.time}</div></div>`:''}
-    ${bookingData.locationType?`<div class="sidebar-item"><div class="sidebar-item-label">Location</div><div class="sidebar-item-val">${bookingData.locationType}</div></div>`:''}
-    ${br?`<div class="sidebar-item"><div class="sidebar-item-label">Barber</div><div class="sidebar-item-val">${br.name}</div></div>`:''}
-    ${t>0?`<div style="margin-top:16px;padding-top:16px;border-top:2px solid var(--black);display:flex;justify-content:space-between;align-items:center"><span style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.1em;color:rgba(19,19,19,0.4);text-transform:uppercase">Estimate</span><span style="font-family:var(--font-display);font-size:24px;color:var(--red)">₱${t.toLocaleString()}</span></div>`:''}
-  `;
+function chkDT(){
+  setSheetCta(!!(B.date&&B.time&&B.loc&&B.addr),'NEXT');
 }
 
-function selectHair(id){bookingData.hairSystem=hairSystems.find(h=>h.id===id);renderBookingPanel();renderBookingSidebar();}
-function selectService(id){bookingData.service=serviceOptions.find(s=>s.id===id);renderBookingPanel();renderBookingSidebar();}
-function selectBarber(id){bookingData.barber=barbers.find(b=>b.id===id);renderBookingPanel();renderBookingSidebar();}
-
-function nextStep(){
-  if(bookingData.step<6){
-    bookingData.step++;
-    renderBooking();
-    document.getElementById('page-booking').scrollIntoView({behavior:'smooth'});
-  }
-}
-function prevStep(){
-  if(bookingData.step>1){
-    bookingData.step--;
-    renderBooking();
-  }
-}
-function submitBooking(){bookingData.step=6;renderBooking();}
-
-// ============ ADMIN ============
-const mockBookings = [
-  {id:'ITP-14892',client:'A. Dela Cruz',system:'The Executive',service:'Full Package',date:'2025-05-03',barber:'Marco Reyes',status:'pending',total:'₱13,500'},
-  {id:'ITP-14891',client:'R. Bondoc',system:'The Sovereign',service:'Installation',status:'confirmed',date:'2025-05-02',barber:'Carlos Ignacio',total:'₱14,500'},
-  {id:'ITP-14890',client:'J. Lim',system:'The Proxy',service:'Maintenance',status:'awaiting',date:'2025-05-01',barber:'Dean Villanueva',total:'₱8,600'},
-  {id:'ITP-14889',client:'M. Cruz',system:'The Cipher',service:'Cut & Style',status:'confirmed',date:'2025-04-30',barber:'Marco Reyes',total:'₱10,400'},
-  {id:'ITP-14888',client:'P. Santos',system:'The Atlas',service:'Full Package',status:'rejected',date:'2025-04-28',barber:'—',total:'₱16,000'},
-];
-
-const mockBarberApps = [
-  {name:'Gio Navarro',specialty:'Installation',exp:'5 yrs',date:'2025-04-27',status:'pending'},
-  {name:'Ben Torres',specialty:'Cut & Blend',exp:'3 yrs',date:'2025-04-26',status:'pending'},
-  {name:'Leo Aquino',specialty:'Both',exp:'9 yrs',date:'2025-04-24',status:'verified'},
-];
-
-let currentAdminTab = 'bookings';
-
-function adminTab(tab, el) {
-  currentAdminTab=tab;
-  document.querySelectorAll('.admin-nav a').forEach(a=>a.classList.remove('active'));
-  document.querySelectorAll('.admin-menu-item').forEach(a=>a.classList.remove('active'));
-  if(el) el.classList.add('active');
-  renderAdmin();
-}
-
-function renderAdmin() {
-  document.getElementById('adminStats').innerHTML=`
-    <div class="stat-card"><div class="stat-label">Total Bookings</div><div class="stat-val">148</div><div class="stat-sub">↑ 12 this week</div></div>
-    <div class="stat-card"><div class="stat-label">Pending Approval</div><div class="stat-val red">7</div><div class="stat-sub">Requires action</div></div>
-    <div class="stat-card"><div class="stat-label">Active Barbers</div><div class="stat-val">28</div><div class="stat-sub">140+ total verified</div></div>
-    <div class="stat-card"><div class="stat-label">Revenue (MTD)</div><div class="stat-val">₱284k</div><div class="stat-sub">↑ 8% vs last month</div></div>
-  `;
-
-  if(currentAdminTab==='bookings'||currentAdminTab==='payments') {
-    document.getElementById('adminTable').innerHTML=`
-      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(19,19,19,0.35);margin-bottom:16px">All Bookings</div>
-      <table class="data-table">
-        <thead><tr>
-          <th>Booking ID</th><th>Client</th><th>System</th><th>Service</th>
-          <th>Date</th><th>Barber</th><th>Total</th><th>Status</th><th>Actions</th>
-        </tr></thead>
-        <tbody>
-          ${mockBookings.map(b=>`<tr>
-            <td style="font-family:var(--font-mono);font-size:11px">${b.id}</td>
-            <td>${b.client}</td><td>${b.system}</td><td>${b.service}</td>
-            <td style="font-family:var(--font-mono);font-size:11px">${b.date}</td>
-            <td>${b.barber}</td>
-            <td style="font-family:var(--font-mono);font-size:12px;color:var(--red)">${b.total}</td>
-            <td><span class="status-pill status-${b.status}">${b.status.toUpperCase()}</span></td>
-            <td>
-              ${b.status==='pending'?`
-                <button class="action-btn btn-approve" onclick="approveBooking('${b.id}')">APPROVE</button>
-                <button class="action-btn btn-reject" onclick="rejectBooking('${b.id}')">REJECT</button>
-              `:`<span style="font-size:11px;color:rgba(19,19,19,0.3)">${b.status==='confirmed'?'Confirmed':'—'}</span>`}
-            </td>
-          </tr>`).join('')}
-        </tbody>
-      </table>`;
-  } else if(currentAdminTab==='barbers') {
-    document.getElementById('adminTable').innerHTML=`
-      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(19,19,19,0.35);margin-bottom:16px">Barber Applications</div>
-      <table class="data-table">
-        <thead><tr><th>Name</th><th>Specialty</th><th>Experience</th><th>Applied</th><th>Status</th><th>Actions</th></tr></thead>
-        <tbody>
-          ${mockBarberApps.map(b=>`<tr>
-            <td style="font-weight:600">${b.name}</td>
-            <td>${b.specialty}</td><td>${b.exp}</td>
-            <td style="font-family:var(--font-mono);font-size:11px">${b.date}</td>
-            <td><span class="status-pill status-${b.status==='verified'?'confirmed':b.status}">${b.status.toUpperCase()}</span></td>
-            <td>
-              ${b.status==='pending'?`
-                <button class="action-btn btn-approve">VERIFY</button>
-                <button class="action-btn btn-reject">REJECT</button>
-              `:'<span style="font-size:11px;color:rgba(19,19,19,0.3)">Processed</span>'}
-            </td>
-          </tr>`).join('')}
-        </tbody>
-      </table>`;
-  } else if(currentAdminTab==='clients') {
-    document.getElementById('adminTable').innerHTML=`<div style="font-family:var(--font-mono);font-size:11px;color:rgba(19,19,19,0.35);padding:40px;text-align:center;background:var(--white);border:1px solid rgba(19,19,19,0.06)">CLIENT MANAGEMENT MODULE — COMING SOON</div>`;
+function sheetNext(){
+  if(sheetStep<4){
+    sheetStep++;
+    renderSheet();
+    document.getElementById('sh-body').scrollTop=0;
+  } else {
+    // confirm
+    closeSheet();
+    const id='ITP-'+Math.floor(Math.random()*90000+10000);
+    showConfirm(id);
   }
 }
 
-function approveBooking(id) {
-  const b = mockBookings.find(x=>x.id===id);
-  if(b){b.status='awaiting';renderAdmin();}
-}
-function rejectBooking(id) {
-  const b = mockBookings.find(x=>x.id===id);
-  if(b){b.status='rejected';renderAdmin();}
-}
-
-// ============ BARBER DASHBOARD ============
-function renderBarberDash() {
-  document.getElementById('barberStats').innerHTML=`
-    <div class="stat-card"><div class="stat-label">Jobs This Month</div><div class="stat-val">18</div><div class="stat-sub">↑ 3 vs last month</div></div>
-    <div class="stat-card"><div class="stat-label">Pending Requests</div><div class="stat-val red">3</div><div class="stat-sub">Awaiting response</div></div>
-    <div class="stat-card"><div class="stat-label">Earnings (MTD)</div><div class="stat-val">₱12,400</div><div class="stat-sub">50% payouts released</div></div>
-  `;
-
-  const jobs = [
-    {id:'ITP-14892',client:'A. Dela Cruz',service:'Full Package',date:'May 3 · 2:00 PM',loc:'Home — Pasig City',system:'The Executive',fee:'₱500',status:'pending'},
-    {id:'ITP-14885',client:'B. Torres',service:'Installation',date:'May 5 · 10:00 AM',loc:'Hotel — Makati',system:'The Sovereign',fee:'₱500',status:'pending'},
-    {id:'ITP-14880',client:'C. Reyes',service:'Maintenance',date:'May 6 · 3:00 PM',loc:'Home — BGC',system:'The Proxy',fee:'₱500',status:'pending'},
-  ];
-
-  document.getElementById('barberJobs').innerHTML=jobs.map(j=>`
-    <div class="job-card">
-      <div class="job-card-header">
-        <div>
-          <div class="job-title">${j.service} — ${j.system}</div>
-          <div class="job-meta">${j.date} · ${j.loc}</div>
-        </div>
-        <div style="font-family:var(--font-mono);font-size:14px;color:var(--red)">${j.fee}</div>
-      </div>
-      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.1em;color:rgba(19,19,19,0.35);text-transform:uppercase">Client: ${j.client} · ${j.id}</div>
-      <div class="job-actions">
-        <button class="action-btn btn-approve" style="padding:10px 24px" onclick="acceptJob('${j.id}',this)">ACCEPT JOB</button>
-        <button class="action-btn btn-reject" onclick="declineJob('${j.id}',this)">DECLINE</button>
-      </div>
-    </div>
-  `).join('');
-
-  document.getElementById('barberSchedule').innerHTML=`
-    <div class="sidebar-item"><div class="sidebar-item-label">MON, MAY 5</div><div class="sidebar-item-val">2 jobs confirmed</div></div>
-    <div class="sidebar-item"><div class="sidebar-item-label">WED, MAY 7</div><div class="sidebar-item-val">1 job confirmed</div></div>
-    <div class="sidebar-item"><div class="sidebar-item-label">SAT, MAY 10</div><div class="sidebar-item-val">3 jobs confirmed</div></div>
-  `;
-
-  document.getElementById('earningsTracker').innerHTML=`
-    <div class="sidebar-item"><div class="sidebar-item-label">Gross Earned</div><div class="sidebar-item-val" style="color:var(--black)">₱12,400</div></div>
-    <div class="sidebar-item"><div class="sidebar-item-label">Released</div><div class="sidebar-item-val" style="color:#0F6E56">₱6,200</div></div>
-    <div class="sidebar-item"><div class="sidebar-item-label">Pending Release</div><div class="sidebar-item-val" style="color:#BA7517">₱6,200</div></div>
-    <div style="margin-top:12px"><button class="action-btn btn-approve" style="width:100%;padding:12px">REQUEST PAYOUT</button></div>
-  `;
-}
-
-function acceptJob(id,btn){
-  btn.closest('.job-card').querySelector('.job-actions').innerHTML='<span style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.1em;color:#0F6E56;text-transform:uppercase">✓ ACCEPTED — CLIENT WILL BE NOTIFIED</span>';
-}
-function declineJob(id,btn){
-  btn.closest('.job-card').style.opacity='0.35';
-  btn.closest('.job-card').querySelector('.job-actions').innerHTML='<span style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.1em;color:rgba(19,19,19,0.3);text-transform:uppercase">DECLINED</span>';
-}
-
-function submitBarberReg(e){
-  e.preventDefault();
-  e.target.innerHTML=`<div class="full-span" style="text-align:center;padding:60px 0">
-    <div style="font-family:var(--font-display);font-size:48px;color:var(--white);margin-bottom:16px">APPLICATION SUBMITTED</div>
-    <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.12em;color:rgba(255,255,255,0.35);text-transform:uppercase">YOUR APPLICATION IS UNDER REVIEW. WE'LL CONTACT YOU WITHIN 48 HOURS.</div>
+// ══ CONFIRM OVERLAY ══
+function showConfirm(bookingId){
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;background:var(--bg);z-index:80;display:flex;flex-direction:column;animation:fadeIn .3s ease';
+  ov.innerHTML=`<style>@keyframes fadeIn{from{opacity:0}to{opacity:1}}</style>
+  <div style="padding:54px 24px 0;display:flex;align-items:center;gap:14px">
+    <div style="font-family:var(--ff);font-size:clamp(36px,10vw,52px);letter-spacing:.04em;line-height:.9"><span style="color:var(--red)">*</span>INCOGNITOUP</div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:28px 24px 12px">
+    <div class="conf-id-box"><span class="conf-id-txt">${bookingId}</span><span style="font-family:var(--fm);font-size:9px;color:var(--red);letter-spacing:.12em">SUBMITTED</span></div>
+    <div style="font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--sub);margin-bottom:12px">Booking Status</div>
+    <div class="st-row active-st"><div class="st-dot"></div><span class="st-txt">Pending admin approval</span></div>
+    <div class="st-row"><div class="st-dot"></div><span class="st-txt">Barber assigned & notified</span></div>
+    <div class="st-row"><div class="st-dot"></div><span class="st-txt">Awaiting 50% downpayment</span></div>
+    <div class="st-row"><div class="st-dot"></div><span class="st-txt">Booking confirmed</span></div>
+  </div>
+  <div style="padding:14px 24px 40px">
+    <button style="width:100%;background:var(--red);border:none;padding:16px;font-family:var(--ff);font-size:20px;letter-spacing:.1em;color:#fff;cursor:pointer" onclick="this.closest('[style]').remove()">DONE</button>
   </div>`;
+  document.getElementById('app').appendChild(ov);
 }
 
-// Init
-renderCatalog();
-renderAdmin();
+// ══ HOME RENDER ══
+(function initHome(){
+  // horizontal sys scroll
+  const hsc=document.getElementById('sys-hscroll');
+  SYSTEMS.forEach(s=>{
+    const c=document.createElement('div');
+    c.className='sys-card';
+    c.innerHTML=`<div class="sys-card-img">
+      <div class="sys-card-letter">${s.letter}</div>
+      ${s.badge?`<div class="sys-badge">${s.badge}</div>`:''}
+    </div>
+    <div class="sys-card-body">
+      <div class="sys-cname">${s.name}</div>
+      <div class="sys-cprice">₱${s.price.toLocaleString()}</div>
+    </div>`;
+    c.onclick=()=>{B.system=s;sheetStep=1;openSheet();};
+    hsc.appendChild(c);
+  });
+
+  // barber list
+  const bl=document.getElementById('barber-list-home');
+  BARBERS.slice(0,3).forEach(b=>{
+    const r=document.createElement('div');
+    r.className='b-row';
+    r.innerHTML=`<div class="b-av">${b.init}</div>
+    <div class="b-info"><div class="b-name">${b.name}</div><div class="b-meta">${b.sub}</div></div>
+    <div class="b-rat"><div><span class="star">★</span> ${b.rating}</div><div style="font-size:10px;color:var(--sub)">${b.sess} sessions</div></div>`;
+    r.onclick=()=>{B.barber=b;sheetStep=0;openSheet();};
+    bl.appendChild(r);
+  });
+})();
+
+// ══ ADMIN ══
+function renderAdmin(){
+  document.getElementById('adm-body').innerHTML=`
+    <div class="stat-row">
+      <div class="st-box"><div class="st-n red">7</div><div class="st-l">Pending</div></div>
+      <div class="st-box"><div class="st-n">28</div><div class="st-l">Barbers</div></div>
+      <div class="st-box"><div class="st-n">148</div><div class="st-l">Bookings</div></div>
+    </div>
+    <div class="adm-sec">Bookings</div>
+    ${BOOKINGS.map(b=>`
+      <div class="adm-card">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">
+          <div><div class="adm-id">${b.id} · ${b.date}</div><div class="adm-name">${b.name}</div><div class="adm-meta">${b.svc} · ₱${b.total.toLocaleString()}</div></div>
+          <span class="pill pill-${b.status.charAt(0)}">${b.status.toUpperCase()}</span>
+        </div>
+        ${b.status==='pending'?`<div class="adm-btns"><button class="adm-ok" onclick="appr('${b.id}')">APPROVE</button><button class="adm-no" onclick="rejt('${b.id}')">REJECT</button></div>`:''}
+      </div>`).join('')}
+    <div class="adm-sec">Network</div>
+    <div class="adm-card" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="showScr('s-reg')">
+      <div><div class="adm-name">Barber Applications</div><div class="adm-meta">3 pending review</div></div>
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="var(--sub)"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </div>`;
+}
+function appr(id){const b=BOOKINGS.find(x=>x.id===id);if(b){b.status='awaiting';renderAdmin();}}
+function rejt(id){const b=BOOKINGS.find(x=>x.id===id);if(b){b.status='rejected';renderAdmin();}}
+
+// ══ SECRET ADMIN ══
+let ht,hf=false;
+const home=document.getElementById('s-home');
+function startHold(){hf=false;ht=setTimeout(()=>{hf=true;renderAdmin();showScr('s-admin');},1800);}
+function endHold(){clearTimeout(ht);}
+document.getElementById('menu-btn').addEventListener('click',()=>{renderAdmin();showScr('s-admin');});
+if(location.hash==='#admin'){setTimeout(()=>{renderAdmin();showScr('s-admin');},100);}
+if(location.hash==='#barber'){setTimeout(()=>showScr('s-reg'),100);}
 </script>
 </body>
 </html>
