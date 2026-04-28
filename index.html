@@ -1,483 +1,907 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
 <title>*INCOGNITOUP</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,900;1,300&family=DM+Mono:wght@400&display=swap" rel="stylesheet"/>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+/* ── TOKENS ─────────────────────────────────────── */
 :root{
   --bg:#0e0e0e;--card:#181818;--card2:#1e1e1e;--line:#262626;--line2:#303030;
-  --text:#f0f0f0;--sub:#666;--dim:#3a3a3a;--red:#c42828;--red-s:#1f0808;
+  --text:#f0f0f0;--text2:#b0b0b0;--sub:#666;--dim:#3a3a3a;
+  --red:#c42828;--red-s:rgba(196,40,40,.08);--red-b:rgba(196,40,40,.25);
   --ff:'Bebas Neue',sans-serif;--fb:'DM Sans',sans-serif;--fm:'DM Mono',monospace;
+  --radius:3px;--sh:0 4px 24px rgba(0,0,0,.4);
 }
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--fb);-webkit-font-smoothing:antialiased}
+[data-theme="light"]{
+  --bg:#f5f5f5;--card:#ffffff;--card2:#f0f0f0;--line:#e0e0e0;--line2:#d0d0d0;
+  --text:#111111;--text2:#444444;--sub:#888888;--dim:#cccccc;
+  --red:#c42828;--red-s:rgba(196,40,40,.06);--red-b:rgba(196,40,40,.2);
+  --sh:0 4px 24px rgba(0,0,0,.1);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--fb);-webkit-font-smoothing:antialiased;transition:background .2s,color .2s}
 body{overflow-x:hidden}
+#app{position:relative}
 
 /* ── SCREENS ── */
-#app{position:relative;min-height:100dvh}
 .scr{display:none;min-height:100dvh;flex-direction:column}
 .scr.active{display:flex}
 
-/* ── NAV ── */
-.nav{position:sticky;top:0;z-index:40;background:rgba(14,14,14,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px}
-.nav-mark{font-family:var(--ff);font-size:24px;letter-spacing:.04em;cursor:pointer}
-.nav-mark .ast{color:var(--red)}
-.nav-links{display:flex;gap:8px;align-items:center}
-.nav-link{font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);cursor:pointer;padding:6px 12px;border:1px solid transparent;transition:all .15s}
-.nav-link:hover{color:var(--text);border-color:var(--line)}
-.nav-link.red{border-color:var(--red);color:var(--red)}
-.nav-link.red:hover{background:var(--red);color:#fff}
-.hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:6px}
-.hamburger span{display:block;width:20px;height:1.5px;background:var(--sub)}
-@media(max-width:640px){.nav-links{display:none}.hamburger{display:flex}}
+/* ════════════════════════════════════════════════
+   COVER PAGE
+════════════════════════════════════════════════ */
+#s-cover{
+  background:#0e0e0e;
+  cursor:pointer;
+  justify-content:center;align-items:center;
+  overflow:hidden;position:relative
+}
+.cover-text{
+  writing-mode:vertical-rl;
+  text-orientation:mixed;
+  transform:rotate(180deg);
+  font-family:var(--ff);
+  font-size:clamp(72px,22vw,160px);
+  letter-spacing:.06em;
+  line-height:.88;
+  color:#f0f0f0;
+  user-select:none;
+  animation:coverIn 1s cubic-bezier(.22,1,.36,1) forwards;
+  opacity:0
+}
+.cover-text .ast{color:#c42828}
+@keyframes coverIn{from{opacity:0;transform:rotate(180deg) translateY(40px)}to{opacity:1;transform:rotate(180deg) translateY(0)}}
+.cover-tap{
+  position:absolute;bottom:40px;left:50%;transform:translateX(-50%);
+  font-family:var(--fm);font-size:10px;letter-spacing:.24em;
+  color:rgba(255,255,255,.25);text-transform:uppercase;
+  animation:pulse 2s ease-in-out infinite
+}
+@keyframes pulse{0%,100%{opacity:.25}50%{opacity:.6}}
 
-/* ── HOME ── */
-.home-hero{padding:40px 24px 32px;border-bottom:1px solid var(--line)}
-.home-mark{font-family:var(--ff);font-size:clamp(38px,9vw,72px);letter-spacing:.04em;line-height:.9;display:flex;align-items:baseline;gap:0}
+/* ════════════════════════════════════════════════
+   NAV
+════════════════════════════════════════════════ */
+.nav{
+  position:sticky;top:0;z-index:40;
+  background:var(--bg);border-bottom:1px solid var(--line);
+  padding:0 24px;display:flex;align-items:center;
+  justify-content:space-between;height:54px;
+  transition:background .2s
+}
+.nav-mark{font-family:var(--ff);font-size:22px;letter-spacing:.04em;cursor:pointer;user-select:none}
+.nav-mark .ast{color:var(--red)}
+.nav-right{display:flex;align-items:center;gap:6px}
+.nav-links{display:flex;gap:4px;align-items:center}
+@media(max-width:640px){.nav-links{display:none!important}}
+.nav-link{font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);cursor:pointer;padding:6px 10px;border:1px solid transparent;transition:all .15s;white-space:nowrap}
+.nav-link:hover{color:var(--text);border-color:var(--line)}
+.nav-link.accent{border-color:var(--red);color:var(--red)}
+.nav-link.accent:hover{background:var(--red);color:#fff}
+.theme-toggle{width:34px;height:34px;border-radius:50%;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;flex-shrink:0}
+.theme-toggle:hover{border-color:var(--sub)}
+.theme-toggle svg{width:15px;height:15px;stroke:var(--sub)}
+.hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:6px;flex-shrink:0}
+.hamburger span{display:block;width:18px;height:1.5px;background:var(--sub)}
+@media(max-width:640px){.hamburger{display:flex}}
+.mobile-menu{display:none;background:var(--card);border-bottom:1px solid var(--line)}
+.mobile-menu.open{display:flex;flex-direction:column}
+.mm-item{padding:12px 24px;font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);cursor:pointer;border-bottom:1px solid var(--line);transition:color .15s}
+.mm-item:hover{color:var(--text)}
+.mm-item:last-child{border-bottom:none}
+.mm-item.accent{color:var(--red)}
+
+/* ════════════════════════════════════════════════
+   HOME
+════════════════════════════════════════════════ */
+#s-home{background:var(--bg)}
+.home-scroll{flex:1;overflow-y:auto}
+.home-scroll::-webkit-scrollbar{display:none}
+.home-hero{padding:36px 24px 28px;border-bottom:1px solid var(--line)}
+.home-mark{font-family:var(--ff);font-size:clamp(44px,11vw,80px);letter-spacing:.04em;line-height:.88;display:flex;align-items:baseline}
 .home-mark .ast{color:var(--red)}
-.home-sub{font-size:13px;font-style:italic;font-weight:300;color:var(--sub);margin-top:10px}
+.home-sub{font-size:12px;font-style:italic;font-weight:300;color:var(--sub);margin-top:10px}
 
 .meta-strip{display:flex;border-bottom:1px solid var(--line);overflow-x:auto}
 .meta-strip::-webkit-scrollbar{display:none}
-.meta-item{flex:1;min-width:90px;padding:16px 20px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:3px}
+.meta-item{flex:1;min-width:80px;padding:14px 18px;border-right:1px solid var(--line);flex-shrink:0}
 .meta-item:last-child{border-right:none}
-.meta-n{font-family:var(--ff);font-size:28px;letter-spacing:.02em;line-height:1;color:var(--text)}
-.meta-l{font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--sub)}
+.meta-n{font-family:var(--ff);font-size:26px;letter-spacing:.02em;line-height:1}
+.meta-l{font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--sub);margin-top:3px}
 
-/* ── SECTION ── */
-.sec-wrap{padding:0 24px}
-.sec-head{padding:28px 0 14px;display:flex;align-items:center;justify-content:space-between}
+.sec-wrap{padding:24px 24px 12px;display:flex;align-items:center;justify-content:space-between}
 .sec-lbl{font-family:var(--fm);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--sub)}
 .sec-link{font-size:11px;font-weight:600;color:var(--red);cursor:pointer}
 
 /* ── SYSTEM GRID ── */
-.sys-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;padding:0 24px 4px}
+.sys-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:6px;padding:0 24px}
 .sys-card{background:var(--card);border:1px solid var(--line);cursor:pointer;transition:border-color .15s;overflow:hidden}
-.sys-card:hover,.sys-card:active{border-color:var(--red)}
-.sys-img{height:100px;background:var(--card2);display:flex;align-items:center;justify-content:center;position:relative}
-.sys-letter{font-family:var(--ff);font-size:52px;color:var(--line2)}
-.sys-badge{position:absolute;top:7px;left:7px;background:var(--red);padding:2px 6px;font-family:var(--fm);font-size:8px;letter-spacing:.1em;color:#fff;text-transform:uppercase}
+.sys-card:hover,.sys-card.expanded{border-color:var(--red)}
+.sys-img{height:88px;background:var(--card2);display:flex;align-items:center;justify-content:center;position:relative}
+.sys-letter{font-family:var(--ff);font-size:50px;color:var(--line2)}
+.sys-badge{position:absolute;top:6px;left:6px;background:var(--red);padding:2px 6px;font-family:var(--fm);font-size:7px;letter-spacing:.1em;color:#fff;text-transform:uppercase}
 .sys-body{padding:10px 12px}
-.sys-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px}
-.sys-attrs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px}
-.sys-attr{font-family:var(--fm);font-size:8px;letter-spacing:.06em;color:var(--sub);border:1px solid var(--dim);padding:2px 5px}
+.sys-name{font-size:12px;font-weight:600;margin-bottom:3px}
+.sys-attrs{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:5px}
+.sys-attr{font-family:var(--fm);font-size:7px;letter-spacing:.06em;color:var(--sub);border:1px solid var(--dim);padding:2px 4px}
 .sys-price{font-family:var(--fm);font-size:10px;color:var(--red)}
 
-/* ── SERVICE ADS ── */
-.ads-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;padding:0 24px 4px}
-.ad-card{background:var(--card);border:1px solid var(--line);padding:18px;pointer-events:none;user-select:none}
-.ad-icon{font-size:22px;margin-bottom:12px}
-.ad-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em}
+/* IMAGE SLIDER (inline expand) */
+.sys-slider{display:none;grid-column:1/-1;background:var(--card2);border:1px solid var(--red);padding:12px;border-top:none}
+.sys-slider.open{display:block}
+.slider-track{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}
+.slider-track::-webkit-scrollbar{height:2px}
+.slider-track::-webkit-scrollbar-thumb{background:var(--red)}
+.slider-thumb{width:120px;height:80px;flex-shrink:0;background:var(--dim);cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:32px;color:var(--line);border:1px solid var(--line2);transition:border-color .15s;position:relative;overflow:hidden}
+.slider-thumb:hover{border-color:var(--red)}
+.slider-thumb img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.slider-label{font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-top:8px}
+
+/* FULLSCREEN LIGHTBOX */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:100;display:none;align-items:center;justify-content:center;flex-direction:column}
+.lightbox.open{display:flex}
+.lightbox-img{max-width:90vw;max-height:75vh;object-fit:contain;background:var(--dim);display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:80px;color:#333;min-width:280px;min-height:180px}
+.lightbox-close{position:absolute;top:20px;right:20px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.lightbox-nav{display:flex;gap:12px;margin-top:16px}
+.lb-btn{padding:8px 20px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:all .15s}
+.lb-btn:hover{background:rgba(255,255,255,.2)}
+.lb-caption{font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:8px}
+
+/* ── ADS ── */
+.ads-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:6px;padding:0 24px}
+.ad-card{background:var(--card);border:1px solid var(--line);padding:16px;pointer-events:none;user-select:none}
+.ad-icon{font-size:20px;margin-bottom:10px}
+.ad-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
 .ad-desc{font-size:11px;color:var(--sub);line-height:1.6}
-.ad-tag{display:inline-block;margin-top:10px;font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);border:1px solid var(--red);padding:3px 8px}
+.ad-tag{display:inline-block;margin-top:8px;font-family:var(--fm);font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);border:1px solid var(--red-b);padding:3px 7px}
 
-/* ── HOME BOTTOM ── */
-.home-footer{padding:24px;display:flex;flex-direction:column;gap:8px}
-.book-btn{background:var(--red);border:none;padding:17px 24px;font-family:var(--ff);font-size:22px;letter-spacing:.1em;color:#fff;cursor:pointer;transition:opacity .15s;display:flex;align-items:center;justify-content:space-between;width:100%}
+/* ── HOME FOOTER ── */
+.home-footer-wrap{padding:24px;display:flex;flex-direction:column;gap:8px}
+.book-btn{background:var(--red);border:none;padding:16px 22px;font-family:var(--ff);font-size:20px;letter-spacing:.1em;color:#fff;cursor:pointer;transition:opacity .15s;display:flex;align-items:center;justify-content:space-between;width:100%}
 .book-btn:hover{opacity:.88}
-.book-btn svg{width:18px;height:18px;stroke:#fff;flex-shrink:0}
-.barber-btn{background:transparent;border:1px solid var(--line2);padding:14px 24px;font-family:var(--fm);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--sub);cursor:pointer;transition:all .15s;width:100%}
-.barber-btn:hover{border-color:var(--sub);color:var(--text)}
+.book-btn svg{width:16px;height:16px;stroke:#fff}
+.stylist-btn{background:transparent;border:1px solid var(--line2);padding:13px 22px;font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--sub);cursor:pointer;transition:all .15s;width:100%}
+.stylist-btn:hover{border-color:var(--sub);color:var(--text)}
+.site-footer{padding:20px 24px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-wrap:gap}
+.footer-copy{font-family:var(--fm);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.staff-link{font-family:var(--fm);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);cursor:pointer;transition:color .15s;background:none;border:none;padding:0}
+.staff-link:hover{color:var(--sub)}
 
-/* ── OVERLAY + SHEET ── */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:50;opacity:0;pointer-events:none;transition:opacity .3s}
+/* ════════════════════════════════════════════════
+   BOOKING SHEET
+════════════════════════════════════════════════ */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:50;opacity:0;pointer-events:none;transition:opacity .3s}
 .overlay.show{opacity:1;pointer-events:all}
 .sheet{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:520px;background:var(--card);z-index:51;transition:transform .38s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column;max-height:92dvh;border-top:1px solid var(--line)}
 .sheet.open{transform:translateX(-50%) translateY(0)}
-.sheet-handle{width:36px;height:3px;background:var(--dim);border-radius:2px;margin:14px auto 0;flex-shrink:0}
-.sheet-head{padding:16px 22px 14px;flex-shrink:0;border-bottom:1px solid var(--line)}
-.sheet-eyebrow{font-family:var(--fm);font-size:9px;letter-spacing:.2em;color:var(--red);text-transform:uppercase;margin-bottom:6px}
-.sheet-title{font-family:var(--ff);font-size:clamp(26px,7vw,36px);letter-spacing:.03em;line-height:.92;color:var(--text)}
-.sh-dots{display:flex;gap:4px;margin-top:12px}
+.sheet-handle{width:36px;height:3px;background:var(--dim);border-radius:2px;margin:12px auto 0;flex-shrink:0}
+.sh-head{padding:14px 20px 12px;flex-shrink:0;border-bottom:1px solid var(--line)}
+.sh-ey{font-family:var(--fm);font-size:9px;letter-spacing:.2em;color:var(--red);text-transform:uppercase;margin-bottom:5px}
+.sh-title{font-family:var(--ff);font-size:clamp(24px,6vw,34px);letter-spacing:.03em;line-height:.92}
+.sh-dots{display:flex;gap:3px;margin-top:10px}
 .sh-dot{flex:1;height:2px;border-radius:1px;transition:background .3s}
-.sheet-body{flex:1;overflow-y:auto;padding:14px 22px 10px}
-.sheet-body::-webkit-scrollbar{display:none}
-.sheet-footer{padding:12px 22px 36px;flex-shrink:0;border-top:1px solid var(--line)}
-.sh-cta{width:100%;background:var(--red);border:none;padding:15px;font-family:var(--ff);font-size:20px;letter-spacing:.1em;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:opacity .15s}
+.sh-body{flex:1;overflow-y:auto;padding:14px 20px 8px}
+.sh-body::-webkit-scrollbar{display:none}
+.sh-footer{padding:10px 20px 32px;flex-shrink:0;border-top:1px solid var(--line)}
+.sh-back{font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);background:none;border:none;cursor:pointer;margin-bottom:8px;display:block;padding:0;transition:color .15s}
+.sh-back:hover{color:var(--text)}
+.sh-cta{width:100%;background:var(--red);border:none;padding:14px;font-family:var(--ff);font-size:18px;letter-spacing:.1em;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:opacity .15s}
 .sh-cta:hover{opacity:.88}
 .sh-cta:disabled{background:var(--card2);color:var(--dim);cursor:default}
-.sh-cta svg{width:14px;height:14px;stroke:#fff;flex-shrink:0}
+.sh-cta svg{width:13px;height:13px;stroke:#fff;flex-shrink:0}
 .sh-cta:disabled svg{stroke:var(--dim)}
-.sh-back{font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);background:none;border:none;cursor:pointer;margin-bottom:10px;display:block}
-.sh-back:hover{color:var(--text)}
 
-/* ── TILES ── */
-.opt-list{display:flex;flex-direction:column;gap:7px}
-.tile{background:var(--card2);border:1px solid var(--line2);padding:13px 15px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:border-color .15s}
-.tile:hover,.tile:active{background:var(--line)}
-.tile.sel{border-color:var(--red);background:rgba(196,40,40,.06)}
-.t-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+/* Tiles */
+.opt-list{display:flex;flex-direction:column;gap:6px}
+.tile{background:var(--card2);border:1px solid var(--line2);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:border-color .15s}
+.tile:hover{border-color:var(--sub)}
+.tile.sel{border-color:var(--red);background:var(--red-s)}
+.t-name{font-size:13px;font-weight:600;margin-bottom:2px}
 .t-sub{font-size:11px;color:var(--sub)}
-.t-right{display:flex;align-items:center;gap:10px;flex-shrink:0;margin-left:12px}
-.t-price{font-family:var(--fm);font-size:11px;color:var(--sub)}
+.t-right{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:10px}
+.t-price{font-family:var(--fm);font-size:10px;color:var(--sub)}
 .tile.sel .t-price{color:var(--red)}
-.chk{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
-.chk svg{width:10px;height:10px;stroke:#fff;opacity:0;transition:opacity .15s}
+.chk{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.chk svg{width:9px;height:9px;stroke:#fff;opacity:0;transition:opacity .15s}
 .tile.sel .chk{background:var(--red);border-color:var(--red)}
 .tile.sel .chk svg{opacity:1}
 
-/* ── LIB GRID ── */
-.lib-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+/* Lib grid in sheet */
+.lib-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .lib-card{background:var(--card2);border:1px solid var(--line2);cursor:pointer;overflow:hidden;transition:border-color .15s}
-.lib-card:hover{border-color:var(--line2)}
+.lib-card:hover{border-color:var(--sub)}
 .lib-card.sel{border-color:var(--red)}
-.lib-img{height:90px;background:var(--bg);display:flex;align-items:center;justify-content:center;position:relative}
-.lib-letter{font-family:var(--ff);font-size:52px;color:var(--line2)}
-.lib-badge{position:absolute;top:7px;left:7px;background:var(--red);padding:2px 6px;font-family:var(--fm);font-size:7px;letter-spacing:.1em;color:#fff;text-transform:uppercase}
-.lib-sel{position:absolute;top:7px;right:7px;width:18px;height:18px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
-.lib-sel svg{width:9px;height:9px;stroke:#fff}
+.lib-img{height:80px;background:var(--bg);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.lib-letter{font-family:var(--ff);font-size:46px;color:var(--line2)}
+.lib-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.lib-badge{position:absolute;top:6px;left:6px;background:var(--red);padding:2px 5px;font-family:var(--fm);font-size:7px;letter-spacing:.08em;color:#fff;text-transform:uppercase}
+.lib-sel{position:absolute;top:6px;right:6px;width:16px;height:16px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
+.lib-sel svg{width:8px;height:8px;stroke:#fff}
 .lib-card.sel .lib-sel{opacity:1}
-.lib-info{padding:9px 11px}
-.lib-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px}
-.lib-attrs{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:5px}
-.lib-attr{font-family:var(--fm);font-size:7px;letter-spacing:.06em;color:var(--sub);border:1px solid var(--dim);padding:2px 5px}
+.lib-info{padding:8px 10px}
+.lib-name{font-size:11px;font-weight:600;margin-bottom:3px}
+.lib-attrs{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:4px}
+.lib-attr{font-family:var(--fm);font-size:7px;letter-spacing:.05em;color:var(--sub);border:1px solid var(--dim);padding:1px 4px}
 .lib-price{font-family:var(--fm);font-size:10px;color:var(--red)}
 
-/* ── FORM FIELDS ── */
-.field-group{display:flex;flex-direction:column;gap:7px;margin-bottom:0}
-.field{background:var(--card2);border:1px solid var(--line2);padding:13px 15px;display:flex;flex-direction:column;gap:5px;cursor:pointer;transition:border-color .15s}
+/* Inline image slider in sheet */
+.sh-slider{margin-top:10px;padding:10px;background:var(--bg);border:1px solid var(--red-b)}
+.sh-slider-track{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+.sh-slider-track::-webkit-scrollbar{height:2px}
+.sh-slider-track::-webkit-scrollbar-thumb{background:var(--red)}
+.sh-thumb{width:100px;height:66px;flex-shrink:0;background:var(--card);border:1px solid var(--line2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:28px;color:var(--line2);position:relative;overflow:hidden;transition:border-color .15s}
+.sh-thumb:hover{border-color:var(--red)}
+.sh-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+/* Form fields */
+.field{background:var(--card2);border:1px solid var(--line2);padding:12px 14px;display:flex;flex-direction:column;gap:4px;margin-bottom:6px;cursor:pointer;transition:border-color .15s}
 .field:focus-within{border-color:var(--sub)}
-.field-label{font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--red)}
+.f-label{font-family:var(--fm);font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--red)}
 .field input,.field select,.field textarea{background:transparent;border:none;outline:none;font-family:var(--fb);font-size:14px;font-weight:500;color:var(--text);width:100%;color-scheme:dark;cursor:pointer}
 .field input::placeholder,.field textarea::placeholder{color:var(--dim)}
-.field select option{background:#181818;color:var(--text)}
+.field select option{background:var(--card2);color:var(--text)}
 .field textarea{resize:none;line-height:1.6}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 
-/* ── RADIO GROUP ── */
-.radio-group{display:flex;flex-direction:column;gap:6px;margin-top:4px}
-.radio-item{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--card2);border:1px solid var(--line2);cursor:pointer;transition:border-color .15s}
-.radio-item.sel{border-color:var(--red);background:rgba(196,40,40,.06)}
-.radio-dot{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--dim);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+/* Radio */
+.radio-item{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;background:var(--card2);border:1px solid var(--line2);cursor:pointer;transition:border-color .15s;margin-bottom:6px}
+.radio-item.sel{border-color:var(--red);background:var(--red-s)}
+.radio-dot{width:15px;height:15px;border-radius:50%;border:1.5px solid var(--dim);flex-shrink:0;margin-top:2px;position:relative;transition:border-color .15s}
 .radio-item.sel .radio-dot{border-color:var(--red)}
-.radio-dot::after{content:'';width:8px;height:8px;border-radius:50%;background:var(--red);opacity:0;transition:opacity .15s}
+.radio-dot::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--red);opacity:0;transition:opacity .15s}
 .radio-item.sel .radio-dot::after{opacity:1}
-.radio-label{font-size:13px;font-weight:500;color:var(--text)}
-.radio-sub{font-size:11px;color:var(--sub);margin-top:1px}
+.radio-label{font-size:13px;font-weight:500}
+.radio-sub{font-size:11px;color:var(--sub);margin-top:2px}
 
-/* ── RECEIPT ── */
+/* Receipt */
 .receipt{background:var(--card2);border:1px solid var(--line2)}
-.receipt-hd{padding:14px;border-bottom:1px solid var(--line);text-align:center}
-.receipt-hd-txt{font-size:15px;font-weight:700}
-.r-row{display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line)}
+.receipt-hd{padding:12px 14px;border-bottom:1px solid var(--line);text-align:center}
+.receipt-hd-txt{font-size:14px;font-weight:700}
+.r-row{display:flex;justify-content:space-between;padding:9px 14px;border-bottom:1px solid var(--line)}
 .r-row:last-child{border-bottom:none}
 .r-lbl{font-size:12px;color:var(--sub)}
-.r-val{font-size:12px;font-weight:600;color:var(--text)}
-.r-row.total-row{background:var(--card);padding:13px 14px}
-.r-row.total-row .r-lbl{font-size:13px;font-weight:700;color:var(--text)}
-.r-row.total-row .r-val{font-size:14px;font-weight:700;color:var(--red)}
-.r-row.down-row{border-left:3px solid var(--red)}
-.r-notice{background:var(--red-s);border:1px solid rgba(196,40,40,.3);padding:12px 14px;margin-top:8px;font-size:11px;line-height:1.7;color:rgba(240,240,240,.65)}
+.r-val{font-size:12px;font-weight:600}
+.r-row.tot{background:var(--card);padding:12px 14px}
+.r-row.tot .r-lbl{font-size:13px;font-weight:700;color:var(--text)}
+.r-row.tot .r-val{font-size:14px;font-weight:700;color:var(--red)}
+.r-row.down{border-left:3px solid var(--red)}
+.r-notice{margin-top:8px;background:var(--red-s);border:1px solid var(--red-b);padding:11px 13px;font-size:11px;line-height:1.7;color:var(--text2)}
 
-/* ── CONFIRM ── */
-.conf-id-box{background:var(--red-s);border:1px solid var(--red);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
-.conf-id-txt{font-family:var(--fm);font-size:10px;letter-spacing:.16em;color:var(--red);text-transform:uppercase}
-.st-item{background:var(--card2);border:1px solid var(--line);padding:12px 15px;display:flex;align-items:center;gap:12px;margin-bottom:6px}
+/* Confirm screen */
+.conf-id-box{background:var(--red-s);border:1px solid var(--red);padding:11px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.conf-id-txt{font-family:var(--fm);font-size:9px;letter-spacing:.16em;color:var(--red);text-transform:uppercase}
+.st-item{background:var(--card2);border:1px solid var(--line);padding:11px 14px;display:flex;align-items:center;gap:10px;margin-bottom:5px}
 .st-item.now{border-left:3px solid var(--red)}
-.st-dot{width:6px;height:6px;border-radius:50%;background:var(--dim);flex-shrink:0}
+.st-dot{width:5px;height:5px;border-radius:50%;background:var(--dim);flex-shrink:0}
 .st-item.now .st-dot{background:var(--red)}
 .st-txt{font-size:12px;color:var(--sub)}
 .st-item.now .st-txt{color:var(--text);font-weight:500}
 
-/* ── BARBER APP ── */
+/* ════════════════════════════════════════════════
+   BARBER APP PAGE
+════════════════════════════════════════════════ */
+#s-barber-app{background:var(--bg)}
 .reg-wrap{max-width:640px;margin:0 auto;padding:32px 24px 60px;width:100%}
-.page-title{font-family:var(--ff);font-size:clamp(36px,8vw,56px);letter-spacing:.03em;line-height:.92;color:var(--text);margin-bottom:6px}
-.page-sub{font-size:13px;color:var(--sub);line-height:1.7;margin-bottom:32px;font-style:italic}
-.form-section{margin-bottom:24px}
-.form-sec-label{font-family:var(--fm);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--line)}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.page-title{font-family:var(--ff);font-size:clamp(34px,8vw,54px);letter-spacing:.03em;line-height:.92;margin-bottom:6px}
+.page-sub{font-size:13px;color:var(--sub);line-height:1.7;margin-bottom:28px;font-style:italic}
+.form-sec{margin-bottom:20px}
+.form-sec-lbl{font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin-bottom:8px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 @media(max-width:480px){.form-grid{grid-template-columns:1fr}}
 .full{grid-column:1/-1}
-.checkbox-item{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;background:var(--card);border:1px solid var(--line);cursor:pointer;margin-bottom:6px}
-.checkbox-item input{width:16px;height:16px;margin-top:1px;accent-color:var(--red);cursor:pointer;flex-shrink:0}
-.checkbox-item label{font-size:12px;line-height:1.6;color:var(--sub);cursor:pointer}
-.submit-btn{width:100%;background:var(--red);border:none;padding:17px;font-family:var(--ff);font-size:22px;letter-spacing:.1em;color:#fff;cursor:pointer;transition:opacity .15s;margin-top:8px}
+.field-reg{background:var(--card);border:1px solid var(--line);padding:11px 13px;display:flex;flex-direction:column;gap:3px}
+.field-reg .f-label{font-family:var(--fm);font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--red)}
+.field-reg input,.field-reg select,.field-reg textarea{background:transparent;border:none;outline:none;font-family:var(--fb);font-size:14px;font-weight:500;color:var(--text);width:100%;color-scheme:dark}
+.field-reg input::placeholder,.field-reg textarea::placeholder{color:var(--dim)}
+.field-reg select option{background:var(--card);color:var(--text)}
+.field-reg textarea{resize:none;line-height:1.6}
+.ck-item{display:flex;align-items:flex-start;gap:10px;padding:10px 13px;background:var(--card);border:1px solid var(--line);cursor:pointer;margin-bottom:5px}
+.ck-item input{width:15px;height:15px;margin-top:1px;accent-color:var(--red);cursor:pointer;flex-shrink:0}
+.ck-item label{font-size:12px;line-height:1.6;color:var(--sub);cursor:pointer}
+.submit-btn{width:100%;background:var(--red);border:none;padding:16px;font-family:var(--ff);font-size:20px;letter-spacing:.1em;color:#fff;cursor:pointer;transition:opacity .15s;margin-top:8px}
 .submit-btn:hover{opacity:.88}
 
-/* ── ADMIN ── */
-#s-admin{background:var(--bg)}
-.admin-layout{display:flex;flex:1;min-height:calc(100dvh - 56px)}
-.admin-sidebar{width:220px;background:var(--card);border-right:1px solid var(--line);flex-shrink:0;padding:20px 0}
+/* ════════════════════════════════════════════════
+   ADMIN (LIGHT MODE FORCED)
+════════════════════════════════════════════════ */
+#s-admin{
+  --bg:#f5f5f5;--card:#ffffff;--card2:#f0f0f0;--line:#e0e0e0;--line2:#d0d0d0;
+  --text:#111111;--text2:#444444;--sub:#888888;--dim:#cccccc;
+  --red:#c42828;--red-s:rgba(196,40,40,.06);--red-b:rgba(196,40,40,.2);
+  background:var(--bg);color:var(--text)
+}
+.admin-wrap{display:flex;flex:1;min-height:calc(100dvh - 54px)}
+.admin-sidebar{width:210px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0;flex-shrink:0}
 @media(max-width:768px){.admin-sidebar{display:none}}
-.admin-nav-item{padding:11px 20px;font-family:var(--fm);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--sub);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:10px;border-left:2px solid transparent}
-.admin-nav-item:hover{color:var(--text);background:var(--card2)}
-.admin-nav-item.act{color:var(--text);border-left-color:var(--red);background:rgba(196,40,40,.05)}
-.admin-mobile-tabs{display:none;padding:12px 16px;gap:6px;overflow-x:auto;border-bottom:1px solid var(--line);background:var(--card)}
-@media(max-width:768px){.admin-mobile-tabs{display:flex}}
-.admin-tab{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--sub);padding:7px 14px;border:1px solid var(--line);cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}
-.admin-tab.act{border-color:var(--red);color:var(--red)}
-.admin-content{flex:1;overflow-y:auto;padding:28px}
-.admin-content::-webkit-scrollbar{width:4px}
-.admin-content::-webkit-scrollbar-track{background:var(--bg)}
-.admin-content::-webkit-scrollbar-thumb{background:var(--dim)}
-.stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-bottom:24px}
-.stat-box{background:var(--card);border:1px solid var(--line);padding:16px}
-.stat-n{font-family:var(--ff);font-size:32px;letter-spacing:.02em;line-height:1}
-.stat-n.red{color:var(--red)}
-.stat-l{font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--sub);margin-top:5px}
-.adm-sec{font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--red);padding:20px 0 10px}
-.adm-sec:first-child{padding-top:0}
-.adm-card{background:var(--card);border:1px solid var(--line);padding:16px;margin-bottom:8px}
-.adm-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
-.adm-id{font-family:var(--fm);font-size:9px;letter-spacing:.12em;color:var(--sub);margin-bottom:4px;text-transform:uppercase}
-.adm-name{font-size:14px;font-weight:700;color:var(--text)}
-.adm-meta{font-size:11px;color:var(--sub);margin-top:3px;line-height:1.5}
-.pill{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;flex-shrink:0}
-.pill-p{background:rgba(180,120,0,.15);color:#c8900a}
-.pill-c{background:rgba(30,120,60,.15);color:#3aaa6a}
-.pill-a{background:var(--red-s);color:var(--red)}
-.pill-r{background:rgba(50,50,50,.4);color:var(--sub)}
-.pill-v{background:rgba(30,120,60,.15);color:#3aaa6a}
-.adm-btns{display:flex;gap:6px;flex-wrap:wrap}
-.adm-ok{padding:8px 16px;border:none;background:var(--red);color:#fff;font-family:var(--fm);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
-.adm-no{padding:8px 16px;border:1px solid var(--line2);background:var(--card2);color:var(--sub);font-family:var(--fm);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.adm-nav-item{padding:10px 18px;font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#888;cursor:pointer;border-left:2px solid transparent;transition:all .15s;display:flex;align-items:center;gap:8px}
+.adm-nav-item:hover{color:#111;background:#f5f5f5}
+.adm-nav-item.act{color:#111;border-left-color:#c42828;background:#fdf5f5}
+.adm-nav-item svg{width:13px;height:13px;flex-shrink:0}
+.adm-mob-tabs{display:none;background:#fff;border-bottom:1px solid #e0e0e0;padding:10px 16px;gap:5px;overflow-x:auto}
+@media(max-width:768px){.adm-mob-tabs{display:flex}}
+.adm-mob-tab{font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#888;padding:6px 12px;border:1px solid #e0e0e0;cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}
+.adm-mob-tab.act{border-color:#c42828;color:#c42828}
+.adm-content{flex:1;overflow-y:auto;padding:24px}
+.adm-content::-webkit-scrollbar{width:4px}
+.adm-content::-webkit-scrollbar-thumb{background:#ddd}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px;margin-bottom:20px}
+.stat-box{background:#fff;border:1px solid #e0e0e0;padding:14px}
+.stat-n{font-family:var(--ff);font-size:30px;letter-spacing:.02em;line-height:1;color:#111}
+.stat-n.red{color:#c42828}
+.stat-l{font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:#888;margin-top:4px}
+.adm-sec{font-family:var(--fm);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:#c42828;padding:16px 0 8px}
+.adm-sec:first-of-type{padding-top:0}
+.adm-card{background:#fff;border:1px solid #e0e0e0;padding:14px;margin-bottom:6px;transition:border-color .15s}
+.adm-card:hover{border-color:#ccc}
+.adm-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.adm-id{font-family:var(--fm);font-size:8px;letter-spacing:.12em;color:#888;margin-bottom:3px;text-transform:uppercase}
+.adm-name{font-size:14px;font-weight:700;color:#111}
+.adm-meta{font-size:11px;color:#888;margin-top:3px;line-height:1.5}
+.adm-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.adm-tag{font-family:var(--fm);font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#888;background:#f0f0f0;border:1px solid #e0e0e0;padding:3px 7px}
+.adm-tag.red{color:#c42828;background:#fdf5f5;border-color:#f0c0c0}
+.pill{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;flex-shrink:0}
+.pill-p{background:#fff9e6;color:#c8900a;border:1px solid #f0d080}
+.pill-c{background:#edfff5;color:#1a8a4a;border:1px solid #b0e8c8}
+.pill-a{background:#fdf5f5;color:#c42828;border:1px solid #f0c0c0}
+.pill-r{background:#f5f5f5;color:#888;border:1px solid #e0e0e0}
+.pill-v{background:#edfff5;color:#1a8a4a;border:1px solid #b0e8c8}
+.adm-btns{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}
+.adm-ok{padding:8px 14px;border:none;background:#c42828;color:#fff;font-family:var(--fm);font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:opacity .15s}
 .adm-ok:hover{opacity:.85}
-.adm-no:hover{border-color:var(--sub);color:var(--text)}
-.detail-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
-.detail-chip{font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);background:var(--card2);border:1px solid var(--line);padding:4px 9px}
-.adm-empty{padding:40px;text-align:center;font-family:var(--fm);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.adm-no{padding:8px 14px;border:1px solid #ddd;background:#f5f5f5;color:#888;font-family:var(--fm);font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .15s}
+.adm-no:hover{border-color:#aaa;color:#333}
 
-/* ── MODAL ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:60;display:none;align-items:center;justify-content:center;padding:20px}
-.modal-overlay.show{display:flex}
-.modal{background:var(--card);border:1px solid var(--line);padding:28px;width:100%;max-width:480px;max-height:90dvh;overflow-y:auto}
-.modal::-webkit-scrollbar{display:none}
-.modal-title{font-family:var(--ff);font-size:28px;letter-spacing:.03em;color:var(--text);margin-bottom:16px}
-.modal-close{float:right;background:none;border:none;color:var(--sub);cursor:pointer;font-size:18px;margin-top:-4px}
-.modal-close:hover{color:var(--text)}
+/* Calendar */
+.cal-wrap{background:#fff;border:1px solid #e0e0e0;margin-bottom:20px}
+.cal-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #e0e0e0}
+.cal-title{font-family:var(--ff);font-size:22px;letter-spacing:.04em;color:#111}
+.cal-nav{display:flex;gap:4px}
+.cal-nav-btn{width:28px;height:28px;border:1px solid #e0e0e0;background:#f5f5f5;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cal-nav-btn:hover{background:#eee}
+.cal-nav-btn svg{width:12px;height:12px;stroke:#666}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.cal-dow{padding:8px 0;text-align:center;font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#aaa;border-bottom:1px solid #e0e0e0}
+.cal-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid #e0e0e0;border-bottom:1px solid #e0e0e0;cursor:pointer;transition:background .15s;position:relative;padding:4px}
+.cal-day:nth-child(7n){border-right:none}
+.cal-day:hover{background:#fafafa}
+.cal-day.today{background:#fdf5f5}
+.cal-day.has-booking{cursor:pointer}
+.cal-day-num{font-size:12px;font-weight:500;color:#333;line-height:1}
+.cal-day.other-month .cal-day-num{color:#ccc}
+.cal-day.today .cal-day-num{color:#c42828;font-weight:700}
+.cal-dots{display:flex;gap:2px;margin-top:2px;flex-wrap:wrap;justify-content:center}
+.cal-dot{width:4px;height:4px;border-radius:50%}
+.cal-dot.p{background:#c8900a}
+.cal-dot.c{background:#1a8a4a}
+.cal-dot.a{background:#c42828}
+.cal-dot.r{background:#aaa}
+
+/* Barber assignment */
+.barber-assign-row{background:#f5f5f5;border:1px solid #e0e0e0;padding:11px 14px;margin-bottom:5px;display:flex;align-items:center;gap:12px}
+.ba-av{width:38px;height:38px;background:#e0e0e0;border:1px solid #d0d0d0;display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:14px;color:#888;flex-shrink:0}
+.ba-name{font-size:13px;font-weight:600;color:#111;margin-bottom:1px}
+.ba-meta{font-size:10px;color:#888}
+.ba-dist{margin-left:auto;font-family:var(--fm);font-size:9px;color:#c42828;text-align:right;flex-shrink:0}
+.ba-assign{padding:6px 12px;border:none;background:#c42828;color:#fff;font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-left:8px;flex-shrink:0;transition:opacity .15s}
+.ba-assign:hover{opacity:.85}
+
+/* Admin modals */
+.adm-modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:70;display:none;align-items:center;justify-content:center;padding:20px}
+.adm-modal-ov.open{display:flex}
+.adm-modal{background:#fff;border:1px solid #e0e0e0;padding:24px;width:100%;max-width:520px;max-height:88dvh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.15)}
+.adm-modal::-webkit-scrollbar{display:none}
+.adm-modal-title{font-family:var(--ff);font-size:26px;letter-spacing:.03em;color:#111;margin-bottom:4px}
+.adm-modal-close{float:right;background:none;border:none;color:#aaa;cursor:pointer;font-size:18px;margin-top:-2px;line-height:1}
+.adm-modal-close:hover{color:#333}
+.adm-detail-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:12px;gap:12px}
+.adm-detail-row:last-child{border-bottom:none}
+.adm-detail-lbl{color:#888;flex-shrink:0}
+.adm-detail-val{font-weight:600;color:#111;text-align:right}
+
+/* PIN GATE */
+.pin-modal{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:90;display:none;align-items:center;justify-content:center}
+.pin-modal.open{display:flex}
+.pin-box{background:var(--card);border:1px solid var(--line);padding:28px;width:280px;text-align:center}
+.pin-title{font-family:var(--ff);font-size:24px;letter-spacing:.04em;margin-bottom:4px}
+.pin-sub{font-size:11px;color:var(--sub);margin-bottom:20px}
+.pin-input{background:var(--card2);border:1px solid var(--line2);padding:12px 14px;width:100%;font-family:var(--fm);font-size:18px;letter-spacing:.3em;color:var(--text);text-align:center;outline:none;color-scheme:dark;margin-bottom:10px}
+.pin-input:focus{border-color:var(--sub)}
+.pin-err{font-size:11px;color:var(--red);height:16px;margin-bottom:8px}
+.pin-btn{width:100%;background:var(--red);border:none;padding:12px;font-family:var(--ff);font-size:18px;letter-spacing:.1em;color:#fff;cursor:pointer}
+.pin-cancel{font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);background:none;border:none;cursor:pointer;margin-top:10px;display:block;width:100%;padding:6px}
+.pin-cancel:hover{color:var(--text)}
 </style>
 </head>
 <body>
 <div id="app">
 
-<!-- ══ HOME ══ -->
-<div class="scr active" id="s-home">
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <div class="lightbox-img" id="lb-img"></div>
+  <div class="lightbox-nav">
+    <button class="lb-btn" onclick="lbNav(-1)">← PREV</button>
+    <button class="lb-btn" onclick="lbNav(1)">NEXT →</button>
+  </div>
+  <div class="lb-caption" id="lb-caption"></div>
+</div>
+
+<!-- PIN GATE -->
+<div class="pin-modal" id="pin-modal">
+  <div class="pin-box">
+    <div class="pin-title">STAFF ACCESS</div>
+    <div class="pin-sub">Enter your PIN to continue</div>
+    <input class="pin-input" type="password" inputmode="numeric" maxlength="4" id="pin-input" placeholder="••••" onkeyup="if(event.key==='Enter')checkPin()"/>
+    <div class="pin-err" id="pin-err"></div>
+    <button class="pin-btn" onclick="checkPin()">ENTER</button>
+    <button class="pin-cancel" onclick="closePinModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- COVER -->
+<div class="scr active" id="s-cover" onclick="goCover()">
+  <div class="cover-text"><span class="ast">*</span>INCOGNITOUP</div>
+  <div class="cover-tap">tap to enter</div>
+</div>
+
+<!-- HOME -->
+<div class="scr" id="s-home">
   <nav class="nav">
     <div class="nav-mark" onclick="showScr('s-home')"><span class="ast">*</span>INCOGNITOUP</div>
-    <div class="nav-links">
-      <span class="nav-link" onclick="document.getElementById('s-home').querySelector('.sys-grid').scrollIntoView({behavior:'smooth'})">Systems</span>
-      <span class="nav-link" onclick="document.getElementById('s-home').querySelector('.ads-grid').scrollIntoView({behavior:'smooth'})">Services</span>
-      <span class="nav-link" onclick="showScr('s-barber-app')">Apply as Stylist</span>
-      <span class="nav-link red" onclick="openSheet()">Book Now</span>
+    <div class="nav-right">
+      <div class="nav-links">
+        <span class="nav-link" onclick="scrollTo('sys-section')">Systems</span>
+        <span class="nav-link" onclick="scrollTo('svc-section')">Services</span>
+        <span class="nav-link" onclick="showScr('s-barber-app')">Apply as Stylist</span>
+        <span class="nav-link accent" onclick="openSheet()">Book Now</span>
+      </div>
+      <div class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" id="theme-icon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </div>
+      <div class="hamburger" onclick="toggleMM()"><span></span><span></span><span></span></div>
     </div>
-    <div class="hamburger" onclick="toggleMobileMenu()"><span></span><span></span><span></span></div>
   </nav>
-
-  <!-- mobile menu -->
-  <div id="mobile-menu" style="display:none;background:var(--card);border-bottom:1px solid var(--line);padding:12px 24px;display:flex;flex-direction:column;gap:2px">
-    <div style="padding:10px 0;font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);cursor:pointer;border-bottom:1px solid var(--line)" onclick="closeMobileMenu()">Systems</div>
-    <div style="padding:10px 0;font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);cursor:pointer;border-bottom:1px solid var(--line)" onclick="closeMobileMenu()">Services</div>
-    <div style="padding:10px 0;font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);cursor:pointer;border-bottom:1px solid var(--line)" onclick="showScr('s-barber-app');closeMobileMenu()">Apply as Stylist</div>
-    <div style="padding:10px 0;font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--red);cursor:pointer" onclick="openSheet();closeMobileMenu()">Book a Session</div>
+  <div class="mobile-menu" id="mm">
+    <div class="mm-item" onclick="scrollTo('sys-section');closeMM()">Systems</div>
+    <div class="mm-item" onclick="scrollTo('svc-section');closeMM()">Services</div>
+    <div class="mm-item" onclick="showScr('s-barber-app');closeMM()">Apply as Stylist</div>
+    <div class="mm-item accent" onclick="openSheet();closeMM()">Book a Session</div>
   </div>
 
-  <div style="overflow-y:auto;flex:1">
+  <div class="home-scroll" id="home-scroll">
     <div class="home-hero">
       <div class="home-mark"><span class="ast">*</span>INCOGNITOUP</div>
       <div class="home-sub">Professional hair system services — discreet, private, at your location.</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:18px">
+        <button class="book-btn" style="flex:1;min-width:140px;padding:13px 18px;font-size:17px" onclick="openSheet()">
+          <span>BOOK A SESSION</span>
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5" width="14" height="14"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <button class="stylist-btn" style="flex:1;min-width:140px;padding:13px 18px" onclick="showScr('s-barber-app')">APPLY AS STYLIST</button>
+        <button class="stylist-btn" style="flex:1;min-width:140px;padding:13px 18px;border-color:var(--line)" onclick="openStatusChecker()">CHECK STATUS</button>
+      </div>
     </div>
 
     <div class="meta-strip">
       <div class="meta-item"><div class="meta-n">140+</div><div class="meta-l">Stylists</div></div>
       <div class="meta-item"><div class="meta-n">2.4k</div><div class="meta-l">Sessions</div></div>
-      <div class="meta-item"><div class="meta-n">100%</div><div class="meta-l">Confidential</div></div>
+      <div class="meta-item"><div class="meta-n">100%</div><div class="meta-l">Private</div></div>
       <div class="meta-item"><div class="meta-n">98%</div><div class="meta-l">Satisfaction</div></div>
     </div>
 
-    <div class="sec-wrap"><div class="sec-head"><span class="sec-lbl">Hair Systems Collection</span><span class="sec-link" onclick="openSheet()">Book now</span></div></div>
-    <div class="sys-grid" id="sys-grid"></div>
-
-    <div class="sec-wrap"><div class="sec-head"><span class="sec-lbl">Services & Features</span></div></div>
-    <div class="ads-grid">
-      <div class="ad-card"><div class="ad-icon">💎</div><div class="ad-title">Installation</div><div class="ad-desc">Full system fitting, bonding, and initial styling by a verified specialist. For new and returning clients.</div><div class="ad-tag">All ages welcome</div></div>
-      <div class="ad-card"><div class="ad-icon">✂️</div><div class="ad-title">Cut & Blend</div><div class="ad-desc">Professional haircut to seamlessly blend your system with your natural hair. Tapered, fade, classic cuts and more.</div><div class="ad-tag">Any style</div></div>
-      <div class="ad-card"><div class="ad-icon">🔄</div><div class="ad-title">Maintenance</div><div class="ad-desc">Monthly upkeep — cleaning, reattachment, and touch-up styling. Extends your system life by 3–4x.</div><div class="ad-tag">Monthly plans</div></div>
-      <div class="ad-card"><div class="ad-icon">🛡️</div><div class="ad-title">Removal & Care</div><div class="ad-desc">Safe, damage-free removal with scalp treatment and conditioning. A clean and comfortable transition.</div><div class="ad-tag">Gentle process</div></div>
-      <div class="ad-card"><div class="ad-icon">📦</div><div class="ad-title">Starter Kit Included</div><div class="ad-desc">Every new system comes with adhesive tape, cleaning solution, and a care brochure detailing maintenance and lifespan.</div><div class="ad-tag">New clients</div></div>
-      <div class="ad-card"><div class="ad-icon">🔒</div><div class="ad-title">100% Confidential</div><div class="ad-desc">Stylists arrive discreetly. No branding. No public records. Your booking details stay strictly between you and us.</div><div class="ad-tag">Private by design</div></div>
+    <div id="sys-section">
+      <div class="sec-wrap"><span class="sec-lbl">Hair Systems Collection</span><span class="sec-link" onclick="openSheet()">Book now →</span></div>
+      <div class="sys-grid" id="sys-grid"></div>
     </div>
 
-    <div class="home-footer">
-      <button class="book-btn" onclick="openSheet()">
-        <span>BOOK A SESSION</span>
-        <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </button>
-      <button class="barber-btn" onclick="showScr('s-barber-app')">APPLY AS A HAIR SYSTEM STYLIST →</button>
+    <div id="svc-section">
+      <div class="sec-wrap" style="margin-top:8px"><span class="sec-lbl">Services & Features</span></div>
+      <div class="ads-grid">
+        <div class="ad-card"><div class="ad-icon">💎</div><div class="ad-title">Installation</div><div class="ad-desc">Full system fitting, bonding, and initial styling. For new clients and system changes of all ages.</div><div class="ad-tag">All ages welcome</div></div>
+        <div class="ad-card"><div class="ad-icon">✂️</div><div class="ad-title">Cut & Blend</div><div class="ad-desc">Tapered, fade, classic, or conservative cut to blend seamlessly with your system.</div><div class="ad-tag">Any style</div></div>
+        <div class="ad-card"><div class="ad-icon">🔄</div><div class="ad-title">Maintenance</div><div class="ad-desc">Monthly upkeep — cleaning, reattachment, and touch-up. Extends system life significantly.</div><div class="ad-tag">Monthly plans</div></div>
+        <div class="ad-card"><div class="ad-icon">🛡️</div><div class="ad-title">Removal & Care</div><div class="ad-desc">Safe, damage-free removal with scalp treatment. A clean, comfortable transition.</div><div class="ad-tag">Gentle process</div></div>
+        <div class="ad-card"><div class="ad-icon">📦</div><div class="ad-title">Starter Kit</div><div class="ad-desc">Every new system includes adhesive tape, cleaning solution, and a care brochure with maintenance schedule and lifespan guide.</div><div class="ad-tag">New clients</div></div>
+        <div class="ad-card"><div class="ad-icon">🔒</div><div class="ad-title">100% Confidential</div><div class="ad-desc">Stylists arrive discreetly. No branding, no records. Your booking stays strictly between you and us.</div><div class="ad-tag">Private by design</div></div>
+      </div>
+    </div>
+
+    <div class="site-footer">
+      <span class="footer-copy">© 2025 *INCOGNITOUP — All rights reserved</span>
+      <button class="staff-link" onclick="openPinModal()">Staff Access</button>
     </div>
   </div>
 </div>
 
-<!-- ══ BARBER APP ══ -->
+<!-- BARBER APP -->
 <div class="scr" id="s-barber-app">
   <nav class="nav">
     <div class="nav-mark" onclick="showScr('s-home')"><span class="ast">*</span>INCOGNITOUP</div>
-    <div class="nav-links">
-      <span class="nav-link" onclick="showScr('s-home')">← Back</span>
+    <div class="nav-right">
+      <div class="theme-toggle" onclick="toggleTheme()"><svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" id="theme-icon2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
+      <span class="nav-link" style="display:flex;align-items:center;gap:4px" onclick="showScr('s-home')">
+        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path d="M15 18l-6-6 6-6"/></svg>Back
+      </span>
     </div>
-    <div class="hamburger" onclick="showScr('s-home')"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path d="M15 18l-6-6 6-6"/></svg></div>
   </nav>
   <div style="overflow-y:auto;flex:1">
     <div class="reg-wrap">
       <div class="page-title">APPLY AS A<br>HAIR SYSTEM<br>STYLIST.</div>
-      <div class="page-sub">We are looking for professionals with hands-on experience in hair system installation, maintenance, and removal — not just general barbering. All applications are reviewed by our team within 48 hours.</div>
-
-      <div class="form-section">
-        <div class="form-sec-label">Personal Information</div>
+      <div class="page-sub">We are looking for professionals with direct experience in hair system installation, maintenance, and removal. General barbering experience alone does not qualify. All applications are reviewed within 48 hours.</div>
+      <div class="form-sec">
+        <div class="form-sec-lbl">Personal Information</div>
         <div class="form-grid">
-          <div class="field"><div class="field-label">Full Name</div><input placeholder="Your full name"/></div>
-          <div class="field"><div class="field-label">Mobile Number</div><input placeholder="+63 9XX XXX XXXX"/></div>
-          <div class="field"><div class="field-label">Email Address</div><input type="email" placeholder="you@email.com"/></div>
-          <div class="field"><div class="field-label">City / Area</div><input placeholder="Makati, BGC, Pasig…"/></div>
-          <div class="field full"><div class="field-label">Full Address</div><input placeholder="Street, Barangay, City"/></div>
+          <div class="field-reg"><div class="f-label">Full Name</div><input placeholder="Your full name"/></div>
+          <div class="field-reg"><div class="f-label">Mobile Number</div><input placeholder="+63 9XX XXX XXXX"/></div>
+          <div class="field-reg"><div class="f-label">Email Address</div><input type="email" placeholder="you@email.com"/></div>
+          <div class="field-reg"><div class="f-label">City / Area</div><input placeholder="Makati, BGC, Pasig…"/></div>
+          <div class="field-reg full"><div class="f-label">Full Address</div><input placeholder="Street, Barangay, City"/></div>
         </div>
       </div>
-
-      <div class="form-section">
-        <div class="form-sec-label">Hair System Experience</div>
+      <div class="form-sec">
+        <div class="form-sec-lbl">Hair System Experience (Required)</div>
         <div class="form-grid">
-          <div class="field"><div class="field-label">Years in Hair Systems</div>
-            <select><option value="">Select</option><option>1–2 years</option><option>3–5 years</option><option>5–10 years</option><option>10+ years</option></select></div>
-          <div class="field"><div class="field-label">Primary Expertise</div>
-            <select><option value="">Select</option><option>Installation</option><option>Maintenance & Cleaning</option><option>Removal</option><option>All of the above</option></select></div>
-          <div class="field full"><div class="field-label">Describe Your Hair System Experience</div><textarea rows="4" placeholder="Describe specific experience with hair systems — types of bases, adhesives, techniques used, client profiles, etc."></textarea></div>
+          <div class="field-reg"><div class="f-label">Years in Hair Systems</div><select><option value="">Select</option><option>1–2 years</option><option>3–5 years</option><option>5–10 years</option><option>10+ years</option></select></div>
+          <div class="field-reg"><div class="f-label">Primary Expertise</div><select><option value="">Select</option><option>Installation</option><option>Maintenance & Cleaning</option><option>Removal</option><option>All services</option></select></div>
+          <div class="field-reg full"><div class="f-label">Describe Your Hair System Experience</div><textarea rows="4" placeholder="Describe experience with hair systems — base types, adhesives, techniques, client profiles…"></textarea></div>
         </div>
-        <div style="margin-top:10px;font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:10px">Services you can offer</div>
-        <div class="checkbox-item"><input type="checkbox" id="ck1"/><label for="ck1">Full hair system installation (lace, poly, mono, skin base)</label></div>
-        <div class="checkbox-item"><input type="checkbox" id="ck2"/><label for="ck2">Professional cut and blend to match system</label></div>
-        <div class="checkbox-item"><input type="checkbox" id="ck3"/><label for="ck3">Monthly maintenance and reattachment</label></div>
-        <div class="checkbox-item"><input type="checkbox" id="ck4"/><label for="ck4">Safe removal and scalp aftercare</label></div>
-        <div class="checkbox-item"><input type="checkbox" id="ck5"/><label for="ck5">System cleaning and conditioning</label></div>
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin:10px 0 8px">Services you can offer</div>
+        <div class="ck-item"><input type="checkbox"/><label>Full installation — lace, poly, mono, and skin base systems</label></div>
+        <div class="ck-item"><input type="checkbox"/><label>Professional cut and blend to match the system</label></div>
+        <div class="ck-item"><input type="checkbox"/><label>Monthly maintenance and reattachment</label></div>
+        <div class="ck-item"><input type="checkbox"/><label>Safe removal with scalp aftercare</label></div>
+        <div class="ck-item"><input type="checkbox"/><label>System cleaning and conditioning</label></div>
       </div>
-
-      <div class="form-section">
-        <div class="form-sec-label">Logistics</div>
+      <div class="form-sec">
+        <div class="form-sec-lbl">Logistics</div>
         <div class="form-grid">
-          <div class="field"><div class="field-label">Transportation</div>
-            <select><option value="">Select</option><option>Motorcycle</option><option>Private Car</option><option>Grab / Rideshare</option></select></div>
-          <div class="field"><div class="field-label">Coverage Areas</div><input placeholder="Makati, BGC, Ortigas…"/></div>
+          <div class="field-reg"><div class="f-label">Transportation</div><select><option value="">Select</option><option>Motorcycle</option><option>Private Car</option><option>Grab / Rideshare</option></select></div>
+          <div class="field-reg"><div class="f-label">Coverage Areas</div><input placeholder="Makati, BGC, Pasig…"/></div>
         </div>
       </div>
-
-      <div class="form-section">
-        <div class="form-sec-label">Documents & Verification</div>
+      <div class="form-sec">
+        <div class="form-sec-lbl">Documents</div>
         <div class="form-grid">
-          <div class="field"><div class="field-label">Valid Government ID</div><input type="file" accept="image/*,.pdf"/></div>
-          <div class="field"><div class="field-label">Portfolio / Certificate (optional)</div><input type="file" accept="image/*,.pdf"/></div>
+          <div class="field-reg"><div class="f-label">Valid Government ID</div><input type="file" accept="image/*,.pdf"/></div>
+          <div class="field-reg"><div class="f-label">Portfolio / Certificate (optional)</div><input type="file" accept="image/*,.pdf"/></div>
         </div>
       </div>
-
-      <div class="form-section">
-        <div class="form-sec-label">Agreement</div>
-        <div class="checkbox-item"><input type="checkbox" id="ck-conf"/><label for="ck-conf">I understand this role requires hair system expertise and I agree to maintain full client confidentiality at all times.</label></div>
-        <div class="checkbox-item"><input type="checkbox" id="ck-terms"/><label for="ck-terms">I agree to the terms of service and background verification process.</label></div>
+      <div class="form-sec">
+        <div class="form-sec-lbl">Agreement</div>
+        <div class="ck-item"><input type="checkbox"/><label>I confirm that I have direct experience with hair system installation, maintenance, and removal — not general barbering only.</label></div>
+        <div class="ck-item"><input type="checkbox"/><label>I agree to maintain full client confidentiality and understand that client identities are never to be disclosed.</label></div>
+        <div class="ck-item"><input type="checkbox"/><label>I agree to terms of service and consent to identity verification.</label></div>
       </div>
-
       <button class="submit-btn" onclick="submitBarberApp()">SUBMIT APPLICATION →</button>
-      <p style="font-family:var(--fm);font-size:9px;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;margin-top:14px;line-height:1.8">Your information is encrypted and reviewed confidentially. We will contact you within 48 hours.</p>
+      <p style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;margin-top:12px;line-height:1.8">Encrypted. Confidential. Reviewed within 48 hours.</p>
     </div>
   </div>
 </div>
 
-<!-- ══ ADMIN ══ -->
+<!-- ADMIN -->
 <div class="scr" id="s-admin">
-  <nav class="nav">
-    <div class="nav-mark" onclick="showScr('s-home')"><span class="ast">*</span>INCOGNITOUP</div>
-    <div class="nav-links">
-      <span class="nav-link" onclick="showScr('s-home')">← Exit Admin</span>
+  <nav class="nav" style="background:#fff;border-bottom:1px solid #e0e0e0">
+    <div class="nav-mark" style="color:#111" onclick="showScr('s-home')"><span style="color:#c42828">*</span>INCOGNITOUP</div>
+    <div class="nav-right">
+      <span class="nav-link" style="color:#888" onclick="showScr('s-home')">← Exit</span>
     </div>
-    <div class="hamburger" onclick="showScr('s-home')"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path d="M15 18l-6-6 6-6"/></svg></div>
   </nav>
-  <div class="admin-mobile-tabs" id="admin-tabs"></div>
-  <div class="admin-layout">
-    <div class="admin-sidebar" id="admin-sidebar"></div>
-    <div class="admin-content" id="admin-content"></div>
+  <div class="adm-mob-tabs" id="adm-mob-tabs"></div>
+  <div class="admin-wrap">
+    <div class="admin-sidebar" id="adm-sidebar"></div>
+    <div class="adm-content" id="adm-content"></div>
   </div>
 </div>
 
-<!-- ══ OVERLAY + SHEET ══ -->
+<!-- SHEET OVERLAY -->
 <div class="overlay" id="overlay" onclick="closeSheet()"></div>
 <div class="sheet" id="sheet">
   <div class="sheet-handle"></div>
-  <div class="sheet-head">
-    <div class="sheet-eyebrow" id="sh-ey">Step 1 of 6</div>
-    <div class="sheet-title" id="sh-title">SELECT SYSTEM</div>
+  <div class="sh-head">
+    <div class="sh-ey" id="sh-ey">Step 1 of 6</div>
+    <div class="sh-title" id="sh-title">SELECT SYSTEM</div>
     <div class="sh-dots" id="sh-dots"></div>
   </div>
-  <div class="sheet-body" id="sh-body"></div>
-  <div class="sheet-footer">
-    <button class="sh-back" id="sh-back" onclick="sheetPrev()">← Back</button>
-    <button class="sh-cta" id="sh-cta" onclick="sheetNext()" disabled>
+  <div class="sh-body" id="sh-body"></div>
+  <div class="sh-footer">
+    <button class="sh-back" id="sh-back" onclick="shPrev()">← Back</button>
+    <button class="sh-cta" id="sh-cta" onclick="shNext()" disabled>
       <span id="sh-cta-txt">NEXT</span>
       <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </button>
   </div>
 </div>
 
-<!-- ══ BOOKING DETAIL MODAL ══ -->
-<div class="modal-overlay" id="booking-modal">
-  <div class="modal" id="booking-modal-body"></div>
+<!-- Admin modals -->
+<div class="adm-modal-ov" id="adm-modal-ov" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="adm-modal" id="adm-modal-body"></div>
 </div>
 
-<!-- ══ BARBER APP MODAL ══ -->
-<div class="modal-overlay" id="app-modal">
-  <div class="modal" id="app-modal-body"></div>
-</div>
-
-</div>
+</div><!-- #app -->
 <script>
-// ══ DATA ══
+// ════ DATA ════
 const SYSTEMS=[
-  {id:1,name:'The Executive',style:'Classic Slick',color:'Jet Black',base:'Full Lace',size:'Medium',price:8500,badge:'BESTSELLER',letter:'E'},
-  {id:2,name:'The Sovereign',style:'Natural Wave',color:'Dark Brown',base:'Swiss Lace',size:'Large',price:12000,badge:'PREMIUM',letter:'S'},
-  {id:3,name:'The Proxy',style:'Textured',color:'Salt & Pepper',base:'Poly Skin',size:'Small',price:6800,badge:'',letter:'P'},
-  {id:4,name:'The Cipher',style:'Straight',color:'Medium Brown',base:'French Lace',size:'Medium',price:9200,badge:'NEW',letter:'C'},
-  {id:5,name:'The Atlas',style:'Curly / Coily',color:'Natural Black',base:'Full Lace',size:'Large',price:11500,badge:'',letter:'A'},
-  {id:6,name:'The Stealth',style:'Thin Skin',color:'Custom',base:'0.03mm Poly',size:'Medium',price:7400,badge:'',letter:'T'},
-  {id:7,name:'The Signal',style:'Side Part',color:'Light Brown',base:'Mono Crown',size:'Medium',price:8900,badge:'',letter:'SI'},
-  {id:8,name:'The Ghost',style:'Buzz Look',color:'Dark Blonde',base:'Skin Base',size:'Small',price:6200,badge:'',letter:'G'},
+  {id:1,name:'The Executive',style:'Classic Slick',color:'Jet Black',base:'Full Lace',size:'Medium',cost:5500,price:8500,badge:'BESTSELLER',letter:'E',
+   images:['Classic Slick 1','Classic Slick 2','Classic Slick 3']},
+  {id:2,name:'The Sovereign',style:'Natural Wave',color:'Dark Brown',base:'Swiss Lace',size:'Large',cost:7500,price:12000,badge:'PREMIUM',letter:'S',
+   images:['Wave Cut 1','Wave Cut 2','Wave Cut 3']},
+  {id:3,name:'The Proxy',style:'Textured',color:'Salt & Pepper',base:'Poly Skin',size:'Small',cost:4200,price:6800,badge:'',letter:'P',
+   images:['Textured 1','Textured 2','Textured 3']},
+  {id:4,name:'The Cipher',style:'Straight',color:'Medium Brown',base:'French Lace',size:'Medium',cost:5800,price:9200,badge:'NEW',letter:'C',
+   images:['Straight 1','Straight 2','Straight 3']},
+  {id:5,name:'The Atlas',style:'Curly / Coily',color:'Natural Black',base:'Full Lace',size:'Large',cost:7200,price:11500,badge:'',letter:'A',
+   images:['Curly 1','Curly 2','Curly 3']},
+  {id:6,name:'The Stealth',style:'Thin Skin',color:'Custom',base:'0.03mm Poly',size:'Medium',cost:4600,price:7400,badge:'',letter:'T',
+   images:['Thin Skin 1','Thin Skin 2','Thin Skin 3']},
+  {id:7,name:'The Signal',style:'Side Part',color:'Light Brown',base:'Mono Crown',size:'Medium',cost:5500,price:8900,badge:'',letter:'SI',
+   images:['Side Part 1','Side Part 2','Side Part 3']},
+  {id:8,name:'The Ghost',style:'Buzz Look',color:'Dark Blonde',base:'Skin Base',size:'Small',cost:3800,price:6200,badge:'',letter:'G',
+   images:['Buzz 1','Buzz 2','Buzz 3']},
 ];
 const SERVICES=[
-  {id:'install',name:'Installation',sub:'Full fitting, bonding & initial style',price:2500,dur:'2–3 hrs'},
-  {id:'cut',name:'Cut & Blend',sub:'Trim, fade, taper or classic cut',price:1200,dur:'1 hr'},
-  {id:'maint',name:'Maintenance',sub:'Clean, reattach & touch-up',price:1800,dur:'1.5 hrs'},
-  {id:'full',name:'Full Package',sub:'Installation + cut + styling',price:4500,dur:'3–4 hrs'},
-  {id:'removal',name:'Removal & Aftercare',sub:'Safe removal with scalp treatment',price:900,dur:'45 min'},
+  {id:'install',name:'Installation',sub:'Fitting, bonding & initial style',fee:1000,dur:'2–3 hrs'},
+  {id:'cut',name:'Cut & Blend',sub:'Tapered, fade, classic or conservative cut',fee:800,dur:'1 hr'},
+  {id:'maint',name:'Maintenance',sub:'Clean, reattach & touch-up',fee:900,dur:'1.5 hrs'},
+  {id:'full',name:'Full Package',sub:'Installation + cut + styling',fee:1500,dur:'3–4 hrs'},
+  {id:'removal',name:'Removal & Aftercare',sub:'Safe removal with scalp treatment',fee:700,dur:'45 min'},
 ];
-const BOOKINGS_DATA=[
-  {id:'ITP-14892',client:'A. Dela Cruz',phone:'+63 912 345 6789',contact:'text',system:'The Executive',service:'Full Package',date:'2025-05-03',time:'2:00 PM',loc:'Home',addr:'123 Emerald Ave, Pasig',notes:'Has private room. Non-smoker.',status:'pending',total:13500,isNew:true},
-  {id:'ITP-14891',client:'R. Bondoc',phone:'+63 917 876 5432',contact:'email',system:'The Sovereign',service:'Installation',date:'2025-05-02',time:'10:00 AM',loc:'Hotel',addr:'Seda BGC, Taguig',notes:'Room 802.',status:'confirmed',total:14500,isNew:false},
-  {id:'ITP-14890',client:'J. Lim',phone:'+63 908 111 2222',contact:'text',system:'The Proxy',service:'Maintenance',date:'2025-05-01',time:'3:00 PM',loc:'Home',addr:'45 Villa Verde, Marikina',notes:'Ground floor unit.',status:'awaiting',total:8600,isNew:false},
-  {id:'ITP-14889',client:'M. Cruz',phone:'+63 919 333 4444',contact:'email',system:'The Cipher',service:'Cut & Blend',date:'2025-04-30',time:'1:00 PM',loc:'Home',addr:'89 Katipunan, QC',notes:'',status:'confirmed',total:10400,isNew:false},
-  {id:'ITP-14888',client:'P. Santos',phone:'+63 926 555 6666',contact:'text',system:'The Atlas',service:'Full Package',date:'2025-04-28',time:'11:00 AM',loc:'Office',addr:'Ayala Tower, Makati',notes:'25th floor.',status:'rejected',total:16000,isNew:false},
+const STYLISTS=[
+  {id:1,name:'Stylist A',area:'Makati / BGC',dist:1.2,exp:'8 yrs',transport:'Car',init:'SA'},
+  {id:2,name:'Stylist B',area:'Pasig / Ortigas',dist:2.4,exp:'6 yrs',transport:'Motorcycle',init:'SB'},
+  {id:3,name:'Stylist C',area:'Taguig / BGC',dist:0.8,exp:'12 yrs',transport:'Car',init:'SC'},
+  {id:4,name:'Stylist D',area:'QC / Mandaluyong',dist:3.1,exp:'4 yrs',transport:'Motorcycle',init:'SD'},
+];
+const BOOKINGS=[
+  // PENDING (10)
+  {id:'ITP-14892',client:'A. Dela Cruz',phone:'+63 912 345 6789',contact:'text',system:'The Executive',service:'Full Package',date:'2025-05-03',time:'2:00 PM',loc:'Home',addr:'123 Emerald Ave, Pasig',notes:'Private room.',status:'pending',sysPrice:8500,svcFee:1500,isNew:true},
+  {id:'ITP-14880',client:'B. Reyes',phone:'+63 917 111 2222',contact:'text',system:'The Sovereign',service:'Installation',date:'2025-05-05',time:'10:00 AM',loc:'Hotel',addr:'Marriott BGC, Taguig',notes:'Room 1204.',status:'pending',sysPrice:12000,svcFee:1000,isNew:true},
+  {id:'ITP-14879',client:'C. Navarro',phone:'+63 908 222 3333',contact:'email',system:'The Cipher',service:'Full Package',date:'2025-05-07',time:'1:00 PM',loc:'Home',addr:'44 Sampaguita St, QC',notes:'',status:'pending',sysPrice:9200,svcFee:1500,isNew:true},
+  {id:'ITP-14878',client:'D. Santos',phone:'+63 926 333 4444',contact:'text',system:'The Ghost',service:'Installation',date:'2025-05-09',time:'3:00 PM',loc:'Home',addr:'77 Rizal Ave, Caloocan',notes:'',status:'pending',sysPrice:6200,svcFee:1000,isNew:true},
+  {id:'ITP-14877',client:'E. Torres',phone:'+63 919 444 5555',contact:'email',system:'The Proxy',service:'Maintenance',date:'2025-05-11',time:'11:00 AM',loc:'Home',addr:'12 Banawe St, QC',notes:'',status:'pending',sysPrice:6800,svcFee:900,isNew:false},
+  {id:'ITP-14876',client:'F. Villanueva',phone:'+63 912 555 6666',contact:'text',system:'The Atlas',service:'Full Package',date:'2025-05-13',time:'9:00 AM',loc:'Office',addr:'Net Lima, BGC',notes:'18th floor.',status:'pending',sysPrice:11500,svcFee:1500,isNew:true},
+  {id:'ITP-14875',client:'G. Mendoza',phone:'+63 917 666 7777',contact:'email',system:'The Stealth',service:'Installation',date:'2025-05-15',time:'2:00 PM',loc:'Hotel',addr:'Shangri-La Makati',notes:'',status:'pending',sysPrice:7400,svcFee:1000,isNew:true},
+  {id:'ITP-14874',client:'H. Garcia',phone:'+63 908 777 8888',contact:'text',system:'The Signal',service:'Cut & Blend',date:'2025-05-17',time:'4:00 PM',loc:'Home',addr:'55 Mabini St, Mandaluyong',notes:'',status:'pending',sysPrice:8900,svcFee:800,isNew:false},
+  {id:'ITP-14873',client:'I. Lopez',phone:'+63 926 888 9999',contact:'email',system:'The Executive',service:'Maintenance',date:'2025-05-20',time:'10:00 AM',loc:'Home',addr:'33 F. Manalo, Pasig',notes:'',status:'pending',sysPrice:8500,svcFee:900,isNew:false},
+  {id:'ITP-14872',client:'J. Aquino',phone:'+63 919 999 0000',contact:'text',system:'The Cipher',service:'Full Package',date:'2025-05-22',time:'1:00 PM',loc:'Home',addr:'99 Aurora Blvd, QC',notes:'Private room.',status:'pending',sysPrice:9200,svcFee:1500,isNew:true},
+  // CONFIRMED (10)
+  {id:'ITP-14891',client:'R. Bondoc',phone:'+63 917 876 5432',contact:'email',system:'The Sovereign',service:'Installation',date:'2025-05-04',time:'10:00 AM',loc:'Hotel',addr:'Seda BGC, Taguig',notes:'Room 802.',status:'confirmed',sysPrice:12000,svcFee:1000,isNew:true},
+  {id:'ITP-14889',client:'M. Cruz',phone:'+63 919 333 4444',contact:'email',system:'The Cipher',service:'Cut & Blend',date:'2025-05-06',time:'1:00 PM',loc:'Home',addr:'89 Katipunan, QC',notes:'',status:'confirmed',sysPrice:9200,svcFee:800,isNew:false},
+  {id:'ITP-14870',client:'K. Ramos',phone:'+63 912 010 1010',contact:'text',system:'The Executive',service:'Full Package',date:'2025-05-08',time:'3:00 PM',loc:'Home',addr:'21 Acacia Ave, Pasig',notes:'',status:'confirmed',sysPrice:8500,svcFee:1500,isNew:true},
+  {id:'ITP-14869',client:'L. Bautista',phone:'+63 917 020 2020',contact:'email',system:'The Atlas',service:'Installation',date:'2025-05-10',time:'11:00 AM',loc:'Hotel',addr:'Novotel Araneta',notes:'',status:'confirmed',sysPrice:11500,svcFee:1000,isNew:true},
+  {id:'ITP-14868',client:'M. Flores',phone:'+63 908 030 3030',contact:'text',system:'The Proxy',service:'Maintenance',date:'2025-05-12',time:'9:00 AM',loc:'Home',addr:'66 Tandang Sora, QC',notes:'',status:'confirmed',sysPrice:6800,svcFee:900,isNew:false},
+  {id:'ITP-14867',client:'N. Castillo',phone:'+63 926 040 4040',contact:'email',system:'The Ghost',service:'Full Package',date:'2025-05-14',time:'2:00 PM',loc:'Home',addr:'18 Sikatuna, Cubao',notes:'',status:'confirmed',sysPrice:6200,svcFee:1500,isNew:true},
+  {id:'ITP-14866',client:'O. Espinosa',phone:'+63 919 050 5050',contact:'text',system:'The Signal',service:'Cut & Blend',date:'2025-05-16',time:'4:00 PM',loc:'Office',addr:'Rockwell, Makati',notes:'5th floor.',status:'confirmed',sysPrice:8900,svcFee:800,isNew:false},
+  {id:'ITP-14865',client:'P. Delos Reyes',phone:'+63 912 060 6060',contact:'email',system:'The Stealth',service:'Installation',date:'2025-05-19',time:'1:00 PM',loc:'Hotel',addr:'EDSA Shangri-La',notes:'',status:'confirmed',sysPrice:7400,svcFee:1000,isNew:true},
+  {id:'ITP-14864',client:'Q. Hernandez',phone:'+63 917 070 7070',contact:'text',system:'The Sovereign',service:'Full Package',date:'2025-05-21',time:'10:00 AM',loc:'Home',addr:'44 Congressional Ave, QC',notes:'',status:'confirmed',sysPrice:12000,svcFee:1500,isNew:true},
+  {id:'ITP-14863',client:'R. Macaraeg',phone:'+63 908 080 8080',contact:'email',system:'The Cipher',service:'Maintenance',date:'2025-05-24',time:'3:00 PM',loc:'Home',addr:'77 Sto. Domingo, QC',notes:'',status:'confirmed',sysPrice:9200,svcFee:900,isNew:false},
+  // AWAITING PAYMENT (10)
+  {id:'ITP-14890',client:'J. Lim',phone:'+63 908 111 2222',contact:'text',system:'The Proxy',service:'Maintenance',date:'2025-05-02',time:'3:00 PM',loc:'Home',addr:'45 Villa Verde, Marikina',notes:'',status:'awaiting',sysPrice:6800,svcFee:900,isNew:false},
+  {id:'ITP-14862',client:'S. Ocampo',phone:'+63 926 090 9090',contact:'text',system:'The Executive',service:'Installation',date:'2025-05-05',time:'9:00 AM',loc:'Home',addr:'11 Gen. Luis, Caloocan',notes:'',status:'awaiting',sysPrice:8500,svcFee:1000,isNew:true},
+  {id:'ITP-14861',client:'T. Valdez',phone:'+63 919 101 1011',contact:'email',system:'The Ghost',service:'Cut & Blend',date:'2025-05-07',time:'2:00 PM',loc:'Home',addr:'55 Lakandula St, Manila',notes:'',status:'awaiting',sysPrice:6200,svcFee:800,isNew:false},
+  {id:'ITP-14860',client:'U. Pascual',phone:'+63 912 121 2121',contact:'text',system:'The Atlas',service:'Full Package',date:'2025-05-09',time:'11:00 AM',loc:'Hotel',addr:'Hotel Okura Manila',notes:'',status:'awaiting',sysPrice:11500,svcFee:1500,isNew:true},
+  {id:'ITP-14859',client:'V. Domingo',phone:'+63 917 131 3131',contact:'email',system:'The Signal',service:'Maintenance',date:'2025-05-11',time:'4:00 PM',loc:'Home',addr:'88 Sgt. Esguerra, QC',notes:'',status:'awaiting',sysPrice:8900,svcFee:900,isNew:false},
+  {id:'ITP-14858',client:'W. Santiago',phone:'+63 908 141 4141',contact:'text',system:'The Stealth',service:'Installation',date:'2025-05-14',time:'10:00 AM',loc:'Home',addr:'33 Kamias Rd, QC',notes:'',status:'awaiting',sysPrice:7400,svcFee:1000,isNew:true},
+  {id:'ITP-14857',client:'X. Ferrer',phone:'+63 926 151 5151',contact:'email',system:'The Proxy',service:'Full Package',date:'2025-05-16',time:'1:00 PM',loc:'Office',addr:'Ayala Ave, Makati',notes:'30th floor.',status:'awaiting',sysPrice:6800,svcFee:1500,isNew:true},
+  {id:'ITP-14856',client:'Y. Soriano',phone:'+63 919 161 6161',contact:'text',system:'The Sovereign',service:'Cut & Blend',date:'2025-05-18',time:'3:00 PM',loc:'Home',addr:'22 Malanday, Marikina',notes:'',status:'awaiting',sysPrice:12000,svcFee:800,isNew:false},
+  {id:'ITP-14855',client:'Z. Aguilar',phone:'+63 912 171 7171',contact:'email',system:'The Executive',service:'Maintenance',date:'2025-05-21',time:'9:00 AM',loc:'Home',addr:'66 Maysilo, Mandaluyong',notes:'',status:'awaiting',sysPrice:8500,svcFee:900,isNew:false},
+  {id:'ITP-14854',client:'AA. Concepcion',phone:'+63 917 181 8181',contact:'text',system:'The Cipher',service:'Installation',date:'2025-05-23',time:'2:00 PM',loc:'Hotel',addr:'The Manila Hotel',notes:'',status:'awaiting',sysPrice:9200,svcFee:1000,isNew:true},
+  // DECLINED (10)
+  {id:'ITP-14888',client:'P. Santos',phone:'+63 926 555 6666',contact:'text',system:'The Atlas',service:'Full Package',date:'2025-05-01',time:'11:00 AM',loc:'Office',addr:'Ayala Tower, Makati',notes:'25th floor.',status:'rejected',sysPrice:11500,svcFee:1500,isNew:false},
+  {id:'ITP-14853',client:'BB. Reyes',phone:'+63 908 191 9191',contact:'email',system:'The Ghost',service:'Installation',date:'2025-05-03',time:'4:00 PM',loc:'Home',addr:'44 Tomas Morato, QC',notes:'',status:'rejected',sysPrice:6200,svcFee:1000,isNew:true},
+  {id:'ITP-14852',client:'CC. Dela Rosa',phone:'+63 919 202 2020',contact:'text',system:'The Proxy',service:'Cut & Blend',date:'2025-05-06',time:'10:00 AM',loc:'Home',addr:'11 Scout Albano, QC',notes:'',status:'rejected',sysPrice:6800,svcFee:800,isNew:false},
+  {id:'ITP-14851',client:'DD. Mercado',phone:'+63 912 212 2121',contact:'email',system:'The Signal',service:'Full Package',date:'2025-05-08',time:'1:00 PM',loc:'Hotel',addr:'Diamond Hotel Manila',notes:'',status:'rejected',sysPrice:8900,svcFee:1500,isNew:true},
+  {id:'ITP-14850',client:'EE. Gutierrez',phone:'+63 917 222 2222',contact:'text',system:'The Stealth',service:'Maintenance',date:'2025-05-10',time:'3:00 PM',loc:'Home',addr:'77 N. Domingo, QC',notes:'',status:'rejected',sysPrice:7400,svcFee:900,isNew:false},
+  {id:'ITP-14849',client:'FF. Morales',phone:'+63 908 232 3232',contact:'email',system:'The Executive',service:'Installation',date:'2025-05-13',time:'11:00 AM',loc:'Home',addr:'33 Boni Ave, Mandaluyong',notes:'',status:'rejected',sysPrice:8500,svcFee:1000,isNew:true},
+  {id:'ITP-14848',client:'GG. Jimenez',phone:'+63 926 242 4242',contact:'text',system:'The Sovereign',service:'Cut & Blend',date:'2025-05-15',time:'9:00 AM',loc:'Office',addr:'RCBC Plaza, Makati',notes:'',status:'rejected',sysPrice:12000,svcFee:800,isNew:false},
+  {id:'ITP-14847',client:'HH. Salazar',phone:'+63 919 252 5252',contact:'email',system:'The Atlas',service:'Maintenance',date:'2025-05-18',time:'2:00 PM',loc:'Home',addr:'55 Bagong Ilog, Pasig',notes:'',status:'rejected',sysPrice:11500,svcFee:900,isNew:false},
+  {id:'ITP-14846',client:'II. Padilla',phone:'+63 912 262 6262',contact:'text',system:'The Cipher',service:'Full Package',date:'2025-05-20',time:'4:00 PM',loc:'Home',addr:'22 Marikina Heights',notes:'',status:'rejected',sysPrice:9200,svcFee:1500,isNew:true},
+  {id:'ITP-14845',client:'JJ. Corpuz',phone:'+63 917 272 7272',contact:'email',system:'The Ghost',service:'Installation',date:'2025-05-25',time:'10:00 AM',loc:'Hotel',addr:'Sofitel Manila',notes:'',status:'rejected',sysPrice:6200,svcFee:1000,isNew:true},
 ];
 const BARBER_APPS=[
   {id:'APP-001',name:'Gio Navarro',phone:'+63 912 000 1111',exp:'5 yrs',specialty:'Installation',area:'Makati, BGC',transport:'Car',status:'pending',date:'2025-04-27'},
   {id:'APP-002',name:'Ben Torres',phone:'+63 917 000 2222',exp:'3 yrs',specialty:'Maintenance & Cleaning',area:'Pasig, Marikina',transport:'Motorcycle',status:'pending',date:'2025-04-26'},
-  {id:'APP-003',name:'Leo Aquino',phone:'+63 908 000 3333',exp:'9 yrs',specialty:'All of the above',area:'Metro Manila',transport:'Car',status:'verified',date:'2025-04-24'},
+  {id:'APP-003',name:'Leo Aquino',phone:'+63 908 000 3333',exp:'9 yrs',specialty:'All services',area:'Metro Manila',transport:'Car',status:'verified',date:'2025-04-24'},
 ];
 
-// ══ BOOKING STATE ══
-const B={system:null,service:null,date:'',time:'',loc:'',addr:'',phone:'',name:'',contactPref:'',locPrivate:null,step:0};
+// ════ STATE ════
+const B={system:null,service:null,date:'',time:'',loc:'',addr:'',name:'',phone:'',contact:'',locPrivate:null,notes:'',step:0};
 const TOTAL_STEPS=6;
+let lbImages=[],lbIdx=0;
+let expandedSys=null;
+let calDate=new Date(2025,4,1); // May 2025 — matches test data
+let adminView='calendar';
+const PIN='1234';
 
-// ══ SCREEN NAV ══
+// ════ THEME ════
+let theme=localStorage.getItem('theme')||'dark';
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  theme=t;
+  localStorage.setItem('theme',t);
+  const icon=document.getElementById('theme-icon');
+  const icon2=document.getElementById('theme-icon2');
+  const svg=t==='dark'?'<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>':'<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+  if(icon)icon.innerHTML=svg;
+  if(icon2)icon2.innerHTML=svg;
+}
+function toggleTheme(){applyTheme(theme==='dark'?'light':'dark');}
+applyTheme(theme);
+
+// ════ SCREENS ════
 function showScr(id){
   document.querySelectorAll('.scr').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
-  if(id==='s-admin') renderAdmin('bookings');
+  if(id==='s-admin')renderAdmin(adminView);
 }
-function toggleMobileMenu(){
-  const m=document.getElementById('mobile-menu');
-  m.style.display=m.style.display==='none'?'flex':'none';
-}
-function closeMobileMenu(){document.getElementById('mobile-menu').style.display='none';}
+function goCover(){showScr('s-home');}
 
-// ══ SHEET ══
+function openSheetSysDetail(s,startIdx){
+  if(!s)return;
+  const ov=document.createElement('div');
+  ov.id='ssd-ov';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:65;display:flex;align-items:flex-end;justify-content:center;animation:fi .2s ease';
+  ov.onclick=(e)=>{if(e.target===ov)ov.remove();};
+  ov.innerHTML=`<div style="background:var(--card);width:100%;max-width:520px;max-height:90dvh;display:flex;flex-direction:column;border-top:1px solid var(--line)">
+    <div style="width:36px;height:3px;background:var(--dim);border-radius:2px;margin:12px auto 0;flex-shrink:0"></div>
+    <div style="flex-shrink:0;padding:12px 16px 0">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);margin-bottom:8px">Sample images — tap to fullscreen</div>
+      <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory">
+        ${s.images.map((img,i)=>`<div onclick="openLightbox(${JSON.stringify(s.images)},${i},'${s.name}')" style="width:110px;height:74px;flex-shrink:0;scroll-snap-align:start;background:var(--card2);border:1px solid ${i===startIdx?'var(--red)':'var(--line2)'};display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:28px;color:var(--line2);cursor:pointer">${img}</div>`).join('')}
+      </div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:14px 16px 8px">
+      <div style="font-family:var(--ff);font-size:clamp(24px,6vw,34px);letter-spacing:.03em;line-height:.92;margin-bottom:10px">${s.name}</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px">
+        ${[s.style,s.color,s.base,s.size].map(a=>`<span style="font-family:var(--fm);font-size:8px;letter-spacing:.08em;color:var(--sub);border:1px solid var(--dim);padding:3px 7px">${a}</span>`).join('')}
+      </div>
+      ${[['System Price',`₱${s.price.toLocaleString()}`],['Base Type',s.base],['Style',s.style],['Color',s.color],['Size',s.size]].map(([l,v])=>`<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-size:12px"><span style="color:var(--sub)">${l}</span><span style="font-weight:600">${v}</span></div>`).join('')}
+    </div>
+    <div style="padding:12px 16px 36px;flex-shrink:0;border-top:1px solid var(--line);display:flex;gap:8px">
+      <button style="flex:1;background:transparent;border:1px solid var(--line2);padding:13px;font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);cursor:pointer" onclick="document.getElementById('ssd-ov').remove()">← BACK</button>
+      <button style="flex:2;background:var(--red);border:none;padding:13px;font-family:var(--ff);font-size:18px;letter-spacing:.1em;color:#fff;cursor:pointer" onclick="document.getElementById('ssd-ov').remove();B.system=SYSTEMS.find(x=>x.id===${s.id});document.querySelectorAll('.lib-card').forEach(x=>x.classList.remove('sel'));document.querySelector('.lib-card[data-sid=\\'${s.id}\\']')?.classList.add('sel');setCTA(true,'NEXT')">SELECT THIS SYSTEM</button>
+    </div>
+  </div>`;
+  document.getElementById('app').appendChild(ov);
+}
+
+function openStatusChecker(){
+  const ov=document.createElement('div');
+  ov.id='status-ov';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:60;display:flex;align-items:flex-end;justify-content:center;animation:fi .2s ease';
+  ov.onclick=(e)=>{if(e.target===ov)ov.remove();};
+  ov.innerHTML=`<div style="background:var(--card);width:100%;max-width:520px;max-height:92dvh;display:flex;flex-direction:column;border-top:1px solid var(--line)">
+    <div style="width:36px;height:3px;background:var(--dim);border-radius:2px;margin:12px auto 0;flex-shrink:0"></div>
+    <div style="padding:16px 20px 12px;border-bottom:1px solid var(--line);flex-shrink:0">
+      <div style="font-family:var(--fm);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin-bottom:6px">Booking Status</div>
+      <div style="font-family:var(--ff);font-size:clamp(24px,6vw,32px);letter-spacing:.03em;line-height:.92">CHECK YOUR<br>BOOKING.</div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:16px 20px">
+      <div style="background:var(--card2);border:1px solid var(--line2);padding:12px 14px;margin-bottom:12px;font-size:11px;line-height:1.7;color:var(--sub);font-style:italic">Enter the booking reference number sent to you via SMS or Email, along with your phone number.</div>
+      <div style="background:var(--card2);border:1px solid var(--line2);padding:12px 14px;display:flex;flex-direction:column;gap:4px;margin-bottom:8px">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--red)">Booking Reference</div>
+        <input id="sc-ref" type="text" placeholder="e.g. ITP-14892" style="background:transparent;border:none;outline:none;font-family:var(--fb);font-size:14px;font-weight:500;color:var(--text);width:100%;color-scheme:dark"/>
+      </div>
+      <div style="background:var(--card2);border:1px solid var(--line2);padding:12px 14px;display:flex;flex-direction:column;gap:4px;margin-bottom:16px">
+        <div style="font-family:var(--fm);font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--red)">Phone Number</div>
+        <input id="sc-phone" type="tel" placeholder="+63 9XX XXX XXXX" style="background:transparent;border:none;outline:none;font-family:var(--fb);font-size:14px;font-weight:500;color:var(--text);width:100%;color-scheme:dark"/>
+      </div>
+      <div id="sc-result"></div>
+    </div>
+    <div style="padding:12px 20px 36px;border-top:1px solid var(--line);flex-shrink:0;display:flex;gap:8px">
+      <button style="flex:1;background:transparent;border:1px solid var(--line2);padding:13px;font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);cursor:pointer" onclick="document.getElementById('status-ov').remove()">CLOSE</button>
+      <button style="flex:2;background:var(--red);border:none;padding:13px;font-family:var(--ff);font-size:18px;letter-spacing:.1em;color:#fff;cursor:pointer" onclick="checkBookingStatus()">CHECK STATUS</button>
+    </div>
+  </div>`;
+  document.getElementById('app').appendChild(ov);
+}
+
+function checkBookingStatus(){
+  const ref=(document.getElementById('sc-ref')?.value||'').trim().toUpperCase();
+  const phone=(document.getElementById('sc-phone')?.value||'').trim();
+  const res=document.getElementById('sc-result');
+  if(!ref||!phone){res.innerHTML=`<div style="font-size:12px;color:var(--red);padding:8px 0">Please enter both fields.</div>`;return;}
+  const b=BOOKINGS.find(x=>x.id===ref&&x.phone===phone);
+  if(!b){res.innerHTML=`<div style="background:var(--red-s);border:1px solid var(--red-b);padding:12px 14px;font-size:12px;line-height:1.7;color:var(--text2)">No booking found with that reference and phone number. Please check your details.</div>`;return;}
+  const total=b.sysPrice+b.svcFee;
+  const down=Math.round(total*.5);
+  const statusMap={pending:{label:'Pending Approval',color:'#c8900a',step:0},awaiting:{label:'Awaiting Payment',color:'#c42828',step:2},confirmed:{label:'Confirmed',color:'#1a8a4a',step:3},rejected:{label:'Declined',color:'#888',step:-1}};
+  const st=statusMap[b.status]||statusMap.pending;
+  const steps=['Submitted — pending review','Session assigned to stylist','Downpayment received','Booking confirmed'];
+  res.innerHTML=`<div style="background:var(--card2);border:1px solid var(--line2);padding:14px;margin-bottom:10px">
+    <div style="font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);margin-bottom:4px">${b.id}</div>
+    <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px">${b.system} · ${b.service}</div>
+    <div style="display:inline-block;padding:4px 10px;border-radius:2px;font-family:var(--fm);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:${st.color}22;color:${st.color};border:1px solid ${st.color}55">${st.label}</div>
+  </div>
+  ${b.status!=='rejected'?steps.map((s,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--card2);border:1px solid var(--line);margin-bottom:4px;${i===st.step?'border-left:3px solid var(--red)':''}">
+    <div style="width:6px;height:6px;border-radius:50%;background:${i<=st.step?'var(--red)':'var(--dim)'};flex-shrink:0"></div>
+    <span style="font-size:12px;color:${i===st.step?'var(--text)':'var(--sub)'};font-weight:${i===st.step?'600':'400'}">${s}</span>
+  </div>`).join(''):`<div style="padding:12px 14px;background:var(--card2);border:1px solid var(--line);font-size:12px;color:var(--sub)">This booking was not approved. Please contact us for assistance.</div>`}
+  ${b.status==='awaiting'?`<div style="margin-top:8px;background:var(--red-s);border:1px solid var(--red-b);padding:12px 14px;font-size:11px;line-height:1.7;color:var(--text2)">Action required: Complete 50% downpayment of <strong style="color:var(--text)">₱${down.toLocaleString()}</strong> to confirm your session. Check your ${b.contact==='text'?'SMS':'Email'} for payment instructions.</div>`:''}
+  <div style="display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line);margin-top:8px;font-size:12px"><span style="color:var(--sub)">Date & Time</span><span style="font-weight:600">${b.date} · ${b.time}</span></div>
+  <div style="display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line);font-size:12px"><span style="color:var(--sub)">Total</span><span style="font-weight:600;color:var(--red)">₱${total.toLocaleString()}</span></div>`;
+}
+
+function scrollTo(id){
+  const el=document.getElementById(id);
+  if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function toggleMM(){document.getElementById('mm').classList.toggle('open');}
+function closeMM(){document.getElementById('mm').classList.remove('open');}
+
+// ════ PIN ════
+function openPinModal(){document.getElementById('pin-modal').classList.add('open');document.getElementById('pin-input').value='';document.getElementById('pin-err').textContent='';setTimeout(()=>document.getElementById('pin-input').focus(),100);}
+function closePinModal(){document.getElementById('pin-modal').classList.remove('open');}
+function checkPin(){
+  const v=document.getElementById('pin-input').value;
+  if(v===PIN){closePinModal();showScr('s-admin');}
+  else{document.getElementById('pin-err').textContent='Incorrect PIN. Try again.';document.getElementById('pin-input').value='';}
+}
+
+// ════ LIGHTBOX ════
+function openLightbox(images,idx,sysName){
+  lbImages=Array.isArray(images)?images:lbImages;
+  lbIdx=idx||0;
+  renderLbImg(sysName);
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
+function renderLbImg(label){
+  const img=document.getElementById('lb-img');
+  img.textContent=lbImages[lbIdx]||(label||'');
+  img.style.cssText='max-width:90vw;max-height:75vh;min-width:280px;min-height:180px;display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:60px;color:#333;background:#1a1a1a';
+  document.getElementById('lb-caption').textContent=`${lbImages[lbIdx]} — ${lbIdx+1} / ${lbImages.length}`;
+}
+function lbNav(dir){lbIdx=(lbIdx+dir+lbImages.length)%lbImages.length;renderLbImg();}
+
+// ════ HOME RENDER ════
+(function initHome(){
+  const g=document.getElementById('sys-grid');
+  SYSTEMS.forEach(s=>{
+    const card=document.createElement('div');
+    card.className='sys-card';
+    card.id='sys-card-'+s.id;
+    card.innerHTML=`<div class="sys-img"><div class="sys-letter">${s.letter}</div>${s.badge?`<div class="sys-badge">${s.badge}</div>`:''}</div><div class="sys-body"><div class="sys-name">${s.name}</div><div class="sys-attrs"><span class="sys-attr">${s.style}</span><span class="sys-attr">${s.color}</span><span class="sys-attr">${s.base}</span></div><div class="sys-price">₱${s.price.toLocaleString()}</div></div>`;
+    card.onclick=()=>openSysDetail(s);
+    g.appendChild(card);
+  });
+})();
+
+function openSysDetail(s){
+  const ov=document.createElement('div');
+  ov.id='sys-detail-ov';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:60;display:flex;align-items:flex-end;justify-content:center;animation:fi .2s ease';
+  ov.onclick=(e)=>{if(e.target===ov)ov.remove();};
+  ov.innerHTML=`<div style="background:var(--card);width:100%;max-width:520px;max-height:92dvh;display:flex;flex-direction:column;border-top:1px solid var(--line)">
+    <div style="width:36px;height:3px;background:var(--dim);border-radius:2px;margin:12px auto 0;flex-shrink:0"></div>
+    <!-- image slider -->
+    <div style="flex-shrink:0;padding:12px 16px 0">
+      <div style="font-family:var(--fm);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);margin-bottom:8px">Sample images — tap to fullscreen</div>
+      <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px" id="sd-track">
+        ${s.images.map((img,i)=>`<div onclick="openLightbox(${JSON.stringify(s.images)},${i},'${s.name}')" style="width:110px;height:74px;flex-shrink:0;background:var(--card2);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:28px;color:var(--line2);cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='var(--line2)'">${img}</div>`).join('')}
+      </div>
+    </div>
+    <!-- details -->
+    <div style="flex:1;overflow-y:auto;padding:14px 16px 10px">
+      <div style="font-family:var(--ff);font-size:clamp(26px,7vw,36px);letter-spacing:.03em;line-height:.92;margin-bottom:10px">${s.name}</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px">
+        ${[s.style,s.color,s.base,s.size].map(a=>`<span style="font-family:var(--fm);font-size:8px;letter-spacing:.08em;color:var(--sub);border:1px solid var(--dim);padding:3px 7px">${a}</span>`).join('')}
+      </div>
+      ${[['System Price',`₱${s.price.toLocaleString()}`],['Base Type',s.base],['Style',s.style],['Color',s.color],['Size',s.size]].map(([l,v])=>`<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-size:12px"><span style="color:var(--sub)">${l}</span><span style="font-weight:600">${v}</span></div>`).join('')}
+    </div>
+    <div style="padding:12px 16px 36px;flex-shrink:0;border-top:1px solid var(--line);display:flex;gap:8px">
+      <button style="flex:1;background:transparent;border:1px solid var(--line2);padding:13px;font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);cursor:pointer" onclick="document.getElementById('sys-detail-ov').remove()">← BACK</button>
+      <button style="flex:2;background:var(--red);border:none;padding:13px;font-family:var(--ff);font-size:18px;letter-spacing:.1em;color:#fff;cursor:pointer" onclick="document.getElementById('sys-detail-ov').remove();B.system=SYSTEMS.find(x=>x.id===${s.id});B.step=1;openSheet()">BOOK THIS SYSTEM →</button>
+    </div>
+  </div>`;
+  document.getElementById('app').appendChild(ov);
+}
+
+// ════ SHEET ════
 function openSheet(sys){
-  if(sys){B.system=sys;B.step=1;}else{B.step=0;}
+  if(sys){B.system=sys;B.step=1;}else if(!B.system){B.step=0;}
   renderSheet();
   document.getElementById('overlay').classList.add('show');
   document.getElementById('sheet').classList.add('open');
@@ -492,8 +916,7 @@ function setCTA(ok,txt){
   document.getElementById('sh-cta-txt').textContent=txt||'NEXT';
 }
 function renderDots(){
-  const c=document.getElementById('sh-dots');
-  c.innerHTML='';
+  const c=document.getElementById('sh-dots');c.innerHTML='';
   for(let i=0;i<TOTAL_STEPS;i++){
     const d=document.createElement('div');
     d.className='sh-dot';
@@ -501,65 +924,74 @@ function renderDots(){
     c.appendChild(d);
   }
 }
+
 function renderSheet(){
   renderDots();
   const bd=document.getElementById('sh-body');
-  const ey=document.getElementById('sh-ey');
-  const tt=document.getElementById('sh-title');
-  const back=document.getElementById('sh-back');
-  back.style.display=B.step>0?'block':'none';
+  document.getElementById('sh-ey').textContent=`Step ${B.step+1} of ${TOTAL_STEPS}`;
+  document.getElementById('sh-back').style.display=B.step>0?'block':'none';
   bd.scrollTop=0;
 
-  // STEP 0: System Library
+  // STEP 0 – System
   if(B.step===0){
-    ey.textContent='Step 1 of 6 — Hair System';
-    tt.innerHTML='PICK YOUR<br>SYSTEM.';
+    document.getElementById('sh-title').textContent='PICK YOUR SYSTEM.';
     bd.innerHTML='<div class="lib-grid" id="lib-g"></div>';
     const g=document.getElementById('lib-g');
     SYSTEMS.forEach(s=>{
       const c=document.createElement('div');
       c.className='lib-card'+(B.system?.id===s.id?' sel':'');
-      c.innerHTML=`<div class="lib-img"><div class="lib-letter">${s.letter}</div>${s.badge?`<div class="lib-badge">${s.badge}</div>`:''}<div class="lib-sel"><svg fill="none" viewBox="0 0 24 24" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div></div><div class="lib-info"><div class="lib-name">${s.name}</div><div class="lib-attrs"><span class="lib-attr">${s.style}</span><span class="lib-attr">${s.color}</span><span class="lib-attr">${s.base}</span></div><div class="lib-price">₱${s.price.toLocaleString()}</div></div>`;
-      c.onclick=()=>{B.system=s;document.querySelectorAll('.lib-card').forEach(x=>x.classList.remove('sel'));c.classList.add('sel');setCTA(true,'NEXT');};
+      c.innerHTML=`<div class="lib-img" style="cursor:default"><div class="lib-letter">${s.letter}</div>${s.badge?`<div class="lib-badge">${s.badge}</div>`:''}<div class="lib-sel"><svg fill="none" viewBox="0 0 24 24" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div></div>
+      <div class="lib-info">
+        <div class="lib-name">${s.name}</div>
+        <div class="lib-attrs"><span class="lib-attr">${s.style}</span><span class="lib-attr">${s.color}</span><span class="lib-attr">${s.base}</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px">
+          <div class="lib-price">₱${s.price.toLocaleString()}</div>
+          <button onclick="event.stopPropagation();openSheetSysDetail(SYSTEMS.find(x=>x.id===${s.id}),0)" style="background:none;border:1px solid var(--line2);padding:3px 9px;font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);cursor:pointer;transition:all .15s" onmouseenter="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseleave="this.style.borderColor='var(--line2)';this.style.color='var(--sub)'">Details</button>
+        </div>
+      </div>`;
+      c.onclick=()=>{
+        B.system=s;
+        document.querySelectorAll('.lib-card').forEach(x=>x.classList.remove('sel'));
+        c.classList.add('sel');
+        setCTA(true,'NEXT');
+      };
       g.appendChild(c);
     });
     setCTA(!!B.system,'NEXT');
   }
 
-  // STEP 1: Service
+  // STEP 1 – Service
   else if(B.step===1){
-    ey.textContent='Step 2 of 6 — Service';
-    tt.innerHTML='YOUR<br>SERVICE.';
+    document.getElementById('sh-title').textContent='YOUR SERVICE.';
     bd.innerHTML='<div class="opt-list" id="opt-svc"></div>';
     const c=document.getElementById('opt-svc');
     SERVICES.forEach(sv=>{
       const d=document.createElement('div');
       d.className='tile'+(B.service?.id===sv.id?' sel':'');
-      d.innerHTML=`<div><div class="t-name">${sv.name}</div><div class="t-sub">${sv.sub} · ${sv.dur}</div></div><div class="t-right"><span class="t-price">₱${sv.price.toLocaleString()}</span><div class="chk"><svg fill="none" viewBox="0 0 24 24" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div></div>`;
+      d.innerHTML=`<div><div class="t-name">${sv.name}</div><div class="t-sub">${sv.sub} · ${sv.dur}</div></div><div class="t-right"><span class="t-price">₱${sv.fee.toLocaleString()}</span><div class="chk"><svg fill="none" viewBox="0 0 24 24" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div></div>`;
       d.onclick=()=>{B.service=sv;c.querySelectorAll('.tile').forEach(x=>x.classList.remove('sel'));d.classList.add('sel');setCTA(true,'NEXT');};
       c.appendChild(d);
     });
     setCTA(!!B.service,'NEXT');
   }
 
-  // STEP 2: Date / Time / Location
+  // STEP 2 – When & Where
   else if(B.step===2){
-    ey.textContent='Step 3 of 6 — Schedule';
-    tt.innerHTML='WHEN &<br>WHERE.';
-    bd.innerHTML=`<div class="field-group">
-      <div class="field" onclick="this.querySelector('input').showPicker?.()">
-        <div class="field-label">Date</div>
+    document.getElementById('sh-title').innerHTML='WHEN &<br>WHERE.';
+    bd.innerHTML=`
+      <div class="field" tabindex="0" onclick="this.querySelector('input[type=date]').focus()">
+        <div class="f-label">Preferred Date</div>
         <input type="date" id="i-date" value="${B.date}" oninput="B.date=this.value;chkDT()"/>
       </div>
       <div class="field" onclick="this.querySelector('select').focus()">
-        <div class="field-label">Time</div>
+        <div class="f-label">Preferred Time</div>
         <select id="i-time" onchange="B.time=this.value;chkDT()">
           <option value="">Select time slot</option>
           ${['9:00 AM','10:00 AM','11:00 AM','1:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM'].map(t=>`<option ${B.time===t?'selected':''}>${t}</option>`).join('')}
         </select>
       </div>
       <div class="field" onclick="this.querySelector('select').focus()">
-        <div class="field-label">Location Type</div>
+        <div class="f-label">Location Type</div>
         <select id="i-loc" onchange="B.loc=this.value;chkDT()">
           <option value="">Select</option>
           <option ${B.loc==='Home'?'selected':''}>Home</option>
@@ -568,283 +1000,406 @@ function renderSheet(){
           <option ${B.loc==='Event Venue'?'selected':''}>Event Venue</option>
         </select>
       </div>
-      <div class="field"><div class="field-label">Full Address</div><input type="text" id="i-addr" placeholder="Building, Street, City" value="${B.addr}" oninput="B.addr=this.value;chkDT()"/></div>
-    </div>`;
+      <div class="field">
+        <div class="f-label">Full Address</div>
+        <input type="text" id="i-addr" placeholder="Building, Street, City" value="${B.addr}" oninput="B.addr=this.value;chkDT()"/>
+      </div>`;
     chkDT();
   }
 
-  // STEP 3: Contact + Privacy
+  // STEP 3 – Contact
   else if(B.step===3){
-    ey.textContent='Step 4 of 6 — Contact';
-    tt.innerHTML='STAY IN<br>TOUCH.';
-    bd.innerHTML=`<div style="font-size:12px;line-height:1.7;color:var(--sub);margin-bottom:16px;font-style:italic;padding:12px 14px;background:var(--card2);border:1px solid var(--line2)">We value your privacy. Your hair system details are strictly confidential and will never be shared. We only use your contact for booking confirmation.</div>
-    <div class="field-group" style="margin-bottom:14px">
-      <div class="field"><div class="field-label">Your Name</div><input type="text" id="i-name" placeholder="First name is fine" value="${B.name}" oninput="B.name=this.value;chkContact()"/></div>
-      <div class="field"><div class="field-label">Phone Number</div><input type="tel" id="i-phone" placeholder="+63 9XX XXX XXXX" value="${B.phone}" oninput="B.phone=this.value;chkContact()"/></div>
+    document.getElementById('sh-title').innerHTML='STAY IN<br>TOUCH.';
+    bd.innerHTML=`<div style="font-size:11px;line-height:1.7;color:var(--sub);font-style:italic;padding:10px 12px;background:var(--card2);border:1px solid var(--line2);margin-bottom:12px">We value your privacy. Your details are strictly confidential and used only for this booking.</div>
+    <div class="field"><div class="f-label">Your Name</div><input type="text" id="i-name" placeholder="First name is fine" value="${B.name}" oninput="B.name=this.value;chkContact()"/></div>
+    <div class="field"><div class="f-label">Phone Number</div><input type="tel" id="i-phone" placeholder="+63 9XX XXX XXXX" value="${B.phone}" oninput="B.phone=this.value;chkContact()"/></div>
+    <div style="font-family:var(--fm);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--sub);margin:10px 0 6px">Receive confirmation via</div>
+    <div class="radio-item ${B.contact==='text'?'sel':''}" onclick="B.contact='text';document.querySelectorAll('#sh-body .radio-item').forEach(x=>x.classList.remove('sel'));this.classList.add('sel');chkContact()">
+      <div class="radio-dot"></div><div><div class="radio-label">Text / SMS</div><div class="radio-sub">Appears as a standard private message.</div></div>
     </div>
-    <div style="font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--sub);margin-bottom:8px">Receive confirmation via</div>
-    <div class="radio-group">
-      <div class="radio-item ${B.contactPref==='text'?'sel':''}" onclick="B.contactPref='text';document.querySelectorAll('.radio-item').forEach(x=>x.classList.remove('sel'));this.classList.add('sel');chkContact()">
-        <div class="radio-dot"></div><div><div class="radio-label">Text / SMS</div><div class="radio-sub">Private. Appears as a standard message.</div></div>
-      </div>
-      <div class="radio-item ${B.contactPref==='email'?'sel':''}" onclick="B.contactPref='email';document.querySelectorAll('.radio-item').forEach(x=>x.classList.remove('sel'));this.classList.add('sel');chkContact()">
-        <div class="radio-dot"></div><div><div class="radio-label">Email</div><div class="radio-sub">Sent from a discreet sender name.</div></div>
-      </div>
+    <div class="radio-item ${B.contact==='email'?'sel':''}" onclick="B.contact='email';document.querySelectorAll('#sh-body .radio-item').forEach(x=>x.classList.remove('sel'));this.classList.add('sel');chkContact()">
+      <div class="radio-dot"></div><div><div class="radio-label">Email</div><div class="radio-sub">Sent from a discreet sender name.</div></div>
     </div>`;
     chkContact();
   }
 
-  // STEP 4: Location requirements (if Home)
+  // STEP 4 – Location details
   else if(B.step===4){
-    ey.textContent='Step 5 of 6 — Requirements';
-    tt.innerHTML='JUST A FEW<br>DETAILS.';
+    document.getElementById('sh-title').innerHTML='JUST A FEW<br>DETAILS.';
     const isHome=B.loc==='Home';
-    bd.innerHTML=`${isHome?`<div style="font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:10px">Home Session Requirements</div>
-    <div class="radio-group" style="margin-bottom:16px">
-      <div class="radio-item ${B.locPrivate===true?'sel':''}" onclick="B.locPrivate=true;document.querySelectorAll('.radio-item').forEach(x=>x.classList.remove('sel'));this.classList.add('sel');chkLocation()">
-        <div class="radio-dot"></div><div><div class="radio-label">Yes — I have a private room available</div><div class="radio-sub">Bedroom, study, or any enclosed space.</div></div>
-      </div>
-      <div class="radio-item ${B.locPrivate===false?'sel':''}" onclick="B.locPrivate=false;document.querySelectorAll('.radio-item').forEach(x=>x.classList.remove('sel'));this.classList.add('sel');chkLocation()">
-        <div class="radio-dot"></div><div><div class="radio-label">No private room — open area</div><div class="radio-sub">Our stylist will manage discretely.</div></div>
-      </div>
-    </div>`:''}
-    <div class="field-group">
-      <div class="field"><div class="field-label">Nearest Landmark</div><input type="text" id="i-lm" placeholder="e.g. Near SM, beside BDO" oninput="chkLocation()"/></div>
-      <div class="field"><div class="field-label">Parking / Access Notes (optional)</div><input type="text" id="i-park" placeholder="e.g. Gate 2, basement parking"/></div>
-      <div class="field"><div class="field-label">Special Instructions (optional)</div><textarea id="i-notes" rows="3" placeholder="Allergies, preferences, anything we should know…"></textarea></div>
-    </div>`;
-    chkLocation();
+    bd.innerHTML=`${isHome?`<div style="font-family:var(--fm);font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:8px">Home session — quick check</div>
+    <div class="radio-item ${B.locPrivate===true?'sel':''}" onclick="B.locPrivate=true;document.querySelectorAll('#sh-body .radio-item').forEach(x=>x.classList.remove('sel'));this.classList.add('sel');chkLoc()">
+      <div class="radio-dot"></div><div><div class="radio-label">I have a private room available</div><div class="radio-sub">Bedroom, study, or any enclosed space.</div></div>
+    </div>
+    <div class="radio-item ${B.locPrivate===false?'sel':''}" onclick="B.locPrivate=false;document.querySelectorAll('#sh-body .radio-item').forEach(x=>x.classList.remove('sel'));this.classList.add('sel');chkLoc()">
+      <div class="radio-dot"></div><div><div class="radio-label">No private room — open space is fine</div><div class="radio-sub">Our stylist will be discreet.</div></div>
+    </div><div style="margin-bottom:10px"></div>`:``}
+    <div class="field"><div class="f-label">Nearest Landmark</div><input type="text" id="i-lm" placeholder="Near SM, beside BDO…" oninput="chkLoc()"/></div>
+    <div class="field"><div class="f-label">Parking / Access Notes (optional)</div><input type="text" id="i-park" placeholder="Gate 2, basement parking…"/></div>
+    <div class="field"><div class="f-label">Additional Notes (optional)</div><textarea id="i-notes" rows="3" placeholder="Allergies, preferences, anything we should know…"></textarea></div>`;
+    chkLoc();
   }
 
-  // STEP 5: Receipt / Summary
+  // STEP 5 – Receipt
   else if(B.step===5){
-    ey.textContent='Step 6 of 6 — Review';
-    tt.innerHTML='YOUR<br>BOOKING.';
+    document.getElementById('sh-title').innerHTML='YOUR<br>BOOKING.';
     const sys=B.system?.price||0;
-    const svc=B.service?.price||0;
+    const svc=B.service?.fee||0;
     const total=sys+svc;
     const down=Math.round(total*.5);
-    const isNewSys=(B.service?.id==='install'||B.service?.id==='full');
+    const isNew=B.service?.id==='install'||B.service?.id==='full';
     bd.innerHTML=`<div class="receipt">
       <div class="receipt-hd"><div class="receipt-hd-txt">Booking Receipt</div></div>
       <div class="r-row"><span class="r-lbl">System</span><span class="r-val">${B.system?.name||'—'}</span></div>
       <div class="r-row"><span class="r-lbl">System Price</span><span class="r-val">₱${sys.toLocaleString()}</span></div>
       <div class="r-row"><span class="r-lbl">Service</span><span class="r-val">${B.service?.name||'—'}</span></div>
       <div class="r-row"><span class="r-lbl">Service Fee</span><span class="r-val">₱${svc.toLocaleString()}</span></div>
-      <div class="r-row"><span class="r-lbl">Date & Time</span><span class="r-val">${B.date} · ${B.time}</span></div>
-      <div class="r-row"><span class="r-lbl">Location</span><span class="r-val">${B.loc}</span></div>
-      <div class="r-row"><span class="r-lbl">Confirmation to</span><span class="r-val">${B.contactPref==='text'?'SMS':'Email'} · ${B.phone}</span></div>
-      <div class="r-row total-row"><span class="r-lbl">Total</span><span class="r-val">₱${total.toLocaleString()}</span></div>
-      <div class="r-row down-row"><span class="r-lbl">50% Downpayment Due</span><span class="r-val" style="color:var(--red)">₱${down.toLocaleString()}</span></div>
+      <div class="r-row"><span class="r-lbl">Date & Time</span><span class="r-val">${B.date||'—'} · ${B.time||'—'}</span></div>
+      <div class="r-row"><span class="r-lbl">Location</span><span class="r-val">${B.loc||'—'}</span></div>
+      <div class="r-row"><span class="r-lbl">Confirmation</span><span class="r-val">${B.contact==='text'?'SMS':'Email'} · ${B.phone||'—'}</span></div>
+      <div class="r-row tot"><span class="r-lbl">Total</span><span class="r-val">₱${total.toLocaleString()}</span></div>
+      <div class="r-row down"><span class="r-lbl">50% Downpayment</span><span class="r-val" style="color:var(--red)">₱${down.toLocaleString()}</span></div>
     </div>
-    ${isNewSys?`<div class="r-notice">📦 Your booking includes a <strong>Starter Kit</strong>: adhesive tape, cleaning solution, and a care brochure covering maintenance schedule and system lifespan (typically 6–12 months with proper care).</div>`:''}`;
-    setCTA(true,'CONFIRM & PAY 50%');
+    ${isNew?`<div class="r-notice">📦 Starter kit included: adhesive tape, cleaning solution, care brochure with maintenance schedule and system lifespan guide (typically 6–12 months).</div>`:''}`;
+    setCTA(true,'CONFIRM BOOKING');
   }
 }
 
 function chkDT(){setCTA(!!(B.date&&B.time&&B.loc&&B.addr),'NEXT');}
-function chkContact(){setCTA(!!(B.name&&B.phone&&B.contactPref),'NEXT');}
-function chkLocation(){
+function chkContact(){setCTA(!!(B.name&&B.phone&&B.contact),'NEXT');}
+function chkLoc(){
   const lm=document.getElementById('i-lm');
-  if(B.loc==='Home') setCTA(!!(B.locPrivate!==null&&lm?.value),'NEXT');
+  if(B.loc==='Home')setCTA(!!(B.locPrivate!==null&&lm?.value),'NEXT');
   else setCTA(!!(lm?.value),'NEXT');
 }
 
-function sheetNext(){
-  if(B.step===2){B.date=document.getElementById('i-date')?.value||B.date;B.time=document.getElementById('i-time')?.value||B.time;B.loc=document.getElementById('i-loc')?.value||B.loc;B.addr=document.getElementById('i-addr')?.value||B.addr;}
+function shNext(){
+  if(B.step===2){
+    B.date=document.getElementById('i-date')?.value||B.date;
+    B.time=document.getElementById('i-time')?.value||B.time;
+    B.loc=document.getElementById('i-loc')?.value||B.loc;
+    B.addr=document.getElementById('i-addr')?.value||B.addr;
+  }
   if(B.step<TOTAL_STEPS-1){B.step++;renderSheet();}
-  else{confirmBooking();}
+  else{closeSheet();showConfirm();}
 }
-function sheetPrev(){if(B.step>0){B.step--;renderSheet();}}
+function shPrev(){if(B.step>0){B.step--;renderSheet();}}
 
-function confirmBooking(){
-  closeSheet();
+function showConfirm(){
   const id='ITP-'+Math.floor(Math.random()*90000+10000);
+  const total=(B.system?.price||0)+(B.service?.fee||0);
+  const down=Math.round(total*.5);
+  const via=B.contact==='text'?'SMS':'Email';
   const ov=document.createElement('div');
+  ov.id='conf-screen';
   ov.style.cssText='position:fixed;inset:0;background:var(--bg);z-index:80;display:flex;flex-direction:column;overflow-y:auto;animation:fi .3s ease';
   ov.innerHTML=`<style>@keyframes fi{from{opacity:0}to{opacity:1}}</style>
-  <nav style="position:sticky;top:0;background:rgba(14,14,14,.95);border-bottom:1px solid var(--line);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;z-index:2">
+  <nav style="position:sticky;top:0;z-index:2;background:var(--bg);border-bottom:1px solid var(--line);padding:0 24px;height:54px;display:flex;align-items:center">
     <div style="font-family:var(--ff);font-size:22px;letter-spacing:.04em"><span style="color:var(--red)">*</span>INCOGNITOUP</div>
   </nav>
-  <div style="max-width:520px;margin:0 auto;padding:32px 24px 60px;width:100%">
-    <div style="font-family:var(--ff);font-size:clamp(32px,8vw,48px);letter-spacing:.03em;line-height:.92;margin-bottom:8px">BOOKING<br>SUBMITTED.</div>
-    <div class="conf-id-box" style="margin-top:24px"><span class="conf-id-txt">${id}</span><span style="font-family:var(--fm);font-size:9px;color:var(--red);letter-spacing:.12em">PENDING</span></div>
-    <div style="font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--sub);margin-bottom:12px">Booking Status</div>
-    <div class="st-item now"><div class="st-dot"></div><span class="st-txt">Pending admin review</span></div>
-    <div class="st-item"><div class="st-dot"></div><span class="st-txt">Session assigned to available stylist</span></div>
-    <div class="st-item"><div class="st-dot"></div><span class="st-txt">Confirmation sent via ${B.contactPref==='text'?'SMS':'Email'} — complete payment form</span></div>
-    <div class="st-item"><div class="st-dot"></div><span class="st-txt">50% downpayment processed</span></div>
-    <div class="st-item"><div class="st-dot"></div><span class="st-txt">Full booking details sent to assigned stylist</span></div>
-    <div class="st-item"><div class="st-dot"></div><span class="st-txt">QR code issued for system collection at production team</span></div>
-    <div style="margin-top:24px;background:var(--card2);border:1px solid var(--line);padding:16px;font-size:12px;line-height:1.8;color:var(--sub)">
-      ${B.service?.id==='install'||B.service?.id==='full'?`<div style="margin-bottom:8px;font-weight:600;color:var(--text)">Your system includes:</div>
-      · Adhesive tape<br>· Cleaning solution<br>· Care & maintenance brochure<br>· System lifespan guide (typically 6–12 months)<br>· QR code for system pickup at our production team<br><br>`:''}
-      We value your privacy. This booking is strictly confidential.
+  <div style="max-width:520px;margin:0 auto;padding:28px 22px 60px;width:100%">
+    <div style="font-family:var(--ff);font-size:clamp(30px,8vw,46px);letter-spacing:.03em;line-height:.92;margin-bottom:6px">BOOKING<br>SUBMITTED.</div>
+    <div style="font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--sub);margin-bottom:20px">Reference: ${id}</div>
+    <div style="background:var(--red-s);border:1px solid var(--red-b);padding:13px 14px;margin-bottom:16px;font-size:12px;line-height:1.8;color:var(--text2)">
+      A confirmation has been sent via <strong style="color:var(--text)">${via}</strong>. To confirm your booking, please complete the 50% downpayment of <strong style="color:var(--red)">₱${down.toLocaleString()}</strong>. Payment instructions are included in your ${via} message.
     </div>
-    <button style="width:100%;background:var(--red);border:none;padding:16px;font-family:var(--ff);font-size:20px;letter-spacing:.1em;color:#fff;cursor:pointer;margin-top:20px" onclick="this.closest('[style]').remove()">DONE</button>
+    <div style="font-family:var(--fm);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--sub);margin-bottom:10px">Booking Status</div>
+    <div class="st-item now"><div class="st-dot"></div><span class="st-txt">Submitted — pending admin review</span></div>
+    <div class="st-item"><div class="st-dot"></div><span class="st-txt">Session posted to available stylists</span></div>
+    <div class="st-item"><div class="st-dot"></div><span class="st-txt">${via} sent — complete 50% downpayment</span></div>
+    <div class="st-item"><div class="st-dot"></div><span class="st-txt">Downpayment confirmed — booking locked</span></div>
+    <div class="st-item"><div class="st-dot"></div><span class="st-txt">Full details sent to your assigned stylist</span></div>
+    ${B.service?.id==='install'||B.service?.id==='full'?`<div class="st-item"><div class="st-dot"></div><span class="st-txt">QR code issued — present to production team for system collection</span></div>`:''}
+    ${B.service?.id==='install'||B.service?.id==='full'?`<div style="margin-top:14px;background:var(--card2);border:1px solid var(--line);padding:13px 14px;font-size:11px;line-height:1.8;color:var(--text2)"><strong style="color:var(--text)">Your starter kit includes:</strong><br>· Adhesive tape<br>· Cleaning solution<br>· Care & maintenance brochure<br>· System lifespan guide (6–12 months)</div>`:''}
+    <button style="width:100%;background:var(--red);border:none;padding:15px;font-family:var(--ff);font-size:19px;letter-spacing:.1em;color:#fff;cursor:pointer;margin-top:20px" onclick="document.getElementById('conf-screen').remove();showScr('s-home')">DONE</button>
   </div>`;
   document.getElementById('app').appendChild(ov);
 }
 
-// ══ ADMIN ══
-let adminView='bookings';
+// ════ ADMIN ════
 function renderAdmin(view){
-  adminView=view||adminView;
-  const sidebar=document.getElementById('admin-sidebar');
-  const tabs=document.getElementById('admin-tabs');
+  adminView=view;
+  const sidebar=document.getElementById('adm-sidebar');
+  const tabs=document.getElementById('adm-mob-tabs');
   const views=[
-    {id:'bookings',label:'Bookings'},
-    {id:'applications',label:'Stylist Applications'},
-    {id:'overview',label:'Overview'},
+    {id:'calendar',label:'Calendar'},
+    {id:'pending',label:'Pending'},
+    {id:'confirmed',label:'Confirmed'},
+    {id:'awaiting',label:'Awaiting Pay'},
+    {id:'declined',label:'Declined'},
+    {id:'applications',label:'Applications'},
   ];
-  const navItems=views.map(v=>`<div class="admin-nav-item ${adminView===v.id?'act':''}" onclick="renderAdmin('${v.id}')">${v.label}</div>`).join('');
-  sidebar.innerHTML=`<div style="padding:0 20px 16px;font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)">Management</div>${navItems}
-  <div style="height:1px;background:var(--line);margin:12px 0"></div>
-  <div class="admin-nav-item" onclick="showScr('s-home')">← Exit Admin</div>`;
-  tabs.innerHTML=views.map(v=>`<div class="admin-tab ${adminView===v.id?'act':''}" onclick="renderAdmin('${v.id}')">${v.label}</div>`).join('');
+  sidebar.innerHTML=`<div style="padding:0 18px 14px;font-family:var(--fm);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:#aaa">Management</div>
+  ${views.map(v=>`<div class="adm-nav-item ${adminView===v.id?'act':''}" onclick="renderAdmin('${v.id}')">${v.label}</div>`).join('')}
+  <div style="height:1px;background:#e0e0e0;margin:12px 0"></div>
+  <div class="adm-nav-item" onclick="showScr('s-home')" style="color:#c42828">← Exit Admin</div>`;
+  tabs.innerHTML=views.map(v=>`<div class="adm-mob-tab ${adminView===v.id?'act':''}" onclick="renderAdmin('${v.id}')">${v.label}</div>`).join('');
 
-  const content=document.getElementById('admin-content');
-  if(adminView==='bookings') renderBookings(content);
-  else if(adminView==='applications') renderApplications(content);
-  else renderOverview(content);
+  const c=document.getElementById('adm-content');
+  if(view!==adminView||!c.dataset.selDate)c.dataset.selDate='';
+  if(view==='calendar')renderCalendar(c);
+  else if(view==='applications')renderApps(c);
+  else renderBookingTab(c,view);
 }
 
-function renderBookings(c){
-  const pending=BOOKINGS_DATA.filter(b=>b.status==='pending');
-  const others=BOOKINGS_DATA.filter(b=>b.status!=='pending');
-  c.innerHTML=`<div class="stat-row">
-    <div class="stat-box"><div class="stat-n red">${pending.length}</div><div class="stat-l">Pending</div></div>
-    <div class="stat-box"><div class="stat-n">${BOOKINGS_DATA.filter(b=>b.status==='confirmed').length}</div><div class="stat-l">Confirmed</div></div>
-    <div class="stat-box"><div class="stat-n">${BOOKINGS_DATA.filter(b=>b.status==='awaiting').length}</div><div class="stat-l">Awaiting Pay</div></div>
-    <div class="stat-box"><div class="stat-n">₱${(BOOKINGS_DATA.reduce((a,b)=>a+b.total,0)/1000).toFixed(0)}k</div><div class="stat-l">Revenue</div></div>
-  </div>
-  ${pending.length?`<div class="adm-sec">Requires Action</div>${pending.map(b=>bookingCard(b)).join('')}`:''}
-  <div class="adm-sec">All Bookings</div>
-  ${others.map(b=>bookingCard(b)).join('')}`;
+// ── stat filter state ──
+let statFilter={mode:'month'}; // mode: 'month' | 'year' | 'range', fromM, toM (0-based), year
+
+function getFilteredBookings(statusFilter){
+  const y=calDate.getFullYear(),m=calDate.getMonth();
+  const sf=statFilter;
+  return BOOKINGS.filter(b=>{
+    if(statusFilter&&b.status!==statusFilter)return false;
+    const bd=new Date(b.date);
+    if(sf.mode==='month') return bd.getFullYear()===y&&bd.getMonth()===m;
+    if(sf.mode==='year')  return bd.getFullYear()===y;
+    if(sf.mode==='range'){
+      const fy=y,tm=sf.toM??m,frm=sf.fromM??0;
+      const from=new Date(fy,frm,1),to=new Date(fy,tm+1,0);
+      return bd>=from&&bd<=to;
+    }
+    return true;
+  });
 }
 
-function bookingCard(b){
-  return `<div class="adm-card">
+function statFilterHTML(status){
+  const y=calDate.getFullYear(),m=calDate.getMonth();
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const sf=statFilter;
+  const modeBtn=(id,lbl)=>`<button onclick="statFilter={mode:'${id}'};renderAdmin(adminView)" style="padding:4px 10px;font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;border:1px solid ${sf.mode===id?'#c42828':'#ddd'};color:${sf.mode===id?'#c42828':'#888'};background:${sf.mode===id?'#fdf5f5':'#fff'};cursor:pointer">${lbl}</button>`;
+  let rangeHTML='';
+  if(sf.mode==='range'){
+    rangeHTML=`<div style="display:flex;gap:6px;align-items:center;margin-top:8px;flex-wrap:wrap">
+      <span style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#888">From</span>
+      <select onchange="statFilter.fromM=parseInt(this.value);renderAdmin(adminView)" style="font-family:var(--fm);font-size:11px;border:1px solid #ddd;padding:4px 8px;background:#fff;color:#333;outline:none">
+        ${months.map((mn,i)=>`<option value="${i}" ${(sf.fromM??0)===i?'selected':''}>${mn}</option>`).join('')}
+      </select>
+      <span style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#888">To</span>
+      <select onchange="statFilter.toM=parseInt(this.value);renderAdmin(adminView)" style="font-family:var(--fm);font-size:11px;border:1px solid #ddd;padding:4px 8px;background:#fff;color:#333;outline:none">
+        ${months.map((mn,i)=>`<option value="${i}" ${(sf.toM??m)===i?'selected':''}>${mn}</option>`).join('')}
+      </select>
+    </div>`;
+  }
+  const filtered=getFilteredBookings(status==='calendar'?null:status);
+  const rev=filtered.reduce((a,b)=>a+b.sysPrice+b.svcFee,0);
+  const pending=filtered.filter(b=>b.status==='pending').length;
+  const confirmed=filtered.filter(b=>b.status==='confirmed').length;
+  const awaiting=filtered.filter(b=>b.status==='awaiting').length;
+  const rejected=filtered.filter(b=>b.status==='rejected').length;
+  const label=sf.mode==='month'?`${months[m]} ${y}`:sf.mode==='year'?`${y}`:
+    `${months[sf.fromM??0]} – ${months[sf.toM??m]} ${y}`;
+  return `<div style="background:#fff;border:1px solid #e0e0e0;padding:14px 16px;margin-bottom:10px">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+      <div style="font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#c42828">${label}</div>
+      <div style="display:flex;gap:4px">${modeBtn('month','Month')}${modeBtn('year','Year')}${modeBtn('range','Range')}</div>
+    </div>
+    ${rangeHTML}
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:6px;margin-top:10px">
+      <div style="background:#fff9e6;border:1px solid #f0d080;padding:10px 12px"><div style="font-family:var(--ff);font-size:26px;color:#c8900a;line-height:1">${pending}</div><div style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#c8900a;margin-top:4px">Pending</div></div>
+      <div style="background:#edfff5;border:1px solid #b0e8c8;padding:10px 12px"><div style="font-family:var(--ff);font-size:26px;color:#1a8a4a;line-height:1">${confirmed}</div><div style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#1a8a4a;margin-top:4px">Confirmed</div></div>
+      <div style="background:#fdf5f5;border:1px solid #f0c0c0;padding:10px 12px"><div style="font-family:var(--ff);font-size:26px;color:#c42828;line-height:1">${awaiting}</div><div style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#c42828;margin-top:4px">Awaiting Pay</div></div>
+      <div style="background:#f5f5f5;border:1px solid #e0e0e0;padding:10px 12px"><div style="font-family:var(--ff);font-size:26px;color:#888;line-height:1">${rejected}</div><div style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#888;margin-top:4px">Declined</div></div>
+      <div style="background:#f0f0ff;border:1px solid #d0d0f0;padding:10px 12px"><div style="font-family:var(--ff);font-size:26px;color:#336;line-height:1">₱${(rev/1000).toFixed(0)}k</div><div style="font-family:var(--fm);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#336;margin-top:4px">Revenue</div></div>
+    </div>
+  </div>`;
+}
+
+function buildCalendar(status){
+  // status = null (all) or specific status
+  const y=calDate.getFullYear(),m=calDate.getMonth();
+  const first=new Date(y,m,1).getDay();
+  const days=new Date(y,m+1,0).getDate();
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const today=new Date();
+  const stColors={pending:'#c8900a',confirmed:'#1a8a4a',awaiting:'#c42828',rejected:'#aaa'};
+  let html=`<div class="cal-wrap">
+    <div class="cal-head">
+      <button class="cal-nav-btn" onclick="calNav(-1,'${status||''}')"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="cal-title">${months[m]} ${y}</div>
+      <button class="cal-nav-btn" onclick="calNav(1,'${status||''}')"><svg fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path d="M9 18l6-6-6-6"/></svg></button>
+    </div>
+    <div class="cal-grid">
+      ${['Su','Mo','Tu','We','Th','Fr','Sa'].map(d=>`<div class="cal-dow">${d}</div>`).join('')}`;
+  for(let i=0;i<first;i++)html+=`<div class="cal-day other-month"><div class="cal-day-num" style="color:#ccc">${new Date(y,m,1-first+i).getDate()}</div></div>`;
+  for(let d=1;d<=days;d++){
+    const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const all=BOOKINGS.filter(b=>b.date===ds);
+    const relevant=status?all.filter(b=>b.status===status):all;
+    const isToday=today.getFullYear()===y&&today.getMonth()===m&&today.getDate()===d;
+    // build badges — for calendar (all) show all colors, for specific show only that color
+    let badges='';
+    if(status){
+      const n=relevant.length;
+      if(n) badges=`<span style="background:${stColors[status]};color:#fff;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;line-height:1">${n}</span>`;
+    } else {
+      const counts={pending:0,confirmed:0,awaiting:0,rejected:0};
+      all.forEach(b=>counts[b.status]=(counts[b.status]||0)+1);
+      badges=['pending','confirmed','awaiting','rejected'].filter(k=>counts[k]).map(k=>`<span style="background:${stColors[k]};color:#fff;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;line-height:1">${counts[k]}</span>`).join('');
+    }
+    html+=`<div class="cal-day ${isToday?'today':''}" onclick="calDayClick('${ds}','${status||''}')" style="cursor:${relevant.length?'pointer':'default'};min-height:52px">
+      <div class="cal-day-num">${d}</div>
+      ${badges?`<div style="display:flex;gap:2px;flex-wrap:wrap;justify-content:center;margin-top:3px">${badges}</div>`:''}
+    </div>`;
+  }
+  html+=`</div></div>`;
+  return html;
+}
+
+function renderCalendar(c){
+  const y=calDate.getFullYear(),m=calDate.getMonth();
+  const mStr=`${y}-${String(m+1).padStart(2,'0')}`;
+  const dayBooks=BOOKINGS.filter(b=>b.date.startsWith(mStr));
+  // clicked-date cards go on top if any
+  const sel=c.dataset.selDate||'';
+  const selCards=sel?BOOKINGS.filter(b=>b.date===sel&&b.status!=='__na'):'';
+  let html=statFilterHTML('calendar');
+  if(sel&&selCards.length){
+    html+=`<div class="adm-sec">${sel} — ${selCards.length} session${selCards.length>1?'s':''}</div>${selCards.map(b=>bookingCardHTML(b,false)).join('')}`;
+  }
+  html+=buildCalendar(null);
+  if(!sel&&dayBooks.length){
+    html+=`<div class="adm-sec">All Sessions This Month</div>${dayBooks.sort((a,b)=>a.date.localeCompare(b.date)).map(b=>bookingCardHTML(b,false)).join('')}`;
+  }
+  c.innerHTML=html;
+  c.dataset.selDate=sel;
+}
+
+function renderBookingTab(c,status){
+  const labels={pending:'Pending Approval',confirmed:'Confirmed',awaiting:'Awaiting Payment',rejected:'Declined'};
+  const y=calDate.getFullYear(),m=calDate.getMonth();
+  const mStr=`${y}-${String(m+1).padStart(2,'0')}`;
+  const monthBooks=BOOKINGS.filter(b=>b.status===status&&b.date.startsWith(mStr));
+  const sel=c.dataset?.selDate||'';
+  const selCards=sel?BOOKINGS.filter(b=>b.date===sel&&b.status===status):[];
+  let html=statFilterHTML(status);
+  if(sel&&selCards.length){
+    html+=`<div class="adm-sec">${sel} — ${selCards.length} session${selCards.length>1?'s':''}</div>${selCards.map(b=>bookingCardHTML(b,false)).join('')}`;
+  }
+  html+=buildCalendar(status);
+  html+=`<div class="adm-sec">${labels[status]||status} — This Month</div>`;
+  html+=monthBooks.length?monthBooks.sort((a,b)=>a.date.localeCompare(b.date)).map(b=>bookingCardHTML(b,false)).join(''):`<div class="adm-empty">No ${status} bookings this month</div>`;
+  c.innerHTML=html;
+  if(c.dataset)c.dataset.selDate=sel;
+}
+
+function calNav(dir,status){
+  calDate=new Date(calDate.getFullYear(),calDate.getMonth()+dir,1);
+  const c=document.getElementById('adm-content');
+  if(c.dataset)c.dataset.selDate='';
+  renderAdmin(adminView);
+}
+function calDayClick(dateStr,status){
+  const c=document.getElementById('adm-content');
+  if(c.dataset)c.dataset.selDate=dateStr;
+  renderAdmin(adminView);
+  // scroll to top of content
+  c.scrollTop=0;
+}
+
+function bookingCardHTML(b,compact){
+  const total=b.sysPrice+b.svcFee;
+  const down=Math.round(total*.5);
+  return `<div class="adm-card" id="bc-${b.id}">
     <div class="adm-card-top">
       <div>
         <div class="adm-id">${b.id} · ${b.date} · ${b.time}</div>
         <div class="adm-name">${b.client}</div>
-        <div class="adm-meta">${b.system} · ${b.service}<br>${b.loc} — ${b.addr}<br>Contact: ${b.phone} via ${b.contact.toUpperCase()}</div>
+        <div class="adm-meta">${b.system} · ${b.service}<br>${b.loc} — ${b.addr}<br>${b.phone} · via ${b.contact.toUpperCase()}</div>
       </div>
       <span class="pill pill-${b.status.charAt(0)}">${b.status.toUpperCase()}</span>
     </div>
-    <div class="detail-row">
-      <span class="detail-chip">₱${b.total.toLocaleString()}</span>
-      ${b.notes?`<span class="detail-chip">${b.notes}</span>`:''}
-      ${b.isNew?`<span class="detail-chip" style="border-color:var(--red);color:var(--red)">NEW SYSTEM</span>`:''}
+    <div class="adm-tags">
+      <span class="adm-tag">₱${total.toLocaleString()} total</span>
+      <span class="adm-tag">50% = ₱${down.toLocaleString()}</span>
+      ${b.isNew?`<span class="adm-tag red">NEW SYSTEM</span>`:''}
+      ${b.notes?`<span class="adm-tag">${b.notes}</span>`:''}
     </div>
-    ${b.status==='pending'?`<div class="adm-btns" style="margin-top:12px">
-      <button class="adm-ok" onclick="approveBooking('${b.id}')">APPROVE & ASSIGN</button>
-      <button class="adm-no" onclick="viewBooking('${b.id}')">VIEW DETAILS</button>
-      <button class="adm-no" onclick="rejectBooking('${b.id}')">REJECT</button>
-    </div>`:b.status==='confirmed'?`<div class="adm-btns" style="margin-top:12px">
-      <button class="adm-no" onclick="viewBooking('${b.id}')">VIEW FULL DETAILS</button>
-    </div>`:''}
-  </div>`;
+    ${b.status==='pending'?`<div class="adm-btns" style="margin-top:10px">
+      <button class="adm-ok" onclick="openAssignModal('${b.id}')">ASSIGN & APPROVE</button>
+      <button class="adm-no" onclick="openBookingModal('${b.id}')">VIEW DETAILS</button>
+      <button class="adm-no" onclick="rejectB('${b.id}')">REJECT</button>
+    </div>`:b.status!=='rejected'?`<div class="adm-btns" style="margin-top:10px">
+      <button class="adm-no" onclick="openBookingModal('${b.id}')">VIEW DETAILS</button>
+    </div>`:''}`+'</div>';
 }
 
-function renderApplications(c){
+function openBookingModal(id){
+  const b=BOOKINGS.find(x=>x.id===id);if(!b)return;
+  const total=b.sysPrice+b.svcFee;
+  document.getElementById('adm-modal-body').innerHTML=`<button class="adm-modal-close" onclick="document.getElementById('adm-modal-ov').classList.remove('open')">✕</button>
+  <div class="adm-modal-title">${b.client}</div>
+  <div style="font-family:var(--fm);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#c42828;margin-bottom:14px">${b.id}</div>
+  ${[['System',b.system],['Service',b.service],['Date',b.date],['Time',b.time],['Location',`${b.loc} — ${b.addr}`],['Phone',b.phone],['Confirmation via',b.contact.toUpperCase()],['Notes',b.notes||'—'],['System Price',`₱${b.sysPrice.toLocaleString()}`],['Service Fee',`₱${b.svcFee.toLocaleString()}`],['Total',`₱${total.toLocaleString()}`],['50% Down',`₱${Math.round(total*.5).toLocaleString()}`],['Status',b.status.toUpperCase()]].map(([l,v])=>`<div class="adm-detail-row"><span class="adm-detail-lbl">${l}</span><span class="adm-detail-val">${v}</span></div>`).join('')}
+  ${b.status==='pending'?`<div style="display:flex;gap:6px;margin-top:14px"><button class="adm-ok" style="flex:1" onclick="openAssignModal('${b.id}');document.getElementById('adm-modal-ov').classList.remove('open')">ASSIGN & APPROVE</button><button class="adm-no" onclick="rejectB('${b.id}');document.getElementById('adm-modal-ov').classList.remove('open')">REJECT</button></div>`:''}`;
+  document.getElementById('adm-modal-ov').classList.add('open');
+}
+
+function openAssignModal(id){
+  const b=BOOKINGS.find(x=>x.id===id);if(!b)return;
+  const sorted=[...STYLISTS].sort((a,c)=>a.dist-c.dist);
+  document.getElementById('adm-modal-body').innerHTML=`<button class="adm-modal-close" onclick="document.getElementById('adm-modal-ov').classList.remove('open')">✕</button>
+  <div class="adm-modal-title">Assign Stylist</div>
+  <div style="font-family:var(--fm);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#888;margin-bottom:14px">${b.id} · ${b.client} · ${b.loc}</div>
+  <div style="font-family:var(--fm);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#c42828;margin-bottom:8px">Available stylists — sorted by nearest</div>
+  ${sorted.map(s=>`<div class="barber-assign-row">
+    <div class="ba-av">${s.init}</div>
+    <div><div class="ba-name">${s.name}</div><div class="ba-meta">${s.area} · ${s.exp} · ${s.transport}</div></div>
+    <div class="ba-dist">${s.dist} km</div>
+    <button class="ba-assign" onclick="assignStylest('${b.id}','${s.id}')">ASSIGN</button>
+  </div>`).join('')}`;
+  document.getElementById('adm-modal-ov').classList.add('open');
+}
+
+function assignStylest(bid,sid){
+  const b=BOOKINGS.find(x=>x.id===bid);
+  if(b){b.status='confirmed';renderAdmin(adminView);}
+  document.getElementById('adm-modal-ov').classList.remove('open');
+}
+function approveB(id){const b=BOOKINGS.find(x=>x.id===id);if(b){b.status='awaiting';renderAdmin(adminView);}}
+function rejectB(id){const b=BOOKINGS.find(x=>x.id===id);if(b){b.status='rejected';renderAdmin(adminView);document.getElementById('adm-modal-ov').classList.remove('open');}}
+
+function renderApps(c){
   const pending=BARBER_APPS.filter(a=>a.status==='pending');
   const verified=BARBER_APPS.filter(a=>a.status==='verified');
   c.innerHTML=`<div class="stat-row">
     <div class="stat-box"><div class="stat-n red">${pending.length}</div><div class="stat-l">Pending</div></div>
     <div class="stat-box"><div class="stat-n">${verified.length}</div><div class="stat-l">Verified</div></div>
   </div>
-  ${pending.length?`<div class="adm-sec">Pending Review</div>${pending.map(a=>appCard(a)).join('')}`:''}
-  ${verified.length?`<div class="adm-sec">Verified Stylists</div>${verified.map(a=>appCard(a)).join('')}`:''}`;
+  ${pending.length?`<div class="adm-sec">Pending Review</div>${pending.map(a=>appCardHTML(a)).join('')}`:''}
+  ${verified.length?`<div class="adm-sec">Verified Stylists</div>${verified.map(a=>appCardHTML(a)).join('')}`:''}`;
 }
 
-function appCard(a){
+function appCardHTML(a){
   return `<div class="adm-card">
     <div class="adm-card-top">
-      <div>
-        <div class="adm-id">${a.id} · Applied ${a.date}</div>
-        <div class="adm-name">${a.name}</div>
-        <div class="adm-meta">${a.specialty} · ${a.exp} experience<br>${a.area} · ${a.transport}<br>${a.phone}</div>
-      </div>
+      <div><div class="adm-id">${a.id} · ${a.date}</div><div class="adm-name">${a.name}</div><div class="adm-meta">${a.specialty} · ${a.exp} · ${a.area} · ${a.phone}</div></div>
       <span class="pill ${a.status==='verified'?'pill-v':'pill-p'}">${a.status.toUpperCase()}</span>
     </div>
-    ${a.status==='pending'?`<div class="adm-btns" style="margin-top:12px">
+    ${a.status==='pending'?`<div class="adm-btns" style="margin-top:10px">
       <button class="adm-ok" onclick="verifyApp('${a.id}')">VERIFY</button>
-      <button class="adm-no" onclick="viewApp('${a.id}')">VIEW APPLICATION</button>
       <button class="adm-no" onclick="rejectApp('${a.id}')">REJECT</button>
     </div>`:''}`+'</div>';
 }
-
-function renderOverview(c){
-  c.innerHTML=`<div class="stat-row">
-    <div class="stat-box"><div class="stat-n">148</div><div class="stat-l">Total Bookings</div></div>
-    <div class="stat-box"><div class="stat-n">28</div><div class="stat-l">Active Stylists</div></div>
-    <div class="stat-box"><div class="stat-n">₱284k</div><div class="stat-l">Revenue MTD</div></div>
-    <div class="stat-box"><div class="stat-n">98%</div><div class="stat-l">Satisfaction</div></div>
-  </div>
-  <div class="adm-sec">Quick Actions</div>
-  <div class="adm-card" style="cursor:pointer" onclick="renderAdmin('bookings')"><div style="display:flex;align-items:center;justify-content:space-between"><div><div class="adm-name">Manage Bookings</div><div class="adm-meta">${BOOKINGS_DATA.filter(b=>b.status==='pending').length} pending approval</div></div><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="var(--sub)"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div></div>
-  <div class="adm-card" style="cursor:pointer" onclick="renderAdmin('applications')"><div style="display:flex;align-items:center;justify-content:space-between"><div><div class="adm-name">Stylist Applications</div><div class="adm-meta">${BARBER_APPS.filter(a=>a.status==='pending').length} pending review</div></div><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="var(--sub)"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div></div>`;
-}
-
-function approveBooking(id){const b=BOOKINGS_DATA.find(x=>x.id===id);if(b){b.status='awaiting';renderAdmin('bookings');}}
-function rejectBooking(id){const b=BOOKINGS_DATA.find(x=>x.id===id);if(b){b.status='rejected';renderAdmin('bookings');}}
 function verifyApp(id){const a=BARBER_APPS.find(x=>x.id===id);if(a){a.status='verified';renderAdmin('applications');}}
 function rejectApp(id){const a=BARBER_APPS.find(x=>x.id===id);if(a){a.status='rejected';renderAdmin('applications');}}
 
-function viewBooking(id){
-  const b=BOOKINGS_DATA.find(x=>x.id===id);if(!b)return;
-  document.getElementById('booking-modal-body').innerHTML=`
-    <button class="modal-close" onclick="document.getElementById('booking-modal').classList.remove('show')">✕</button>
-    <div class="modal-title">${b.client}</div>
-    <div style="font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:16px">${b.id}</div>
-    ${[['System',b.system],['Service',b.service],['Date & Time',`${b.date} · ${b.time}`],['Location',`${b.loc} — ${b.addr}`],['Phone',b.phone],['Confirmation',b.contact.toUpperCase()],['Total',`₱${b.total.toLocaleString()}`],['Notes',b.notes||'—'],['Status',b.status.toUpperCase()]].map(([l,v])=>`<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px"><span style="color:var(--sub)">${l}</span><span style="font-weight:600;text-align:right;max-width:60%">${v}</span></div>`).join('')}
-    <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
-      ${b.status==='pending'?`<button class="adm-ok" style="flex:1" onclick="approveBooking('${b.id}');document.getElementById('booking-modal').classList.remove('show')">APPROVE & ASSIGN</button><button class="adm-no" onclick="rejectBooking('${b.id}');document.getElementById('booking-modal').classList.remove('show')">REJECT</button>`:''}
-    </div>`;
-  document.getElementById('booking-modal').classList.add('show');
-}
-
-function viewApp(id){
-  const a=BARBER_APPS.find(x=>x.id===id);if(!a)return;
-  document.getElementById('app-modal-body').innerHTML=`
-    <button class="modal-close" onclick="document.getElementById('app-modal').classList.remove('show')">✕</button>
-    <div class="modal-title">${a.name}</div>
-    <div style="font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:16px">${a.id}</div>
-    ${[['Specialty',a.specialty],['Experience',a.exp],['Area',a.area],['Transport',a.transport],['Phone',a.phone],['Applied',a.date]].map(([l,v])=>`<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px"><span style="color:var(--sub)">${l}</span><span style="font-weight:600">${v}</span></div>`).join('')}
-    <div style="margin-top:16px;display:flex;gap:8px">
-      ${a.status==='pending'?`<button class="adm-ok" style="flex:1" onclick="verifyApp('${a.id}');document.getElementById('app-modal').classList.remove('show')">VERIFY</button><button class="adm-no" onclick="rejectApp('${a.id}');document.getElementById('app-modal').classList.remove('show')">REJECT</button>`:''}
-    </div>`;
-  document.getElementById('app-modal').classList.add('show');
-}
-
 function submitBarberApp(){
-  const ov=document.createElement('div');
-  ov.style.cssText='position:fixed;inset:0;background:var(--bg);z-index:80;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center;animation:fi .3s ease';
-  ov.innerHTML=`<style>@keyframes fi{from{opacity:0}to{opacity:1}}</style>
-  <div style="font-family:var(--ff);font-size:clamp(36px,8vw,56px);letter-spacing:.03em;line-height:.92;margin-bottom:20px"><span style="color:var(--red)">*</span>INCOGNITOUP</div>
-  <div style="font-family:var(--fm);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin-bottom:12px">Application Received</div>
-  <div style="font-size:13px;line-height:1.8;color:var(--sub);max-width:320px;margin-bottom:32px">Our team will review your application within 48 hours and contact you directly. All information is handled confidentially.</div>
-  <button style="background:var(--red);border:none;padding:14px 40px;font-family:var(--ff);font-size:20px;letter-spacing:.1em;color:#fff;cursor:pointer" onclick="this.closest('[style]').remove();showScr('s-home')">DONE</button>`;
-  document.getElementById('app').appendChild(ov);
+  showScr('s-home');
+  setTimeout(()=>{
+    const ov=document.createElement('div');
+    ov.style.cssText='position:fixed;inset:0;background:var(--bg);z-index:80;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center;animation:fi .3s ease';
+    ov.innerHTML=`<style>@keyframes fi{from{opacity:0}to{opacity:1}}</style>
+    <div style="font-family:var(--ff);font-size:clamp(34px,8vw,54px);letter-spacing:.04em;line-height:.92;margin-bottom:20px"><span style="color:var(--red)">*</span>INCOGNITOUP</div>
+    <div style="font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin-bottom:12px">Application Received</div>
+    <div style="font-size:13px;line-height:1.8;color:var(--sub);max-width:300px;margin-bottom:32px">Our team will review your application within 48 hours and contact you directly. All information is handled confidentially.</div>
+    <button style="background:var(--red);border:none;padding:13px 36px;font-family:var(--ff);font-size:18px;letter-spacing:.1em;color:#fff;cursor:pointer" onclick="this.closest('[style]').remove()">DONE</button>`;
+    document.getElementById('app').appendChild(ov);
+  },100);
 }
 
-// ══ INIT HOME ══
-(function(){
-  const g=document.getElementById('sys-grid');
-  SYSTEMS.forEach(s=>{
-    const c=document.createElement('div');
-    c.className='sys-card';
-    c.innerHTML=`<div class="sys-img"><div class="sys-letter">${s.letter}</div>${s.badge?`<div class="sys-badge">${s.badge}</div>`:''}</div><div class="sys-body"><div class="sys-name">${s.name}</div><div class="sys-attrs"><span class="sys-attr">${s.style}</span><span class="sys-attr">${s.color}</span><span class="sys-attr">${s.base}</span></div><div class="sys-price">₱${s.price.toLocaleString()}</div></div>`;
-    c.onclick=()=>{B.system=s;B.step=1;openSheet();};
-    g.appendChild(c);
-  });
-})();
-
-// admin via hash or hotkey
-if(location.hash==='#admin'){setTimeout(()=>showScr('s-admin'),100);}
-if(location.hash==='#barber'){setTimeout(()=>showScr('s-barber-app'),100);}
+// ════ HASH NAV ════
+if(location.hash==='#admin'){setTimeout(()=>openPinModal(),200);}
+if(location.hash==='#barber'){setTimeout(()=>showScr('s-barber-app'),200);}
 </script>
 </body>
 </html>
