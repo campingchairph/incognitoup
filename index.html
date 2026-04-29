@@ -157,7 +157,47 @@ body{overflow-x:hidden}
 .ad-desc{font-size:11px;color:var(--sub);line-height:1.6}
 .ad-tag{display:inline-block;margin-top:8px;font-family:var(--fm);font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);border:1px solid var(--red-b);padding:3px 7px}
 
-/* ── HOME FOOTER ── */
+/* ── BANNER SLIDER ── */
+.banner-wrap{position:relative;overflow:hidden;background:#0e0e0e}
+/* Desktop: normal height */
+.banner-wrap{height:420px}
+/* Mobile: full viewport */
+@media(max-width:640px){
+  .banner-wrap{height:100dvh;height:100vh}
+  #s-home{display:flex;flex-direction:column}
+  #s-home .home-scroll{display:flex;flex-direction:column-reverse}
+  /* show banner first on mobile (column-reverse puts it on top) */
+}
+.banner-track{display:flex;height:100%;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+.banner-slide{min-width:100%;height:100%;display:flex;align-items:flex-end;padding:40px 32px;flex-shrink:0;position:relative}
+@media(max-width:640px){.banner-slide{padding:32px 24px 120px}}
+.slide-content{position:relative;z-index:2;max-width:480px}
+.slide-eyebrow{font-family:var(--fm);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:12px}
+.slide-title{font-family:var(--ff);font-size:clamp(42px,8vw,72px);line-height:.92;letter-spacing:.03em;color:#fff;margin-bottom:12px}
+.slide-sub{font-size:13px;font-weight:300;color:rgba(255,255,255,.55);line-height:1.7;max-width:360px}
+/* Floating buttons over banner */
+.banner-btns{position:absolute;bottom:0;left:0;right:0;z-index:10;display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 16px;background:linear-gradient(transparent,rgba(0,0,0,.7))}
+@media(min-width:641px){.banner-btns{position:static;padding:14px 24px;background:var(--bg);border-bottom:1px solid var(--line);flex-direction:row}}
+/* dots */
+.banner-dots{position:absolute;bottom:72px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10}
+@media(min-width:641px){.banner-dots{bottom:14px}}
+.bdot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25);cursor:pointer;transition:all .2s}
+.bdot.act{background:var(--red);width:18px;border-radius:3px}
+/* scroll hint mobile only */
+.scroll-hint{display:none}
+@media(max-width:640px){
+  .scroll-hint{display:block;position:absolute;top:16px;left:50%;transform:translateX(-50%);font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.35);z-index:10;white-space:nowrap;animation:pulse 2s ease-in-out infinite}
+}
+/* 3-col mobile sys-grid */
+@media(max-width:640px){
+  .sys-grid{grid-template-columns:repeat(3,1fr);gap:4px;padding:0 12px}
+  .sys-body{padding:7px 8px}
+  .sys-name{font-size:10px}
+  .sys-attr{font-size:6px;padding:1px 3px}
+  .sys-price{font-size:9px}
+  .sys-img{height:64px}
+  .sys-letter{font-size:38px}
+}
 .home-footer-wrap{padding:24px;display:flex;flex-direction:column;gap:8px}
 .book-btn{background:var(--red);border:none;padding:16px 22px;font-family:var(--ff);font-size:20px;letter-spacing:.1em;color:#fff;cursor:pointer;transition:opacity .15s;display:flex;align-items:center;justify-content:space-between;width:100%}
 .book-btn:hover{opacity:.88}
@@ -471,41 +511,75 @@ body{overflow-x:hidden}
   </div>
 
   <div class="home-scroll" id="home-scroll">
-    <div class="home-hero">
-      <div class="home-mark"><span class="ast">*</span>INCOGNITOUP</div>
-      <div class="home-sub">Professional hair system services — discreet, private, at your location.</div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:18px">
-        <button class="book-btn" style="flex:1;min-width:140px;padding:13px 18px;font-size:17px" onclick="openSheet()">
-          <span>BOOK A SESSION</span>
-          <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5" width="14" height="14"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </button>
-        <button class="stylist-btn" style="flex:1;min-width:140px;padding:13px 18px" onclick="showScr('s-barber-app')">APPLY AS STYLIST</button>
-        <button class="stylist-btn" style="flex:1;min-width:140px;padding:13px 18px;border-color:var(--line)" onclick="openStatusChecker()">CHECK STATUS</button>
-      </div>
-    </div>
 
-    <div class="meta-strip">
-      <div class="meta-item"><div class="meta-n">140+</div><div class="meta-l">Stylists</div></div>
-      <div class="meta-item"><div class="meta-n">2.4k</div><div class="meta-l">Sessions</div></div>
-      <div class="meta-item"><div class="meta-n">100%</div><div class="meta-l">Private</div></div>
-      <div class="meta-item"><div class="meta-n">98%</div><div class="meta-l">Satisfaction</div></div>
+    <!-- BANNER SLIDER (mobile: full screen, desktop: normal section) -->
+    <div class="banner-wrap" id="banner-wrap">
+      <!-- Floating buttons — always visible over banner -->
+      <div class="banner-btns">
+        <button class="book-btn" style="flex:1;min-width:120px;padding:12px 16px;font-size:16px" onclick="openSheet()">
+          <span>BOOK SESSION</span>
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="2.5" width="13" height="13"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <button class="stylist-btn" style="flex:1;min-width:120px;padding:12px 16px" onclick="showScr('s-barber-app')">APPLY AS STYLIST</button>
+        <button class="stylist-btn" style="flex:1;min-width:120px;padding:12px 16px;border-color:var(--line)" onclick="openStatusChecker()">CHECK STATUS</button>
+      </div>
+
+      <!-- Slides -->
+      <div class="banner-track" id="banner-track">
+        <div class="banner-slide" style="background:linear-gradient(135deg,#0e0e0e 0%,#1a0a0a 100%)">
+          <div class="slide-content">
+            <div class="slide-eyebrow">*INCOGNITOUP</div>
+            <div class="slide-title">CONFIDENCE,<br>DELIVERED<br>PRIVATELY.</div>
+            <div class="slide-sub">Professional hair system services — discreet, at your location.</div>
+          </div>
+        </div>
+        <div class="banner-slide" style="background:linear-gradient(135deg,#100808 0%,#1e0e0e 100%)">
+          <div class="slide-content">
+            <div class="slide-eyebrow">💎 Installation</div>
+            <div class="slide-title">FULL SYSTEM<br>FITTING.</div>
+            <div class="slide-sub">Bonding, initial styling, and scalp prep. For all ages and all system types.</div>
+          </div>
+        </div>
+        <div class="banner-slide" style="background:linear-gradient(135deg,#080e10 0%,#0e1a1e 100%)">
+          <div class="slide-content">
+            <div class="slide-eyebrow">✂️ Cut & Blend</div>
+            <div class="slide-title">TAPERED,<br>FADED,<br>NATURAL.</div>
+            <div class="slide-sub">Classic, fade, or conservative cut that blends seamlessly with your system.</div>
+          </div>
+        </div>
+        <div class="banner-slide" style="background:linear-gradient(135deg,#080a10 0%,#0e1020 100%)">
+          <div class="slide-content">
+            <div class="slide-eyebrow">🔄 Maintenance</div>
+            <div class="slide-title">KEEP IT<br>FRESH.</div>
+            <div class="slide-sub">Monthly clean, reattach, and touch-up. Extends your system life significantly.</div>
+          </div>
+        </div>
+        <div class="banner-slide" style="background:linear-gradient(135deg,#100a08 0%,#1e140a 100%)">
+          <div class="slide-content">
+            <div class="slide-eyebrow">📦 Starter Kit</div>
+            <div class="slide-title">EVERYTHING<br>YOU NEED.</div>
+            <div class="slide-sub">Adhesive tape, cleaning solution, and a care brochure included with every new system.</div>
+          </div>
+        </div>
+        <div class="banner-slide" style="background:linear-gradient(135deg,#080e08 0%,#0e1a0e 100%)">
+          <div class="slide-content">
+            <div class="slide-eyebrow">🔒 100% Confidential</div>
+            <div class="slide-title">PRIVATE BY<br>DESIGN.</div>
+            <div class="slide-sub">No branding. No records. Your booking stays strictly between you and us.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dots -->
+      <div class="banner-dots" id="banner-dots"></div>
+
+      <!-- Mobile scroll hint -->
+      <div class="scroll-hint" id="scroll-hint">↑ scroll up for collection</div>
     </div>
 
     <div id="sys-section">
       <div class="sec-wrap"><span class="sec-lbl">Hair Systems Collection</span><span class="sec-link" onclick="openSheet()">Book now →</span></div>
       <div class="sys-grid" id="sys-grid"></div>
-    </div>
-
-    <div id="svc-section">
-      <div class="sec-wrap" style="margin-top:8px"><span class="sec-lbl">Services & Features</span></div>
-      <div class="ads-grid">
-        <div class="ad-card"><div class="ad-icon">💎</div><div class="ad-title">Installation</div><div class="ad-desc">Full system fitting, bonding, and initial styling. For new clients and system changes of all ages.</div><div class="ad-tag">All ages welcome</div></div>
-        <div class="ad-card"><div class="ad-icon">✂️</div><div class="ad-title">Cut & Blend</div><div class="ad-desc">Tapered, fade, classic, or conservative cut to blend seamlessly with your system.</div><div class="ad-tag">Any style</div></div>
-        <div class="ad-card"><div class="ad-icon">🔄</div><div class="ad-title">Maintenance</div><div class="ad-desc">Monthly upkeep — cleaning, reattachment, and touch-up. Extends system life significantly.</div><div class="ad-tag">Monthly plans</div></div>
-        <div class="ad-card"><div class="ad-icon">🛡️</div><div class="ad-title">Removal & Care</div><div class="ad-desc">Safe, damage-free removal with scalp treatment. A clean, comfortable transition.</div><div class="ad-tag">Gentle process</div></div>
-        <div class="ad-card"><div class="ad-icon">📦</div><div class="ad-title">Starter Kit</div><div class="ad-desc">Every new system includes adhesive tape, cleaning solution, and a care brochure with maintenance schedule and lifespan guide.</div><div class="ad-tag">New clients</div></div>
-        <div class="ad-card"><div class="ad-icon">🔒</div><div class="ad-title">100% Confidential</div><div class="ad-desc">Stylists arrive discreetly. No branding, no records. Your booking stays strictly between you and us.</div><div class="ad-tag">Private by design</div></div>
-      </div>
     </div>
 
     <div class="site-footer">
@@ -1397,7 +1471,32 @@ function submitBarberApp(){
   },100);
 }
 
-// ════ HASH NAV ════
+// ════ BANNER SLIDER ════
+(function initBanner(){
+  const track=document.getElementById('banner-track');
+  const dotsWrap=document.getElementById('banner-dots');
+  const slides=track.querySelectorAll('.banner-slide');
+  let cur=0,timer;
+  // build dots
+  slides.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='bdot'+(i===0?' act':'');
+    d.onclick=()=>goTo(i);
+    dotsWrap.appendChild(d);
+  });
+  function goTo(n){
+    cur=(n+slides.length)%slides.length;
+    track.style.transform=`translateX(-${cur*100}%)`;
+    dotsWrap.querySelectorAll('.bdot').forEach((d,i)=>d.classList.toggle('act',i===cur));
+    reset();
+  }
+  function reset(){clearInterval(timer);timer=setInterval(()=>goTo(cur+1),4000);}
+  // swipe
+  let sx=0;
+  track.addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+  track.addEventListener('touchend',e=>{const dx=sx-e.changedTouches[0].clientX;if(Math.abs(dx)>40)goTo(cur+(dx>0?1:-1));});
+  goTo(0);
+})();
 if(location.hash==='#admin'){setTimeout(()=>openPinModal(),200);}
 if(location.hash==='#barber'){setTimeout(()=>showScr('s-barber-app'),200);}
 </script>
